@@ -1,0 +1,2100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalentXRay — X-Ray Sourcing Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4f0;
+  --white:#ffffff;
+  --surface:#fafaf8;
+  --border:#e4e2db;
+  --border2:#ccc9bf;
+  --ink:#0f0e0c;
+  --ink2:#4a4843;
+  --ink3:#8a8780;
+  --accent:#1a3a8f;
+  --accent-lt:#e8edf8;
+  --accent-md:#6b84c5;
+  --green:#0d7a4e;
+  --green-lt:#e6f4ee;
+  --amber:#b45309;
+  --amber-lt:#fef3c7;
+  --red:#b91c1c;
+  --red-lt:#fef2f2;
+  --purple:#5b21b6;
+  --purple-lt:#ede9fe;
+  --sans:'Outfit',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --radius:10px;
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 12px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.1),0 1px 4px rgba(0,0,0,0.06);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  min-height:100vh;
+  font-size:15px;
+  line-height:1.5;
+}
+
+/* ── Topbar ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;
+  height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-brand{display:flex;align-items:center;gap:10px;}
+.topbar-logo{
+  width:30px;height:30px;background:var(--accent);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.topbar-logo svg{width:16px;height:16px;}
+.topbar-name{font-weight:700;font-size:16px;letter-spacing:-0.02em;color:var(--ink);}
+.topbar-name span{color:var(--accent);}
+.topbar-tag{font-size:11px;color:var(--ink3);background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:20px;font-family:var(--mono);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.btn-contact{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 16px;border-radius:8px;
+  background:var(--accent);color:#fff;
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  border:none;cursor:pointer;
+  transition:background .15s,transform .1s;
+  letter-spacing:-0.01em;
+}
+.btn-contact:hover{background:#152e78;transform:translateY(-1px);}
+.btn-contact svg{width:14px;height:14px;}
+
+/* ── Suite bar ── */
+.suite-bar{
+  background:var(--ink);color:rgba(255,255,255,0.7);
+  font-family:var(--mono);font-size:11.5px;
+  padding:0 24px;height:36px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+}
+.suite-brand{color:#fff;font-weight:600;letter-spacing:.04em;}
+.suite-steps{display:flex;align-items:center;gap:6px;}
+.suite-step{
+  display:flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
+  font-size:11px;font-weight:500;color:rgba(255,255,255,0.45);
+  text-decoration:none;transition:color .15s;
+}
+.suite-step:hover{color:rgba(255,255,255,0.8);}
+.suite-step.active{
+  background:rgba(255,255,255,0.12);color:#fff;font-weight:700;
+}
+.suite-step-num{
+  width:16px;height:16px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;flex-shrink:0;
+  background:rgba(255,255,255,0.15);
+}
+.suite-step.active .suite-step-num{background:var(--accent);}
+.suite-arrow{color:rgba(255,255,255,0.25);font-size:10px;}
+
+/* ── From-SkillMapper banner ── */
+.from-sm-banner{
+  background:linear-gradient(135deg,var(--accent-lt),#f0fdfa);
+  border:1px solid var(--accent-md);
+  border-radius:12px;padding:14px 18px;margin-bottom:20px;
+  display:none;
+}
+.from-sm-banner.show{display:flex;align-items:flex-start;gap:14px;}
+.fsm-icon{
+  width:36px;height:36px;background:var(--accent);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.fsm-body{flex:1;}
+.fsm-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.fsm-role{font-size:15px;font-weight:800;color:var(--accent);letter-spacing:-0.02em;margin-bottom:6px;}
+.fsm-skills{display:flex;flex-wrap:wrap;gap:5px;}
+.fsm-skill{font-size:11px;font-family:var(--mono);font-weight:600;padding:2px 8px;border-radius:12px;background:var(--accent-lt);color:var(--accent);border:1px solid rgba(26,58,143,0.2);}
+.fsm-back{font-size:12px;color:var(--ink3);text-decoration:none;align-self:center;white-space:nowrap;padding:6px 12px;border:1px solid var(--border);border-radius:7px;transition:all .15s;flex-shrink:0;}
+.fsm-back:hover{color:var(--ink);border-color:var(--border2);}
+
+
+
+/* ── Hero ── */
+.hero{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px 32px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:20px;
+}
+.hero-text h1{
+  font-size:26px;font-weight:800;letter-spacing:-0.03em;
+  line-height:1.15;color:var(--ink);margin-bottom:6px;
+}
+.hero-text h1 em{font-style:normal;color:var(--accent);}
+.hero-text p{font-size:14px;color:var(--ink2);line-height:1.6;max-width:480px;}
+.hero-stats{
+  display:flex;gap:16px;flex-shrink:0;
+}
+.stat{text-align:center;padding:10px 16px;background:var(--bg);border-radius:10px;border:1px solid var(--border);}
+.stat-num{font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-0.03em;}
+.stat-lbl{font-size:11px;color:var(--ink3);font-weight:500;margin-top:1px;}
+
+/* ── Step card ── */
+.step-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:14px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:border-color .2s;
+}
+.step-card:focus-within{border-color:var(--accent-md);}
+.step-header{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+}
+.step-num{
+  width:26px;height:26px;border-radius:8px;
+  background:var(--accent);color:#fff;
+  font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.step-num.done{background:var(--green);}
+.step-title{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:-0.01em;}
+.step-desc{font-size:12px;color:var(--ink3);margin-left:auto;}
+.step-body{padding:20px;}
+
+/* ── Platform grid ── */
+.platform-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+.platform-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--white);
+  color:var(--ink2);font-family:var(--sans);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .15s;
+  user-select:none;
+}
+.platform-btn:hover{border-color:var(--accent-md);color:var(--ink);}
+.platform-btn.active{
+  border-color:var(--accent);background:var(--accent-lt);color:var(--accent);font-weight:600;
+}
+.platform-btn.active .p-check{opacity:1;}
+.p-check{width:14px;height:14px;opacity:0;transition:opacity .15s;flex-shrink:0;}
+.p-hint{font-size:12px;color:var(--ink3);margin-top:8px;}
+.p-hint strong{color:var(--accent);font-weight:600;}
+
+/* ── LinkedIn region ── */
+.li-row{
+  display:flex;align-items:center;gap:12px;
+  margin-top:14px;padding:10px 14px;
+  background:var(--accent-lt);border:1px solid rgba(26,58,143,0.15);
+  border-radius:8px;flex-wrap:wrap;
+}
+.li-row.hidden{display:none;}
+.li-lbl{font-size:12px;font-weight:600;color:var(--accent);white-space:nowrap;}
+.li-row select{
+  flex:1;max-width:260px;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:7px;color:var(--ink);
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  padding:6px 28px 6px 10px;
+  appearance:none;cursor:pointer;outline:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8780' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+}
+.li-row select:focus{border-color:var(--accent);}
+.noise-pill{
+  font-size:11px;color:var(--green);font-weight:600;font-family:var(--mono);
+  background:var(--green-lt);border:1px solid rgba(13,122,78,0.2);
+  padding:3px 9px;border-radius:20px;white-space:nowrap;
+}
+
+/* ── Form fields ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-row.single{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field.span2{grid-column:1/-1;}
+.field label{
+  font-size:12px;font-weight:600;color:var(--ink2);letter-spacing:.01em;
+  display:flex;align-items:center;gap:7px;
+}
+.ltag{
+  font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;
+  font-family:var(--mono);letter-spacing:.04em;
+}
+.tag-and{background:var(--green-lt);color:var(--green);border:1px solid rgba(13,122,78,0.2);}
+.tag-or{background:var(--purple-lt);color:var(--purple);border:1px solid rgba(91,33,182,0.2);}
+.tag-not{background:var(--red-lt);color:var(--red);border:1px solid rgba(185,28,28,0.2);}
+.badge-skip{font-size:10px;color:var(--amber);background:var(--amber-lt);border:1px solid rgba(180,83,9,0.2);padding:1px 7px;border-radius:20px;font-family:var(--mono);}
+
+input[type=text],input[type=number],select.field-select{
+  background:var(--white);
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  color:var(--ink);
+  font-family:var(--sans);font-size:14px;
+  padding:9px 13px;outline:none;width:100%;
+  transition:border-color .15s,box-shadow .15s;
+}
+select.field-select{
+  appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8780' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  padding-right:36px;
+}
+input[type=text]:focus,input[type=number]:focus,select.field-select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(26,58,143,0.1);
+}
+input::placeholder{color:var(--ink3);}
+.hint{font-size:11px;color:var(--ink3);padding-left:1px;}
+.hint.warn{color:var(--amber);font-weight:500;}
+
+.exp-row{display:flex;align-items:center;gap:8px;}
+.exp-row input{flex:1;}
+.exp-sep{font-size:13px;color:var(--ink3);flex-shrink:0;font-weight:500;}
+
+/* ── Bubble input ── */
+.bubble-wrap{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:8px;padding:7px 10px;min-height:46px;
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  cursor:text;transition:border-color .15s,box-shadow .15s;
+}
+.bubble-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,58,143,0.1);}
+.bubble{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 4px 3px 9px;border-radius:20px;
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  user-select:none;
+}
+.bubble.and-b{background:var(--green-lt);color:var(--green);border:1px solid rgba(13,122,78,0.25);}
+.bubble.or-b{background:var(--purple-lt);color:var(--purple);border:1px solid rgba(91,33,182,0.2);}
+.bubble.not-b{background:var(--red-lt);color:var(--red);border:1px solid rgba(185,28,28,0.2);}
+.bubble-x{
+  background:none;border:none;color:inherit;cursor:pointer;
+  font-size:14px;line-height:1;padding:1px 4px;border-radius:50%;opacity:.6;
+}
+.bubble-x:hover{opacity:1;background:rgba(0,0,0,0.08);}
+.bubble-input{
+  background:none;border:none;outline:none;
+  color:var(--ink);font-family:var(--sans);font-size:14px;
+  padding:2px 4px;min-width:120px;flex:1;
+}
+.bubble-input::placeholder{color:var(--ink3);}
+.skill-count{font-size:11px;color:var(--green);font-weight:600;font-family:var(--mono);margin-left:2px;}
+.skill-count.warn{color:var(--amber);}
+
+/* ── Skill suggestions dropdown ── */
+.skill-field-wrap{position:relative;}
+.suggestions{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+  background:var(--white);border:1.5px solid var(--accent);
+  border-radius:10px;box-shadow:var(--shadow-md);
+  max-height:220px;overflow-y:auto;
+  display:none;
+}
+.suggestions.open{display:block;}
+.sug-group-label{
+  font-size:10px;font-weight:700;color:var(--ink3);
+  text-transform:uppercase;letter-spacing:.06em;
+  padding:8px 12px 4px;
+}
+.sug-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;cursor:pointer;transition:background .1s;
+  font-size:13px;color:var(--ink);
+}
+.sug-item:hover,.sug-item.focused{background:var(--accent-lt);}
+.sug-item span{font-family:var(--mono);font-size:12px;color:var(--ink3);}
+.sug-item em{font-style:normal;color:var(--accent);font-weight:600;}
+.sug-empty{padding:10px 12px;font-size:12.5px;color:var(--ink3);font-style:italic;}
+.sug-scroll::-webkit-scrollbar{width:4px;}
+.sug-scroll::-webkit-scrollbar-track{background:transparent;}
+.sug-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* ── Warn banner ── */
+.warn-banner{
+  display:none;align-items:flex-start;gap:10px;
+  padding:10px 14px;background:var(--amber-lt);
+  border:1px solid rgba(180,83,9,0.2);border-radius:8px;
+  font-size:12.5px;color:var(--amber);line-height:1.6;
+  margin-bottom:12px;
+}
+.warn-banner.show{display:flex;}
+.warn-banner svg{flex-shrink:0;margin-top:1px;}
+
+/* ── Strength meter ── */
+.strength-wrap{
+  display:none;background:var(--surface);
+  border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;margin-bottom:16px;
+}
+.strength-wrap.show{display:block;}
+.strength-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.strength-label{font-size:12px;font-weight:600;color:var(--ink2);}
+.strength-status{font-size:12px;font-weight:700;}
+.strength-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.strength-fill{height:100%;border-radius:3px;transition:width .4s ease,background .4s ease;}
+.strength-tip{font-size:11.5px;color:var(--ink3);margin-top:7px;}
+
+/* ── Action bar ── */
+.action-bar{
+  display:flex;gap:10px;align-items:center;
+  padding:16px 0;flex-wrap:wrap;
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 22px;border-radius:9px;border:none;
+  background:var(--accent);color:#fff;
+  font-family:var(--sans);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .15s;letter-spacing:-0.01em;
+  box-shadow:0 2px 8px rgba(26,58,143,0.25);
+}
+.btn-primary:hover{background:#152e78;transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,58,143,0.3);}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:11px 18px;border-radius:9px;
+  background:var(--white);color:var(--ink2);
+  border:1.5px solid var(--border);
+  font-family:var(--sans);font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .15s;letter-spacing:-0.01em;
+}
+.btn-secondary:hover{border-color:var(--border2);color:var(--ink);}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:11px 16px;border-radius:9px;
+  background:transparent;color:var(--ink3);
+  border:1.5px solid var(--border);
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .15s;
+}
+.btn-ghost:hover{color:var(--ink2);border-color:var(--border2);}
+.action-divider{width:1px;height:28px;background:var(--border);margin:0 2px;}
+
+/* ── Output panel ── */
+.output-panel{
+  background:var(--white);
+  border:2px solid var(--border);
+  border-radius:14px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+}
+.output-panel.active{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(26,58,143,0.08),var(--shadow);
+}
+.output-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 18px;background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.output-meta{display:flex;align-items:center;gap:8px;}
+.output-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:background .3s;}
+.output-dot.live{background:var(--green);box-shadow:0 0 0 3px rgba(13,122,78,0.15);}
+.output-lbl{font-size:12px;font-weight:600;color:var(--ink2);}
+.output-chars{font-size:11px;color:var(--ink3);font-family:var(--mono);}
+.copy-grp{display:flex;gap:6px;}
+.copy-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:6px;
+  background:var(--white);border:1px solid var(--border);
+  color:var(--ink3);font-family:var(--sans);font-size:12px;font-weight:500;
+  cursor:pointer;transition:all .15s;
+}
+.copy-btn:hover{border-color:var(--border2);color:var(--ink2);}
+.copy-btn.ok{border-color:var(--green);color:var(--green);background:var(--green-lt);}
+.output-body{padding:18px;min-height:64px;}
+.ostr{font-family:var(--mono);font-size:13px;color:var(--ink3);line-height:1.9;word-break:break-all;}
+.ostr.has-content{color:var(--ink);}
+.ostr-empty{font-size:13px;color:var(--ink3);font-style:italic;}
+/* token colours */
+.tok-site{color:#1a3a8f;font-weight:500;}
+.tok-title{color:#5b21b6;}
+.tok-not{color:#b91c1c;}
+.tok-op{color:#8a8780;}
+
+/* ── Variations ── */
+.var-panel{margin-bottom:14px;display:none;}
+.var-panel.show{display:block;}
+.var-item{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;margin-bottom:8px;
+  transition:border-color .15s;
+}
+.var-item:hover{border-color:var(--border2);}
+.var-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;background:var(--surface);border-bottom:1px solid var(--border);
+}
+.var-tag{font-size:11px;font-weight:600;color:var(--ink2);}
+.var-acts{display:flex;gap:6px;}
+.var-str{font-family:var(--mono);font-size:12px;color:var(--ink2);padding:10px 14px;line-height:1.7;word-break:break-all;}
+
+/* ── Templates ── */
+.tpl-panel{margin-bottom:14px;display:none;}
+.tpl-panel.show{display:block;}
+.tpl-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;background:var(--white);
+  border:1px solid var(--border);border-radius:8px;
+  margin-bottom:6px;transition:border-color .15s;
+}
+.tpl-item:hover{border-color:var(--border2);}
+.tpl-name{flex:1;font-size:13px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tpl-date{font-size:11px;color:var(--ink3);font-family:var(--mono);flex-shrink:0;}
+.tpl-load{padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--ink2);font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;flex-shrink:0;}
+.tpl-load:hover{border-color:var(--accent);color:var(--accent);}
+.tpl-del{padding:4px 8px;border:none;background:transparent;color:var(--ink3);font-size:15px;cursor:pointer;border-radius:5px;flex-shrink:0;}
+.tpl-del:hover{color:var(--red);background:var(--red-lt);}
+
+/* ── History ── */
+.hist-panel{margin-bottom:14px;display:none;}
+.hist-panel.show{display:block;}
+.hist-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.hist-title{font-size:13px;font-weight:700;color:var(--ink2);}
+.hist-actions{display:flex;gap:8px;}
+.hist-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--white);
+  border:1px solid var(--border);border-radius:8px;
+  margin-bottom:6px;transition:border-color .15s;
+}
+.hist-item:hover{border-color:var(--border2);}
+.hist-ptag{font-size:10px;font-weight:700;font-family:var(--mono);padding:2px 8px;border-radius:20px;flex-shrink:0;border:1px solid;}
+.tag-li{background:rgba(26,58,143,0.08);color:#1a3a8f;border-color:rgba(26,58,143,0.2);}
+.tag-gh{background:#f3f4f6;color:#374151;border-color:#d1d5db;}
+.tag-be{background:rgba(59,130,246,0.08);color:#2563eb;border-color:rgba(37,99,235,0.2);}
+.tag-dr{background:rgba(236,72,153,0.08);color:#db2777;border-color:rgba(219,39,119,0.2);}
+.tag-kg{background:rgba(20,184,166,0.08);color:#0d9488;border-color:rgba(13,148,136,0.2);}
+.tag-md{background:rgba(34,197,94,0.08);color:#16a34a;border-color:rgba(22,163,74,0.2);}
+.tag-rs{background:rgba(245,158,11,0.08);color:#d97706;border-color:rgba(217,119,6,0.2);}
+.hist-text{flex:1;font-family:var(--mono);font-size:11.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hist-time{font-size:10.5px;color:var(--ink3);font-family:var(--mono);flex-shrink:0;}
+.hist-reuse{padding:3px 9px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--ink3);font-family:var(--sans);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;flex-shrink:0;}
+.hist-reuse:hover{border-color:var(--accent);color:var(--accent);}
+.hist-del{padding:3px 7px;border:none;background:transparent;color:var(--ink3);cursor:pointer;font-size:14px;border-radius:4px;flex-shrink:0;}
+.hist-del:hover{color:var(--red);background:var(--red-lt);}
+
+/* ── Section divider ── */
+.sdiv{height:1px;background:var(--border);margin:20px 0;}
+
+/* ── Contact modal ── */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(15,14,12,0.45);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+  padding:20px;
+}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal{
+  background:var(--white);border-radius:16px;
+  padding:32px;width:100%;max-width:460px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.15);
+  transform:translateY(8px);transition:transform .2s;
+}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-close{
+  position:absolute;top:16px;right:16px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:18px;color:var(--ink3);transition:all .15s;
+}
+.modal-close:hover{color:var(--ink);border-color:var(--border2);}
+.modal-icon{
+  width:48px;height:48px;background:var(--accent-lt);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+}
+.modal h2{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;}
+.modal p{font-size:13.5px;color:var(--ink2);line-height:1.6;margin-bottom:20px;}
+.modal-options{display:flex;flex-direction:column;gap:10px;}
+.contact-option{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;border:1.5px solid var(--border);
+  border-radius:10px;cursor:pointer;text-decoration:none;
+  transition:all .15s;background:var(--white);
+}
+.contact-option:hover{border-color:var(--accent);background:var(--accent-lt);}
+.co-icon{
+  width:36px;height:36px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.co-icon.email{background:var(--accent-lt);}
+.co-icon.linkedin{background:rgba(10,102,194,0.1);}
+.co-icon.whatsapp{background:rgba(37,211,102,0.1);}
+.co-text strong{display:block;font-size:13px;font-weight:700;color:var(--ink);}
+.co-text span{font-size:12px;color:var(--ink3);}
+.modal-footer{margin-top:16px;font-size:12px;color:var(--ink3);text-align:center;line-height:1.5;}
+
+/* ── Tab nav ── */
+.tab-nav{
+  border-bottom:1px solid var(--border);
+  background:var(--white);
+  padding:0 24px;
+  display:flex;align-items:center;gap:0;
+}
+.tab-btn{
+  padding:13px 18px;font-family:var(--sans);font-size:13px;font-weight:600;
+  color:var(--ink3);border:none;background:transparent;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color .15s,border-color .15s;letter-spacing:-0.01em;
+}
+.tab-btn:hover{color:var(--ink2);}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ── Page visibility ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── How to use page ── */
+.how-hero{
+  background:linear-gradient(135deg,#1a3a8f 0%,#2d5bc7 100%);
+  border-radius:16px;padding:36px 40px;margin-bottom:24px;color:#fff;
+}
+.how-hero h2{font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
+.how-hero p{font-size:14px;opacity:.85;line-height:1.7;max-width:500px;}
+.how-steps{display:flex;flex-direction:column;gap:16px;margin-bottom:28px;}
+.how-step{
+  display:flex;gap:18px;align-items:flex-start;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:14px;padding:20px 24px;box-shadow:var(--shadow);
+}
+.how-step-num{
+  width:32px;height:32px;border-radius:9px;background:var(--accent);color:#fff;
+  font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;
+}
+.how-step-body h3{font-size:15px;font-weight:700;letter-spacing:-0.01em;margin-bottom:5px;}
+.how-step-body p{font-size:13.5px;color:var(--ink2);line-height:1.65;margin-bottom:10px;}
+.how-example{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--ink2);
+  line-height:1.7;word-break:break-all;
+}
+.how-example strong{color:var(--accent);font-weight:600;}
+.tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px;}
+.tip-card{
+  background:var(--white);border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;box-shadow:var(--shadow);
+}
+.tip-card-icon{font-size:20px;margin-bottom:10px;}
+.tip-card h4{font-size:13px;font-weight:700;margin-bottom:6px;letter-spacing:-0.01em;}
+.tip-card p{font-size:12.5px;color:var(--ink2);line-height:1.6;}
+.platform-table{
+  background:var(--white);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;box-shadow:var(--shadow);margin-bottom:28px;
+}
+.pt-head{
+  display:grid;grid-template-columns:160px 1fr 1fr;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:10px 20px;font-size:11px;font-weight:700;color:var(--ink3);
+  text-transform:uppercase;letter-spacing:.06em;
+}
+.pt-row{
+  display:grid;grid-template-columns:160px 1fr 1fr;
+  padding:12px 20px;border-bottom:1px solid var(--border);
+  font-size:13px;align-items:center;transition:background .1s;
+}
+.pt-row:last-child{border-bottom:none;}
+.pt-row:hover{background:var(--surface);}
+.pt-name{font-weight:600;color:var(--ink);}
+.pt-use{color:var(--ink2);}
+.pt-tip{color:var(--ink3);font-size:12px;}
+.faq-list{display:flex;flex-direction:column;gap:2px;margin-bottom:28px;}
+.faq-item{
+  background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+}
+.faq-q{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;cursor:pointer;font-size:14px;font-weight:600;
+  transition:background .1s;user-select:none;
+}
+.faq-q:hover{background:var(--surface);}
+.faq-q svg{flex-shrink:0;transition:transform .2s;color:var(--ink3);}
+.faq-item.open .faq-q svg{transform:rotate(180deg);}
+.faq-a{
+  display:none;padding:0 18px 16px;font-size:13.5px;color:var(--ink2);line-height:1.7;
+}
+.faq-item.open .faq-a{display:block;}
+
+/* ── About page ── */
+.about-hero{
+  background:var(--white);border:1px solid var(--border);border-radius:16px;
+  padding:32px 36px;margin-bottom:20px;box-shadow:var(--shadow);
+  display:flex;gap:28px;align-items:flex-start;
+}
+.about-avatar{
+  width:80px;height:80px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#1a3a8f,#6b84c5);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.02em;
+}
+.about-info h2{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
+.about-info .role{font-size:14px;color:var(--accent);font-weight:600;margin-bottom:12px;}
+.about-info p{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:16px;}
+.about-links{display:flex;gap:10px;flex-wrap:wrap;}
+.about-link{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);
+  font-size:13px;font-weight:600;text-decoration:none;color:var(--ink2);
+  transition:all .15s;background:var(--white);
+}
+.about-link:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lt);}
+.value-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
+.value-card{
+  background:var(--white);border:1px solid var(--border);border-radius:12px;
+  padding:20px;box-shadow:var(--shadow);text-align:center;
+}
+.value-card .vc-icon{font-size:24px;margin-bottom:10px;}
+.value-card h4{font-size:13px;font-weight:700;margin-bottom:6px;}
+.value-card p{font-size:12px;color:var(--ink3);line-height:1.6;}
+.cta-band{
+  background:linear-gradient(135deg,#1a3a8f 0%,#2d5bc7 100%);
+  border-radius:14px;padding:28px 32px;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;margin-bottom:20px;
+}
+.cta-band h3{font-size:18px;font-weight:800;letter-spacing:-0.02em;margin-bottom:5px;}
+.cta-band p{font-size:13.5px;opacity:.85;max-width:400px;}
+.btn-cta-white{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 22px;border-radius:9px;border:none;
+  background:#fff;color:var(--accent);
+  font-family:var(--sans);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
+  letter-spacing:-0.01em;
+}
+.btn-cta-white:hover{background:#e8edf8;transform:translateY(-1px);}
+
+/* ── Footer ── */
+.site-footer{
+  background:var(--ink);color:rgba(255,255,255,0.6);
+  font-size:12.5px;padding:24px;text-align:center;
+  line-height:1.8;
+}
+.site-footer strong{color:#fff;font-weight:600;}
+.site-footer a{color:rgba(255,255,255,0.7);text-decoration:none;}
+.site-footer a:hover{color:#fff;}
+
+@media(max-width:640px){
+  .tip-grid,.value-grid{grid-template-columns:1fr;}
+  .pt-head,.pt-row{grid-template-columns:1fr 1fr;}
+  .pt-tip{display:none;}
+  .about-hero{flex-direction:column;}
+  .cta-band{flex-direction:column;}
+}
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--ink);color:#fff;
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  padding:10px 20px;border-radius:30px;z-index:300;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);pointer-events:none;
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.ok{background:#0d7a4e;}
+.toast.err{background:#b91c1c;}
+
+@media(max-width:640px){
+  .hero{flex-direction:column;}
+  .hero-stats{width:100%;justify-content:flex-start;}
+  .form-row{grid-template-columns:1fr;}
+  .field.span2{grid-column:1;}
+  .action-bar{flex-direction:column;align-items:stretch;}
+  .btn-primary,.btn-secondary,.btn-ghost{justify-content:center;}
+}
+
+/* ── Paywall modal ── */
+.pw-overlay{position:fixed;inset:0;z-index:500;background:rgba(15,14,12,0.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.pw-overlay.open{opacity:1;pointer-events:auto;}
+.pw-modal{background:var(--white);border-radius:18px;padding:0;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,0.18);overflow:hidden;transform:translateY(10px);transition:transform .2s;}
+.pw-overlay.open .pw-modal{transform:translateY(0);}
+.pw-top{background:linear-gradient(135deg,#1a3a8f 0%,#2d5bc7 100%);padding:28px 32px;color:#fff;}
+.pw-top h2{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;}
+.pw-top p{font-size:13.5px;opacity:.85;line-height:1.55;}
+.pw-body{padding:24px 32px;}
+.pw-used{display:flex;align-items:center;gap:10px;background:var(--amber-lt);border:1px solid rgba(180,83,9,0.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--amber);font-weight:500;}
+.pw-features{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+.pw-feat{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink2);}
+.pw-feat svg{color:var(--green);flex-shrink:0;}
+.pw-price{display:flex;align-items:baseline;gap:6px;margin-bottom:18px;}
+.pw-amount{font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-0.03em;}
+.pw-period{font-size:13px;color:var(--ink3);}
+.pw-cta{display:block;width:100%;padding:14px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;border:none;cursor:pointer;text-align:center;text-decoration:none;transition:all .15s;letter-spacing:-0.01em;margin-bottom:10px;}
+.pw-cta:hover{background:#152e78;transform:translateY(-1px);}
+.pw-skip{display:block;text-align:center;font-size:12px;color:var(--ink3);cursor:pointer;padding:6px;}
+.pw-skip:hover{color:var(--ink2);}
+.search-used-badge{display:none;font-size:11px;font-family:var(--mono);color:var(--amber);background:var(--amber-lt);border:1px solid rgba(180,83,9,0.2);padding:3px 9px;border-radius:20px;margin-left:8px;}
+.search-used-badge.show{display:inline;}
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="suite-bar">
+  <span class="suite-brand">HR Founders Kit</span>
+  <div class="suite-steps">
+    <a class="suite-step" href="skillmapper.html">
+      <span class="suite-step-num">1</span>
+      SkillMapper
+    </a>
+    <span class="suite-arrow">›</span>
+    <span class="suite-step active">
+      <span class="suite-step-num">2</span>
+      TalentXRay
+    </span>
+  </div>
+  <span style="font-size:11px;color:rgba(255,255,255,0.35);">Identify role → Source talent</span>
+</div>
+
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="6.5" cy="6.5" r="5" stroke="white" stroke-width="1.6"/>
+        <path d="M10.5 10.5L14 14" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="topbar-name">Talent<span>XRay</span></span>
+    <span class="topbar-tag">X-Ray Sourcing</span>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-contact" onclick="openModal()">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4z" stroke="currentColor" stroke-width="1.4"/><path d="M2 4l6 5 6-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Get a custom version
+    </button>
+  </div>
+</header>
+
+<!-- Tab nav -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('tool',this)">🔍 Tool</button>
+  <button class="tab-btn" onclick="switchTab('howto',this)">📖 How to Use</button>
+  <button class="tab-btn" onclick="switchTab('about',this)">👋 About</button>
+</nav>
+
+<div id="page-tool" class="page active">
+<main class="main">
+
+  <!-- From SkillMapper banner -->
+  <div class="from-sm-banner" id="fromSmBanner">
+    <div class="fsm-icon">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 3l5 5-5 5" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="fsm-body">
+      <div class="fsm-title">Role identified in SkillMapper — pre-filled below</div>
+      <div class="fsm-role" id="fsmRole"></div>
+      <div class="fsm-skills" id="fsmSkills"></div>
+    </div>
+    <a class="fsm-back" href="skillmapper.html">← Back to SkillMapper</a>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-text">
+      <h1>Source the right talent,<br><em>faster than ever.</em></h1>
+      <p>TalentXRay generates precision Google X-Ray search strings across 7 platforms — no Boolean expertise required. Built for founders, HR leaders, and talent teams who need pipeline, not process. Includes one complimentary search.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">Platforms</div></div>
+      <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">Regions</div></div>
+      <div class="stat"><div class="stat-num">1</div><div class="stat-lbl">Search free</div></div>
+    </div>
+  </div>
+
+  <!-- Step 1: Platform -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num" id="sn1">1</div>
+      <div>
+        <div class="step-title">Where do you want to search?</div>
+      </div>
+      <div class="step-desc">Pick one or more platforms</div>
+    </div>
+    <div class="step-body">
+      <div class="platform-grid">
+        <button class="platform-btn active" data-platform="linkedin" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          💼 LinkedIn
+        </button>
+        <button class="platform-btn" data-platform="github" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          🐙 GitHub
+        </button>
+        <button class="platform-btn" data-platform="kaggle" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          📊 Kaggle
+        </button>
+        <button class="platform-btn" data-platform="behance" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          🎨 Behance
+        </button>
+        <button class="platform-btn" data-platform="dribbble" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          🏀 Dribbble
+        </button>
+        <button class="platform-btn" data-platform="medium" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          ✍️ Medium
+        </button>
+        <button class="platform-btn" data-platform="researchgate" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          🔬 ResearchGate
+        </button>
+      </div>
+      <div class="p-hint" id="platformHint">Select one or more — multiple platforms are OR-combined in one Google search</div>
+
+      <div class="li-row" id="liRow">
+        <span class="li-lbl">🌐 LinkedIn region</span>
+        <select id="liCountry" onchange="liveUpdate()">
+          <option value="in.linkedin.com/in/">🇮🇳 India — best indexed</option>
+          <option value="uk.linkedin.com/in/">🇬🇧 United Kingdom</option>
+          <option value="ca.linkedin.com/in/">🇨🇦 Canada</option>
+          <option value="ae.linkedin.com/in/">🇦🇪 UAE</option>
+          <option value="fr.linkedin.com/in/">🇫🇷 France</option>
+          <option value="br.linkedin.com/in/">🇧🇷 Brazil</option>
+          <option value="linkedin.com/in/">🌐 Global (least indexed)</option>
+        </select>
+        <span class="noise-pill">✓ -jobs -groups -company auto-filtered</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Role & Seniority -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num" id="sn2">2</div>
+      <div>
+        <div class="step-title">What role are you hiring for?</div>
+      </div>
+      <div class="step-desc">Title, seniority & experience</div>
+    </div>
+    <div class="step-body">
+      <div class="form-row">
+        <div class="field">
+          <label>Job title</label>
+          <input type="text" id="jobTitle" placeholder="e.g. Software Engineer" oninput="liveUpdate()">
+        </div>
+        <div class="field">
+          <label>Alternative titles</label>
+          <div class="bubble-wrap" id="altWrap" onclick="focusBubble('altInput')">
+            <input class="bubble-input" id="altInput" placeholder="e.g. SWE — press Enter" onkeydown="handleGenBubble(event,'alt')" oninput="liveUpdate()">
+          </div>
+          <span class="hint">Each title added — searched with OR logic</span>
+        </div>
+        <div class="field">
+          <label>Seniority level</label>
+          <select id="seniority" class="field-select" onchange="liveUpdate()">
+            <option value="">Any level</option>
+            <option>Junior</option><option>Mid-level</option><option>Senior</option>
+            <option>Staff</option><option>Principal</option><option>Lead</option>
+            <option>Manager</option><option>Director</option><option>VP</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Experience range <span class="badge-skip" id="expBadge" style="display:none">Skipped for LinkedIn</span></label>
+          <div class="exp-row">
+            <input type="number" id="expMin" min="0" max="40" placeholder="Min yrs" oninput="liveUpdate()">
+            <span class="exp-sep">to</span>
+            <input type="number" id="expMax" min="0" max="40" placeholder="Max yrs" oninput="liveUpdate()">
+          </div>
+          <span class="hint" id="expHint">Phrases like "4+ years experience"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Skills -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num" id="sn3">3</div>
+      <div>
+        <div class="step-title">What skills should they have?</div>
+      </div>
+      <div class="step-desc">Type a skill, press Enter</div>
+    </div>
+    <div class="step-body">
+      <div class="warn-banner" id="skillWarn">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14.9 14H1.1L8 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7v3M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span>LinkedIn works best with <strong>2–3 must-have skills max</strong>. Extra AND skills have been moved to nice-to-have automatically.</span>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>
+            Must-have skills <span class="ltag tag-and">AND</span>
+            <span class="skill-count" id="skillCount" style="display:none"></span>
+          </label>
+          <div class="skill-field-wrap">
+            <div class="bubble-wrap" id="mustWrap" onclick="focusBubble('mustInput')">
+              <input class="bubble-input" id="mustInput" placeholder="Type a skill or choose below" onkeydown="handleBubble(event,'must')" oninput="onSkillInput(event,'must')" onfocus="onSkillFocus('must')" onblur="onSkillBlur('must')">
+            </div>
+            <div class="suggestions sug-scroll" id="mustSug" onmousedown="event.preventDefault()"></div>
+          </div>
+          <span class="hint">All must appear in the profile</span>
+        </div>
+        <div class="field">
+          <label>Nice-to-have skills <span class="ltag tag-or">OR</span></label>
+          <div class="skill-field-wrap">
+            <div class="bubble-wrap" id="orWrap" onclick="focusBubble('orInput')">
+              <input class="bubble-input" id="orInput" placeholder="Type a skill or choose below" onkeydown="handleBubble(event,'or')" oninput="onSkillInput(event,'or')" onfocus="onSkillFocus('or')" onblur="onSkillBlur('or')">
+            </div>
+            <div class="suggestions sug-scroll" id="orSug" onmousedown="event.preventDefault()"></div>
+          </div>
+          <span class="hint">At least one should appear</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Location & Companies -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num" id="sn4">4</div>
+      <div>
+        <div class="step-title">Where and which companies?</div>
+      </div>
+      <div class="step-desc">Optional but narrows results</div>
+    </div>
+    <div class="step-body">
+      <div class="form-row">
+        <div class="field">
+          <label>Location</label>
+          <input type="text" id="location" placeholder="e.g. Mumbai, India" oninput="liveUpdate()">
+        </div>
+        <div class="field">
+          <label>Target companies <span class="ltag tag-and">AND</span></label>
+          <div class="bubble-wrap" id="compWrap" onclick="focusBubble('compInput')">
+            <input class="bubble-input" id="compInput" placeholder="e.g. Google — press Enter" onkeydown="handleGenBubble(event,'comp')" oninput="liveUpdate()">
+          </div>
+          <span class="hint">All must appear — finds multi-company pedigree</span>
+        </div>
+        <div class="field span2">
+          <label>Exclude keywords <span class="ltag tag-not">NOT</span></label>
+          <div class="bubble-wrap" id="excWrap" onclick="focusBubble('excInput')">
+            <input class="bubble-input" id="excInput" placeholder="e.g. Recruiter — press Enter" onkeydown="handleGenBubble(event,'exc')" oninput="liveUpdate()">
+          </div>
+          <span class="hint">Each tag removed from results</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Strength meter -->
+  <div class="strength-wrap" id="strengthWrap">
+    <div class="strength-top">
+      <span class="strength-label">Query strength</span>
+      <span class="strength-status" id="strengthStatus"></span>
+    </div>
+    <div class="strength-track"><div class="strength-fill" id="strengthFill"></div></div>
+    <div class="strength-tip" id="strengthTip"></div>
+  </div>
+
+  <!-- Action bar -->
+  <div class="action-bar">
+    <button class="btn-primary" onclick="openSearch()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Open in Google
+    </button>
+    <span class="search-used-badge" id="searchUsedBadge"></span>
+    <button class="btn-secondary" onclick="copyStr()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="9" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M3 11V3a2 2 0 0 1 2-2h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span id="copyLbl">Copy string</span>
+    </button>
+    <button class="btn-ghost" onclick="generateVars()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Variations
+    </button>
+    <button class="btn-ghost" onclick="saveTpl()">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 2h8l3 3v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.4"/><path d="M6 2v4h5M6 11h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Save
+    </button>
+    <div class="action-divider"></div>
+    <button class="btn-ghost" onclick="resetAll()">Reset</button>
+  </div>
+
+  <!-- Output -->
+  <div class="output-panel" id="outputPanel">
+    <div class="output-head">
+      <div class="output-meta">
+        <div class="output-dot" id="outputDot"></div>
+        <span class="output-lbl">Search string preview</span>
+        <span class="output-chars" id="outputChars"></span>
+      </div>
+      <div class="copy-grp">
+        <button class="copy-btn" id="copyUrlBtn" onclick="copyURL()">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 10a4 4 0 1 0 0-4m0 4l4-4m0 0a4 4 0 1 1 0 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Copy URL
+        </button>
+      </div>
+    </div>
+    <div class="output-body">
+      <div class="ostr" id="outputStr"><span class="ostr-empty">Fill in the fields above — your search string appears here in real time</span></div>
+    </div>
+  </div>
+
+  <!-- Variations -->
+  <div class="var-panel" id="varPanel">
+    <div class="step-card" style="margin-bottom:0">
+      <div class="step-header">
+        <div class="step-num" style="background:#5b21b6">↻</div>
+        <div><div class="step-title">Query variations</div></div>
+        <div class="step-desc">Run each to beat the 10-result cap</div>
+      </div>
+      <div class="step-body" style="padding:14px 20px">
+        <div id="varList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Templates -->
+  <div class="tpl-panel" id="tplPanel">
+    <div class="sdiv"></div>
+    <div class="hist-head">
+      <div class="hist-title">Saved templates</div>
+    </div>
+    <div id="tplList"></div>
+  </div>
+
+  <!-- History -->
+  <div class="hist-panel" id="histPanel">
+    <div class="sdiv"></div>
+    <div class="hist-head">
+      <div class="hist-title">Search history</div>
+      <div class="hist-actions">
+        <button class="btn-ghost" style="font-size:12px;padding:6px 12px" onclick="exportCSV()">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 2v9M4 7l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Export CSV
+        </button>
+        <button class="btn-ghost" style="font-size:12px;padding:6px 12px" onclick="clearHist()">Clear</button>
+      </div>
+    </div>
+    <div id="histList"></div>
+  </div>
+
+</main>
+</div><!-- end page-tool -->
+
+<!-- HOW TO USE PAGE -->
+<div id="page-howto" class="page">
+<main class="main">
+  <div class="how-hero">
+    <h2>How to use TalentXRay</h2>
+    <p>A step-by-step guide to finding anyone on the internet using Google X-Ray search — no Boolean knowledge required.</p>
+  </div>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <div class="how-step-body">
+        <h3>Pick your platform</h3>
+        <p>LinkedIn is the default and best for most roles. For engineers, also try GitHub. For designers, Behance and Dribbble. For data scientists, Kaggle. You can select multiple — they'll be searched together in one query.</p>
+        <p>When LinkedIn is selected, choose the correct <strong>region</strong>. India is the best-indexed globally. If hiring in the UK or Canada, switch to those subdomains for far better results.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <div class="how-step-body">
+        <h3>Enter the role</h3>
+        <p>Type the primary job title as candidates write it on their profiles. Add alternative titles — if looking for a "Product Manager", also add "PM" and "Product Lead" since people use different titles for the same role.</p>
+        <p>Select seniority to narrow the pool. Experience range is available for non-LinkedIn platforms where profiles contain that text.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <div class="how-step-body">
+        <h3>Add skills — keep it lean</h3>
+        <p><strong>Must-have (AND)</strong> — only the 2–3 non-negotiables. Every extra AND halves your result pool. More than 3 on LinkedIn = zero results.</p>
+        <p><strong>Nice-to-have (OR)</strong> — everything else goes here. The candidate only needs one of these to appear.</p>
+        <div class="how-example">
+          ✅ <strong>Good:</strong> Must-have: Python, AWS · Nice-to-have: Docker, Kubernetes, Terraform<br>
+          ❌ <strong>Bad:</strong> Must-have: Python, AWS, Docker, Kubernetes, Terraform, GCP, React
+        </div>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">4</div>
+      <div class="how-step-body">
+        <h3>Location, companies and exclusions</h3>
+        <p>Location narrows to a city or country. Target companies finds candidates with <em>all</em> those companies in their profile history — great for specific pedigree combinations.</p>
+        <p>Exclude keywords remove noise — "Recruiter", "Student", "Intern", "Fresher" filters out ~30% of irrelevant profiles instantly.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">5</div>
+      <div class="how-step-body">
+        <h3>Open in Google, then use an extension</h3>
+        <p>Click <strong>Open in Google</strong>. You'll see up to 100 real profile pages. To extract emails and phone numbers, install a Chrome extension like <strong>Apollo.io</strong>, <strong>ContactOut</strong>, or <strong>Hunter.io</strong> — these run on the LinkedIn profile and surface contact info automatically.</p>
+        <p>Only getting 10 results? Click <strong>Variations</strong> to generate 5 alternative queries. Each returns a fresh batch — together that's 50–200+ unique profiles per session.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:12px;letter-spacing:-0.01em;">Pro tips</div>
+  <div class="tip-grid">
+    <div class="tip-card"><div class="tip-card-icon">🔁</div><h4>Beat the 10-result cap</h4><p>Google caps X-Ray at ~10–30 results per query. Use Variations to generate 5 different versions — each returns a fresh batch of profiles.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">🌏</div><h4>India subdomain gets the most</h4><p>in.linkedin.com is the most-indexed LinkedIn subdomain globally. Try it first even for non-India hires to understand result volume.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">💡</div><h4>Use the strength meter</h4><p>The bar below your form shows if your query is too broad or narrow. Aim for "Balanced" — that's the sweet spot for real results.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">💾</div><h4>Save your best searches</h4><p>Click Save to store a search as a named template. Great for recurring roles — save "Senior Backend India" once and reload it anytime.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">🎨</div><h4>Platform matters for role type</h4><p>Don't use LinkedIn for designers — Behance and Dribbble profiles are richer. For data scientists, Kaggle shows actual competition history.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">🚫</div><h4>Exclusions are underused</h4><p>Adding "Recruiter", "HR", "Hiring Manager" to excludes removes 20–30% of noise from results instantly.</p></div>
+  </div>
+
+  <div style="font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:12px;letter-spacing:-0.01em;">Which platform for which role</div>
+  <div class="platform-table">
+    <div class="pt-head"><div>Platform</div><div>Best for</div><div>Tip</div></div>
+    <div class="pt-row"><div class="pt-name">💼 LinkedIn</div><div class="pt-use">All roles — general professionals</div><div class="pt-tip">Use India subdomain for best coverage</div></div>
+    <div class="pt-row"><div class="pt-name">🐙 GitHub</div><div class="pt-use">Software engineers, open source contributors</div><div class="pt-tip">Search by programming language as a skill</div></div>
+    <div class="pt-row"><div class="pt-name">📊 Kaggle</div><div class="pt-use">Data scientists, ML engineers</div><div class="pt-tip">Profiles show competition rankings — great signal</div></div>
+    <div class="pt-row"><div class="pt-name">🎨 Behance</div><div class="pt-use">UI/UX designers, visual designers</div><div class="pt-tip">Portfolio quality visible directly in results</div></div>
+    <div class="pt-row"><div class="pt-name">🏀 Dribbble</div><div class="pt-use">Product designers, brand designers</div><div class="pt-tip">Rich profiles for senior designers</div></div>
+    <div class="pt-row"><div class="pt-name">✍️ Medium</div><div class="pt-use">Technical writers, thought leaders, devrel</div><div class="pt-tip">Good for content and growth roles</div></div>
+    <div class="pt-row"><div class="pt-name">🔬 ResearchGate</div><div class="pt-use">Researchers, academics, PhDs</div><div class="pt-tip">Best for deep science or R&D roles</div></div>
+  </div>
+
+  <div style="font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:12px;letter-spacing:-0.01em;">Frequently asked questions</div>
+  <div class="faq-list">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why am I only getting 10 results on LinkedIn?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Google caps X-Ray searches at ~10–30 results per query — this is a Google and LinkedIn limitation, not a tool issue. Use the <strong>Variations</strong> button to generate 5 different versions of your query. Run each one to get a fresh batch. Together they give you 50–200+ unique candidates from one search session.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why does US LinkedIn return almost no results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">LinkedIn has progressively blocked Google from indexing US profiles to push companies toward LinkedIn Recruiter (their paid product). For US hiring, GitHub works better. India, UK, and Canada subdomains are still well-indexed.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I get email addresses from the profiles?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">TalentXRay finds the profiles — contact extraction requires a separate Chrome extension. The most popular options are <strong>Apollo.io</strong>, <strong>ContactOut</strong>, and <strong>Hunter.io</strong>. Install one, open a LinkedIn profile from your results, and the extension surfaces the email and phone number automatically.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why do my searches return zero results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Too many AND conditions is the most common cause. Check your query strength meter — if it shows red, remove 2–3 must-have skills and move them to nice-to-have. Also try removing the location field — many profiles don't explicitly state their city.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I use this for non-tech roles?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Absolutely. TalentXRay works for any role with a professional presence online. Finance, HR, Operations, Marketing, Sales — all work well on LinkedIn. The skills suggestion library includes HR & People, Finance & Ops, and Design categories specifically for non-technical searches.</div></div>
+  </div>
+</main>
+</div><!-- end page-howto -->
+
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page">
+<main class="main">
+  <div class="about-hero">
+    <div class="about-avatar">HR</div>
+    <div class="about-info">
+      <h2>Himani Rawat</h2>
+      <div class="role">Fractional HR Leader · People Business Partner · Digital HR Tools Builder</div>
+      <p>I'm an experienced HR leader and People Business Partner who has spent years helping startups build their teams from the ground up. I built TalentXRay because I watched too many founders and junior recruiters waste hours on Boolean syntax when they should be spending that time talking to candidates.</p>
+      <p>TalentXRay is part of a growing digital product portfolio I'm building for startup founders who need HR systems without the enterprise price tag.</p>
+      <div class="about-links">
+        <a class="about-link" href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="#0a66c2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+
+      </div>
+    </div>
+  </div>
+  <div style="font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:12px;letter-spacing:-0.01em;">What I can help you with</div>
+  <div class="value-grid">
+    <div class="value-card"><div class="vc-icon">🔍</div><h4>Sourcing strategy</h4><p>End-to-end top-of-funnel setup — Boolean search, sourcing channels, outreach templates, pipeline tracking.</p></div>
+    <div class="value-card"><div class="vc-icon">🏗️</div><h4>HR OS for startups</h4><p>Lightweight headcount planning, budget dashboards, and org structure design without enterprise HRIS costs.</p></div>
+    <div class="value-card"><div class="vc-icon">📋</div><h4>Hiring process design</h4><p>Interview frameworks, offer letter templates, onboarding checklists — built for 5–50 person teams.</p></div>
+    <div class="value-card"><div class="vc-icon">🎯</div><h4>Custom tool builds</h4><p>TalentXRay branded for your company — your logo, colour scheme, and integrated into your existing workflow.</p></div>
+    <div class="value-card"><div class="vc-icon">📊</div><h4>People analytics</h4><p>Attrition analysis, salary benchmarking, diversity hiring metrics — simple dashboards founders actually use.</p></div>
+    <div class="value-card"><div class="vc-icon">🤝</div><h4>Fractional CHRO</h4><p>Part-time HR leadership for Series A/B startups that need senior People ops without a full-time hire.</p></div>
+  </div>
+  <div class="cta-band">
+    <div>
+      <h3>Want TalentXRay branded for your company?</h3>
+      <p>Add your company branding, connect it to your hiring workflow, and tailor it to the platforms and roles your team actually uses. Typical turnaround is 48–72 hours.</p>
+    </div>
+    <button class="btn-cta-white" onclick="openModal()">Get in touch</button>
+  </div>
+</main>
+</div><!-- end page-about -->
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <strong>TalentXRay</strong> · <a href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">Himani Rawat</a> · HR Founders Kit · Pair with <a href="skillmapper.html">SkillMapper</a> to identify roles first
+</footer>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" style="position:relative">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#1a3a8f"><path d="M21 6.5A2.5 2.5 0 0 0 18.5 4h-13A2.5 2.5 0 0 0 3 6.5v11A2.5 2.5 0 0 0 5.5 20h13a2.5 2.5 0 0 0 2.5-2.5v-11zm-9 8.5L3 8.5V7l9 6 9-6v1.5L12 15z"/></svg>
+    </div>
+    <h2>Want TalentXRay for your company?</h2>
+    <p>Add your company branding, integrate it into your hiring workflow, or tailor it to your specific platforms and markets. Used by individual recruiters and teams alike.</p>
+    <div class="modal-options">
+      <a class="contact-option" href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">
+        <div class="co-icon email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#1a3a8f" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="#1a3a8f" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="co-text">
+          <strong>Send a message</strong>
+          <span>Describe what you need — reply within 24 hrs</span>
+        </div>
+      </a>
+      <a class="contact-option" href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">
+        <div class="co-icon linkedin">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </div>
+        <div class="co-text">
+          <strong>Himani Rawat on LinkedIn</strong>
+          <span>Connect and discuss your requirements</span>
+        </div>
+      </a>
+    </div>
+    <div class="modal-footer">Used by individual recruiters, HR teams, and growing companies · Customisation available</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── Tab switching ─── */
+function switchTab(tab, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
+  // find correct tab btn if not passed
+  const activeBtn = btn || document.querySelector(`.tab-btn[onclick*="'${tab}'"]`);
+  if(activeBtn) activeBtn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleFaq(qEl){
+  const item = qEl.closest('.faq-item');
+  item.classList.toggle('open');
+}
+
+/* ─── State ─── */
+let selPlatforms = new Set(['linkedin']);
+let mustBubbles  = [];
+let orBubbles    = [];
+let altBubbles   = [];   // alternative titles  → OR
+let compBubbles  = [];   // target companies    → AND
+let excBubbles   = [];   // exclude keywords    → NOT
+let curStr = '', curUrl = '';
+let searchHistory = JSON.parse(localStorage.getItem('txr_history') || '[]');
+let templates     = JSON.parse(localStorage.getItem('txr_templates') || '[]');
+
+const PLATFORMS = {
+  linkedin:     {site:'site:linkedin.com/in/',  label:'LinkedIn',     intitle:true,  tc:'tag-li'},
+  github:       {site:'site:github.com',         label:'GitHub',       intitle:false, tc:'tag-gh'},
+  kaggle:       {site:'site:kaggle.com',          label:'Kaggle',       intitle:false, tc:'tag-kg'},
+  behance:      {site:'site:behance.net',         label:'Behance',      intitle:false, tc:'tag-be'},
+  dribbble:     {site:'site:dribbble.com',        label:'Dribbble',     intitle:false, tc:'tag-dr'},
+  medium:       {site:'site:medium.com/@',        label:'Medium',       intitle:false, tc:'tag-md'},
+  researchgate: {site:'site:researchgate.net',    label:'ResearchGate', intitle:false, tc:'tag-rs'},
+};
+
+/* ─── Platform toggle ─── */
+function togglePlatform(btn){
+  const k = btn.dataset.platform;
+  if(selPlatforms.has(k)){
+    if(selPlatforms.size===1){toast('Need at least one platform','err');return;}
+    selPlatforms.delete(k); btn.classList.remove('active');
+  } else {
+    selPlatforms.add(k); btn.classList.add('active');
+  }
+  const liRow = document.getElementById('liRow');
+  liRow.classList.toggle('hidden', !selPlatforms.has('linkedin'));
+  const hint = document.getElementById('platformHint');
+  const n = selPlatforms.size;
+  hint.innerHTML = n===1
+    ? 'Select one or more — multiple platforms OR-combined in one Google search'
+    : `<strong>${n} platforms</strong>: ${[...selPlatforms].map(k=>PLATFORMS[k].label).join(', ')} — searched together`;
+  updateStepNum();
+  liveUpdate();
+}
+
+function updateStepNum(){
+  ['sn1','sn2','sn3','sn4'].forEach((id,i)=>{
+    document.getElementById(id).textContent = i+1;
+  });
+}
+
+/* ─── LinkedIn UI ─── */
+function updateLinkedInUI(){
+  const hasLI = selPlatforms.has('linkedin');
+  const badge = document.getElementById('expBadge');
+  const hint  = document.getElementById('expHint');
+  badge.style.display = hasLI ? 'inline' : 'none';
+  hint.style.display  = hasLI ? 'none'   : 'block';
+}
+
+/* ─── Bubbles ─── */
+function focusBubble(id){ document.getElementById(id).focus(); }
+
+/* ─── Skills database ─── */
+const SKILLS_DB = {
+  'Engineering & Backend':['Python','Java','JavaScript','TypeScript','Go','Rust','C++','C#','Ruby','PHP','Kotlin','Swift','Scala','R','Dart','Node.js','Spring Boot','Django','FastAPI','Flask','Express','Laravel','Ruby on Rails','GraphQL','REST APIs','gRPC','Microservices','System Design'],
+  'Frontend & Mobile':['React','Vue.js','Angular','Next.js','Nuxt.js','Svelte','React Native','Flutter','iOS','Android','HTML','CSS','Tailwind CSS','SASS','TypeScript','Webpack','Vite'],
+  'Cloud & DevOps':['AWS','Azure','GCP','Docker','Kubernetes','Terraform','Ansible','CI/CD','Jenkins','GitHub Actions','Linux','Nginx','Redis','Kafka','RabbitMQ','Elasticsearch','Prometheus','Grafana','Helm'],
+  'Data & AI':['Machine Learning','Deep Learning','NLP','Computer Vision','TensorFlow','PyTorch','Scikit-learn','Pandas','NumPy','Spark','Hadoop','Airflow','dbt','SQL','PostgreSQL','MySQL','MongoDB','BigQuery','Snowflake','Tableau','Power BI','LLMs','LangChain','RAG','OpenAI API'],
+  'Design & Product':['Figma','Sketch','Adobe XD','UI Design','UX Design','User Research','Wireframing','Prototyping','Design Systems','Illustrator','Photoshop','After Effects','Motion Design','Product Strategy','Product Roadmap','A/B Testing','User Testing'],
+  'Security & QA':['Cybersecurity','Penetration Testing','SIEM','SOC','OAuth','SAML','Zero Trust','Selenium','Cypress','Jest','Pytest','JUnit','Load Testing','Manual Testing','Automation Testing'],
+  'HR & People':['Talent Acquisition','Boolean Search','HRIS','Workday','BambooHR','Rippling','Employee Relations','Compensation & Benefits','Organisational Development','HR Analytics','Performance Management','Onboarding','Employer Branding','LinkedIn Recruiter','Greenhouse','Lever'],
+  'Finance & Ops':['Financial Modelling','Excel','SQL','Accounting','Fundraising','Cap Table','Unit Economics','P&L Management','Operations','Logistics','Supply Chain','Procurement','ERP','SAP'],
+};
+const ALL_SKILLS = Object.entries(SKILLS_DB).flatMap(([group,skills])=>skills.map(s=>({s,group})));
+
+let sugFocused = {must:-1, or:-1};
+
+function onSkillInput(e, type){
+  liveUpdate();
+  const val = e.target.value.trim();
+  renderSuggestions(type, val);
+}
+
+function onSkillFocus(type){
+  const val = document.getElementById(type==='must'?'mustInput':'orInput').value.trim();
+  renderSuggestions(type, val);
+}
+
+function onSkillBlur(type){
+  // Small delay so click on suggestion fires first
+  setTimeout(()=>hideSuggestions(type), 150);
+}
+
+function renderSuggestions(type, query){
+  const dropId = type==='must' ? 'mustSug' : 'orSug';
+  const drop   = document.getElementById(dropId);
+  const already = type==='must' ? mustBubbles.map(b=>b.text.toLowerCase()) : orBubbles.map(b=>b.text.toLowerCase());
+
+  sugFocused[type] = -1;
+
+  let items;
+  if(!query){
+    // Show popular picks when empty
+    const popular = ['Python','JavaScript','React','AWS','SQL','Figma','Java','Node.js','TypeScript','Docker','Kubernetes','Machine Learning'];
+    items = popular.filter(s=>!already.includes(s.toLowerCase())).slice(0,10).map(s=>{
+      const g = ALL_SKILLS.find(x=>x.s===s)?.group || '';
+      return {s, group:g, match:s};
+    });
+  } else {
+    // Filter by query, highlight match
+    const q = query.toLowerCase();
+    items = ALL_SKILLS
+      .filter(({s})=> s.toLowerCase().includes(q) && !already.includes(s.toLowerCase()))
+      .slice(0,12)
+      .map(({s,group})=>({s, group, match:s}));
+  }
+
+  if(!items.length && query){
+    drop.innerHTML = `<div class="sug-empty">No suggestions — press Enter to add "${query}"</div>`;
+    drop.classList.add('open');
+    return;
+  }
+  if(!items.length){ drop.classList.remove('open'); return; }
+
+  // Group results
+  const grouped = {};
+  items.forEach(({s,group,match})=>{
+    if(!grouped[group]) grouped[group]=[];
+    grouped[group].push({s,match});
+  });
+
+  let html = '';
+  if(!query) html += `<div class="sug-group-label">Popular skills</div>`;
+  Object.entries(grouped).forEach(([group, skills])=>{
+    if(query && Object.keys(grouped).length > 1) html += `<div class="sug-group-label">${group}</div>`;
+    skills.forEach(({s,match})=>{
+      const q = query.toLowerCase();
+      const hi = q ? s.replace(new RegExp(`(${q})`, 'gi'), '<em>$1</em>') : s;
+      html += `<div class="sug-item" onclick="pickSuggestion('${type}','${s.replace(/'/g,"\\'")}')"><div>${hi}</div><span>${group}</span></div>`;
+    });
+  });
+
+  drop.innerHTML = html;
+  drop.classList.add('open');
+}
+
+function hideSuggestions(type){
+  document.getElementById(type==='must'?'mustSug':'orSug').classList.remove('open');
+  sugFocused[type] = -1;
+}
+
+/* ─── Generic bubble handler (alt titles, companies, excludes) ─── */
+const GEN_BUBBLE_CFG = {
+  alt:  {arr:()=>altBubbles,  setArr:(a)=>altBubbles=a,  wrapId:'altWrap',  inputId:'altInput',  cls:'or-b'},
+  comp: {arr:()=>compBubbles, setArr:(a)=>compBubbles=a, wrapId:'compWrap', inputId:'compInput', cls:'and-b'},
+  exc:  {arr:()=>excBubbles,  setArr:(a)=>excBubbles=a,  wrapId:'excWrap',  inputId:'excInput',  cls:'not-b'},
+};
+
+const COMPANY_SUGGESTIONS = ['Google','Microsoft','Amazon','Meta','Apple','Netflix','Atlassian','Salesforce','Uber','Airbnb','Stripe','Spotify','LinkedIn','Twitter','Adobe','Oracle','SAP','Infosys','TCS','Wipro','HCL','Cognizant','Accenture','Flipkart','Swiggy','Zomato','Meesho','Razorpay','PhonePe','CRED','Freshworks','Zoho','Byju\'s','Ola','Paytm','Nykaa'];
+const EXCLUDE_SUGGESTIONS = ['Recruiter','Student','Intern','Fresher','Graduate','Trainee','Director','CEO','CTO','Founder','HR','Hiring','Wanted','Looking for job','Open to work','Career Coach','Mentor','Consultant','Freelancer','Agency'];
+
+function handleGenBubble(e, type){
+  const cfg   = GEN_BUBBLE_CFG[type];
+  const input = e.target;
+  if(e.key==='Escape'){ return; }
+  const val = input.value.trim().replace(/,$/,'').trim();
+  if((e.key==='Enter'||e.key===',') && val){
+    e.preventDefault();
+    cfg.arr().push(val);
+    input.value='';
+    renderAllBubbles();
+    liveUpdate();
+  }
+  if(e.key==='Backspace' && !input.value && cfg.arr().length){
+    cfg.arr().pop();
+    renderAllBubbles();
+    liveUpdate();
+  }
+}
+
+function removeGenBubble(type, idx){
+  GEN_BUBBLE_CFG[type].arr().splice(idx,1);
+  renderAllBubbles();
+  liveUpdate();
+}
+
+function renderGenBubbleList(type){
+  const cfg   = GEN_BUBBLE_CFG[type];
+  const wrap  = document.getElementById(cfg.wrapId);
+  const input = document.getElementById(cfg.inputId);
+  [...wrap.querySelectorAll('.bubble')].forEach(b=>b.remove());
+  cfg.arr().forEach((text,i)=>{
+    const el = document.createElement('span');
+    el.className = `bubble ${cfg.cls}`;
+    el.innerHTML = `${text}<button class="bubble-x" onclick="removeGenBubble('${type}',${i})">×</button>`;
+    wrap.insertBefore(el, input);
+  });
+}
+
+function pickSuggestion(type, skill){
+  if(type==='must') mustBubbles.push({text:skill, mode:'and'});
+  else              orBubbles.push({text:skill,   mode:'or'});
+  const inputId = type==='must' ? 'mustInput' : 'orInput';
+  document.getElementById(inputId).value = '';
+  renderBubbles();
+  liveUpdate();
+  hideSuggestions(type);
+  document.getElementById(inputId).focus();
+}
+
+/* ─── Handle arrow key navigation in suggestions ─── */
+function handleBubble(e, type){
+  const input = e.target;
+  const dropId = type==='must' ? 'mustSug' : 'orSug';
+  const drop   = document.getElementById(dropId);
+  const items  = [...drop.querySelectorAll('.sug-item')];
+
+  // Arrow navigation
+  if(e.key==='ArrowDown' && items.length){
+    e.preventDefault();
+    sugFocused[type] = Math.min(sugFocused[type]+1, items.length-1);
+    items.forEach((el,i)=>el.classList.toggle('focused', i===sugFocused[type]));
+    return;
+  }
+  if(e.key==='ArrowUp' && items.length){
+    e.preventDefault();
+    sugFocused[type] = Math.max(sugFocused[type]-1, 0);
+    items.forEach((el,i)=>el.classList.toggle('focused', i===sugFocused[type]));
+    return;
+  }
+  if(e.key==='Escape'){ hideSuggestions(type); return; }
+
+  // Enter selects focused suggestion or adds typed value
+  if(e.key==='Enter'){
+    e.preventDefault();
+    if(sugFocused[type] >= 0 && items[sugFocused[type]]){
+      items[sugFocused[type]].click();
+      return;
+    }
+  }
+
+  const val = input.value.trim().replace(/,$/,'').trim();
+  if((e.key==='Enter'||e.key===',') && val){
+    e.preventDefault();
+    if(type==='must') mustBubbles.push({text:val, mode:'and'});
+    else              orBubbles.push({text:val,   mode:'or'});
+    input.value = '';
+    renderBubbles();
+    liveUpdate();
+    hideSuggestions(type);
+  }
+  if(e.key==='Backspace' && !input.value){
+    if(type==='must' && mustBubbles.length){ mustBubbles.pop(); renderBubbles(); liveUpdate(); }
+    if(type==='or'   && orBubbles.length){  orBubbles.pop();   renderBubbles(); liveUpdate(); }
+  }
+}
+
+function removeBubble(type, idx){
+  if(type==='must') mustBubbles.splice(idx,1);
+  else              orBubbles.splice(idx,1);
+  renderBubbles(); liveUpdate();
+}
+
+function renderBubbles(){
+  renderBubbleList('mustWrap','mustInput',mustBubbles,'must');
+  renderBubbleList('orWrap','orInput',orBubbles,'or');
+  updateSkillCount();
+}
+
+function renderAllBubbles(){
+  renderBubbles();
+  renderGenBubbleList('alt');
+  renderGenBubbleList('comp');
+  renderGenBubbleList('exc');
+}
+
+function renderBubbleList(wrapId, inputId, bubbles, type){
+  const wrap  = document.getElementById(wrapId);
+  const input = document.getElementById(inputId);
+  [...wrap.querySelectorAll('.bubble')].forEach(b=>b.remove());
+  bubbles.forEach((b,i)=>{
+    const el = document.createElement('span');
+    el.className = `bubble ${b.mode==='and'?'and-b':'or-b'}`;
+    el.innerHTML = `${b.text}<button class="bubble-x" onclick="removeBubble('${type}',${i})">×</button>`;
+    wrap.insertBefore(el, input);
+  });
+}
+
+function updateSkillCount(){
+  const isLI = selPlatforms.has('linkedin');
+  const andCount = mustBubbles.filter(b=>b.mode==='and').length;
+  const cnt = document.getElementById('skillCount');
+  const warn = document.getElementById('skillWarn');
+  if(!mustBubbles.length){ cnt.style.display='none'; warn.classList.remove('show'); return; }
+  cnt.style.display = 'inline';
+  if(isLI && andCount>3){
+    cnt.textContent = `${andCount} skills — 3 AND max`;
+    cnt.className = 'skill-count warn';
+    warn.classList.add('show');
+  } else {
+    cnt.textContent = `${mustBubbles.length}`;
+    cnt.className = 'skill-count';
+    warn.classList.remove('show');
+  }
+}
+
+/* ─── Build string ─── */
+function parseList(s){ return s.split(',').map(x=>x.trim()).filter(Boolean); }
+
+function buildString(ov={}){
+  const platforms   = [...selPlatforms];
+  const hasLI       = selPlatforms.has('linkedin');
+  const isLIOnly    = hasLI && platforms.length===1;
+  const liCountry   = document.getElementById('liCountry').value;
+  const jobTitle    = ov.jobTitle    ?? document.getElementById('jobTitle').value.trim();
+  const altTitles   = ov.altTitles   ?? altBubbles.map(t=>t);
+  const seniority   = ov.seniority   ?? document.getElementById('seniority').value;
+  const expMin      = ov.expMin      ?? document.getElementById('expMin').value.trim();
+  const expMax      = ov.expMax      ?? document.getElementById('expMax').value.trim();
+  const location    = ov.location    ?? document.getElementById('location').value.trim();
+  const companies   = ov.companies   ?? compBubbles.map(c=>c);
+  const excludeKw   = ov.excludeKw   ?? excBubbles.map(k=>k);
+
+  let allMust = ov.mustBubbles ?? mustBubbles;
+  let allOr   = ov.orBubbles   ?? orBubbles;
+
+  // Cap AND skills at 3 for LinkedIn
+  if(hasLI){
+    const andB    = allMust.filter(b=>b.mode==='and');
+    const overflow = andB.slice(3);
+    allMust = [...allMust.filter(b=>b.mode==='or'), ...andB.slice(0,3)];
+    allOr   = [...allOr, ...overflow];
+  }
+
+  if(!jobTitle && !allMust.length && !allOr.length) return {str:'',url:''};
+
+  let parts = [];
+
+  // Site
+  if(platforms.length===1){
+    parts.push(hasLI ? `site:${liCountry}` : PLATFORMS[platforms[0]].site);
+  } else {
+    parts.push('('+platforms.map(k=> k==='linkedin'?`site:${liCountry}`:PLATFORMS[k].site).join(' OR ')+')');
+  }
+
+  // LinkedIn noise filters
+  if(hasLI) parts.push('-inurl:jobs -inurl:groups -inurl:company -inurl:posts');
+
+  // Titles
+  if(jobTitle){
+    const titles = [jobTitle, ...altTitles];
+    let variants = [];
+    if(seniority){
+      titles.forEach(t=>{ variants.push(`"${seniority} ${t}"`); variants.push(`"${t}"`); });
+      variants = [...new Set(variants)];
+    } else {
+      variants = titles.map(t=>`"${t}"`);
+    }
+    const expr = variants.length===1 ? variants[0] : `(${variants.join(' OR ')})`;
+    parts.push(isLIOnly ? `intitle:${expr}` : expr);
+  }
+
+  // Experience (skip for LinkedIn)
+  if(!hasLI){
+    if(expMin&&expMax)  parts.push(`("${expMin} to ${expMax} years" OR "${expMin}+ years experience")`);
+    else if(expMin)     parts.push(`"${expMin}+ years experience"`);
+    else if(expMax)     parts.push(`"${expMax} years experience"`);
+  }
+
+  // Location + Companies
+  if(location) parts.push(`"${location}"`);
+  companies.forEach(c=>parts.push(`"${c}"`));
+
+  // Must-have skills
+  allMust.filter(b=>b.mode==='and').forEach(b=>parts.push(`"${b.text}"`));
+  const mustOrArr = allMust.filter(b=>b.mode==='or').map(b=>b.text);
+  if(mustOrArr.length===1) parts.push(`"${mustOrArr[0]}"`);
+  else if(mustOrArr.length>1) parts.push(`(${mustOrArr.map(s=>`"${s}"`).join(' OR ')})`);
+
+  // Nice-to-have
+  const orArr = allOr.map(b=>typeof b==='string'?b:b.text);
+  if(orArr.length===1) parts.push(`"${orArr[0]}"`);
+  else if(orArr.length>1) parts.push(`(${orArr.map(s=>`"${s}"`).join(' OR ')})`);
+
+  // Exclusions
+  excludeKw.forEach(k=>parts.push(`-"${k}"`));
+
+  const str = parts.join(' ');
+  return {str, url:`https://www.google.com/search?q=${encodeURIComponent(str)}&num=100`};
+}
+
+/* ─── Strength meter ─── */
+function updateStrength(str){
+  const wrap = document.getElementById('strengthWrap');
+  if(!str){ wrap.classList.remove('show'); return; }
+  wrap.classList.add('show');
+  const isLI = selPlatforms.has('linkedin');
+  const andSkills = mustBubbles.filter(b=>b.mode==='and').length;
+  const hasTitle  = !!document.getElementById('jobTitle').value.trim();
+  const hasLoc    = !!document.getElementById('location').value.trim();
+  const coCount   = parseList(document.getElementById('companies').value).length;
+  const total     = andSkills + (hasTitle?1:0) + (hasLoc?1:0) + Math.max(0,coCount-1);
+
+  let width, color, status, tip;
+  if(total<=2){
+    width=82; color='#0d7a4e'; status='Broad — high volume';
+    tip='Add 1–2 must-have skills to improve precision.';
+  } else if(total<=4){
+    width=62; color='#1a3a8f'; status='Balanced — good results expected';
+    tip='Sweet spot for X-Ray searches.';
+  } else if(total<=6){
+    width=30; color='#b45309'; status='Tight — fewer results';
+    tip='Remove 1–2 must-have skills or convert to nice-to-have.';
+  } else {
+    width=8; color='#b91c1c'; status='Over-constrained — likely zero results';
+    tip='Too many AND conditions. Remove at least 3 to get results.';
+  }
+
+  document.getElementById('strengthFill').style.cssText = `width:${width}%;background:${color};`;
+  const statusEl = document.getElementById('strengthStatus');
+  statusEl.textContent = status; statusEl.style.color = color;
+  document.getElementById('strengthTip').textContent = tip;
+}
+
+/* ─── Live update ─── */
+function liveUpdate(){
+  updateLinkedInUI();
+  updateSkillCount();
+  const {str, url} = buildString();
+  curStr = str; curUrl = url;
+  const el    = document.getElementById('outputStr');
+  const dot   = document.getElementById('outputDot');
+  const panel = document.getElementById('outputPanel');
+  const chars = document.getElementById('outputChars');
+  if(str){
+    el.innerHTML = renderHL(str);
+    el.classList.add('has-content');
+    dot.classList.add('live');
+    panel.classList.add('active');
+    chars.textContent = `${str.length} chars`;
+  } else {
+    el.innerHTML = '<span class="ostr-empty">Fill in the fields above — your search string appears here in real time</span>';
+    el.classList.remove('has-content');
+    dot.classList.remove('live');
+    panel.classList.remove('active');
+    chars.textContent = '';
+  }
+  updateStrength(str);
+}
+
+function renderHL(str){
+  return str
+    .replace(/(site:[^\s]+)/g,'<span class="tok-site">$1</span>')
+    .replace(/(intitle:\([^)]+\)|intitle:"[^"]+")/g,'<span class="tok-title">$1</span>')
+    .replace(/(-"[^"]+"|-inurl:\w+)/g,'<span class="tok-not">$1</span>')
+    .replace(/\b(OR)\b/g,'<span class="tok-op">$1</span>');
+}
+
+/* ─── Actions ─── */
+function openSearch(){
+  const {str,url} = buildString();
+  if(!str){ toast('Fill in a job title or skills first','err'); return; }
+  if(!checkPaywall()) return;
+  consumeSearch();
+  curStr=str; curUrl=url; liveUpdate();
+  saveHist(str,url);
+  window.open(url,'_blank');
+}
+
+function copyStr(){
+  const {str} = buildString();
+  if(!str){ toast('Nothing to copy yet','err'); return; }
+  navigator.clipboard.writeText(str).then(()=>{
+    const lbl = document.getElementById('copyLbl');
+    lbl.textContent='Copied!';
+    setTimeout(()=>lbl.textContent='Copy string',2000);
+    toast('String copied','ok');
+  });
+}
+
+function copyURL(){
+  const {url} = buildString();
+  if(!url){ toast('Nothing to copy yet','err'); return; }
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn = document.getElementById('copyUrlBtn');
+    btn.classList.add('ok'); btn.textContent='✓ Copied!';
+    setTimeout(()=>{ btn.classList.remove('ok'); btn.innerHTML=`<svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M6 10a4 4 0 1 0 0-4m0 4l4-4m0 0a4 4 0 1 1 0 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Copy URL`; },2000);
+    toast('URL copied','ok');
+  });
+}
+
+function resetAll(){
+  ['jobTitle','location','expMin','expMax'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('seniority').value='';
+  mustBubbles=[]; orBubbles=[]; altBubbles=[]; compBubbles=[]; excBubbles=[];
+  renderAllBubbles();
+  selPlatforms = new Set(['linkedin']);
+  document.querySelectorAll('.platform-btn').forEach(b=>b.classList.toggle('active',b.dataset.platform==='linkedin'));
+  document.getElementById('liRow').classList.remove('hidden');
+  document.getElementById('platformHint').innerHTML='Select one or more — multiple platforms OR-combined in one Google search';
+  document.getElementById('varPanel').classList.remove('show');
+  curStr=''; curUrl=''; liveUpdate();
+  toast('Form cleared','');
+}
+
+/* ─── Variations ─── */
+function generateVars(){
+  const {str} = buildString();
+  if(!str){ toast('Fill in fields first','err'); return; }
+  const jobTitle  = document.getElementById('jobTitle').value.trim();
+  const altTitles = altBubbles.map(t=>t);
+  const seniority = document.getElementById('seniority').value;
+  const location  = document.getElementById('location').value.trim();
+  const andSkills = mustBubbles.filter(b=>b.mode==='and');
+  const vars = [];
+
+  if(andSkills.length>=2){
+    const {str:s,url:u}=buildString({mustBubbles:andSkills.slice(0,2)});
+    if(s) vars.push({label:'Minimal — title + top 2 skills only', str:s, url:u});
+  }
+  if(altTitles.length>0){
+    const {str:s,url:u}=buildString({jobTitle:altTitles[0], altTitles:altTitles.slice(1)});
+    if(s) vars.push({label:`Alt title — "${altTitles[0]}"`, str:s, url:u});
+  }
+  if(seniority){
+    const {str:s,url:u}=buildString({seniority:''});
+    if(s) vars.push({label:'Without seniority — broader pool', str:s, url:u});
+  }
+  if(location){
+    const {str:s,url:u}=buildString({location:''});
+    if(s) vars.push({label:'Without location — catches unlisted cities', str:s, url:u});
+  }
+  if(andSkills.length>0){
+    const orOnly = mustBubbles.map(b=>({...b,mode:'or'}));
+    const {str:s,url:u}=buildString({mustBubbles:orOnly});
+    if(s) vars.push({label:'All skills as OR — widest pool', str:s, url:u});
+  }
+
+  if(!vars.length){ toast('Add more fields to generate variations','err'); return; }
+  window._vars = vars;
+  const panel = document.getElementById('varPanel');
+  panel.classList.add('show');
+  document.getElementById('varList').innerHTML = vars.map((v,i)=>`
+    <div class="var-item">
+      <div class="var-head">
+        <span class="var-tag">Variation ${i+1} — ${v.label}</span>
+        <div class="var-acts">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(window._vars[${i}].str).then(()=>toast('Copied','ok'))">Copy</button>
+          <button class="copy-btn" onclick="window.open(window._vars[${i}].url,'_blank')">Open</button>
+        </div>
+      </div>
+      <div class="var-str">${renderHL(v.str)}</div>
+    </div>
+  `).join('');
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  toast(`${vars.length} variations ready`,'ok');
+}
+
+/* ─── Templates ─── */
+function saveTpl(){
+  const {str} = buildString();
+  if(!str){ toast('Fill in fields before saving','err'); return; }
+  const name = prompt('Name this template:');
+  if(!name||!name.trim()) return;
+  const tpl = {
+    id:Date.now(), name:name.trim(),
+    date:new Date().toLocaleDateString(),
+    platforms:[...selPlatforms],
+    liCountry:document.getElementById('liCountry').value,
+    jobTitle:document.getElementById('jobTitle').value,
+    altBubbles:[...altBubbles],
+    seniority:document.getElementById('seniority').value,
+    expMin:document.getElementById('expMin').value,
+    expMax:document.getElementById('expMax').value,
+    location:document.getElementById('location').value,
+    compBubbles:[...compBubbles],
+    mustBubbles:[...mustBubbles], orBubbles:[...orBubbles],
+    excBubbles:[...excBubbles], str
+  };
+  templates.unshift(tpl);
+  localStorage.setItem('txr_templates',JSON.stringify(templates));
+  renderTemplates();
+  toast(`"${tpl.name}" saved`,'ok');
+}
+
+function loadTpl(id){
+  const t = templates.find(x=>x.id===id);
+  if(!t) return;
+  document.getElementById('jobTitle').value   = t.jobTitle||'';
+  document.getElementById('seniority').value  = t.seniority||'';
+  document.getElementById('expMin').value     = t.expMin||'';
+  document.getElementById('expMax').value     = t.expMax||'';
+  document.getElementById('location').value   = t.location||'';
+  document.getElementById('liCountry').value  = t.liCountry||'in.linkedin.com/in/';
+  mustBubbles=[...(t.mustBubbles||[])]; orBubbles=[...(t.orBubbles||[])];
+  altBubbles=[...(t.altBubbles||[])]; compBubbles=[...(t.compBubbles||[])]; excBubbles=[...(t.excBubbles||[])];
+  renderAllBubbles();
+  selPlatforms = new Set(t.platforms||['linkedin']);
+  document.querySelectorAll('.platform-btn').forEach(b=>b.classList.toggle('active',selPlatforms.has(b.dataset.platform)));
+  document.getElementById('liRow').classList.toggle('hidden',!selPlatforms.has('linkedin'));
+  liveUpdate();
+  window.scrollTo({top:0,behavior:'smooth'});
+  toast(`"${t.name}" loaded`,'ok');
+}
+
+function deleteTpl(id){
+  templates = templates.filter(t=>t.id!==id);
+  localStorage.setItem('txr_templates',JSON.stringify(templates));
+  renderTemplates();
+}
+
+function renderTemplates(){
+  const panel = document.getElementById('tplPanel');
+  const list  = document.getElementById('tplList');
+  if(!templates.length){ panel.classList.remove('show'); return; }
+  panel.classList.add('show');
+  list.innerHTML = templates.map(t=>`
+    <div class="tpl-item">
+      <span class="tpl-name">${t.name}</span>
+      <span class="tpl-date">${t.date}</span>
+      <button class="tpl-load" onclick="loadTpl(${t.id})">Load</button>
+      <button class="tpl-del" onclick="deleteTpl(${t.id})" title="Delete">×</button>
+    </div>
+  `).join('');
+}
+
+/* ─── History ─── */
+function saveHist(str,url){
+  const keys = [...selPlatforms];
+  const item = {id:Date.now(), platforms:keys, platformLabel:keys.map(k=>PLATFORMS[k].label).join('+'), tc:PLATFORMS[keys[0]].tc, str, url, time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})};
+  searchHistory.unshift(item);
+  if(searchHistory.length>20) searchHistory=searchHistory.slice(0,20);
+  localStorage.setItem('txr_history',JSON.stringify(searchHistory));
+  renderHistory();
+}
+
+function reuseSearch(id){
+  const item = searchHistory.find(h=>h.id===id);
+  if(!item) return;
+  curStr=item.str; curUrl=item.url;
+  selPlatforms = new Set(item.platforms||[item.platform]);
+  document.querySelectorAll('.platform-btn').forEach(b=>b.classList.toggle('active',selPlatforms.has(b.dataset.platform)));
+  document.getElementById('liRow').classList.toggle('hidden',!selPlatforms.has('linkedin'));
+  const el = document.getElementById('outputStr');
+  el.innerHTML=renderHL(item.str); el.classList.add('has-content');
+  document.getElementById('outputDot').classList.add('live');
+  document.getElementById('outputPanel').classList.add('active');
+  document.getElementById('outputChars').textContent=`${item.str.length} chars`;
+  updateStrength(item.str);
+  toast('Loaded — click Open in Google','ok');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function deleteHist(id){
+  searchHistory=searchHistory.filter(h=>h.id!==id);
+  localStorage.setItem('txr_history',JSON.stringify(searchHistory));
+  renderHistory();
+}
+
+function clearHist(){
+  searchHistory=[];
+  localStorage.setItem('txr_history','[]');
+  renderHistory();
+  toast('History cleared','');
+}
+
+function renderHistory(){
+  const panel = document.getElementById('histPanel');
+  const list  = document.getElementById('histList');
+  if(!searchHistory.length){ panel.classList.remove('show'); return; }
+  panel.classList.add('show');
+  list.innerHTML = searchHistory.map(item=>`
+    <div class="hist-item">
+      <span class="hist-ptag ${item.tc}">${item.platformLabel}</span>
+      <span class="hist-text">${item.str}</span>
+      <span class="hist-time">${item.time}</span>
+      <button class="hist-reuse" onclick="reuseSearch(${item.id})">Reuse</button>
+      <button class="hist-del"   onclick="deleteHist(${item.id})">×</button>
+    </div>
+  `).join('');
+}
+
+/* ─── CSV Export ─── */
+function exportCSV(){
+  if(!searchHistory.length){ toast('No history to export','err'); return; }
+  const rows = searchHistory.map(h=>{
+    const ts = new Date(h.id).toLocaleString();
+    return `${ts},${h.platformLabel},"${h.str.replace(/"/g,'""')}","${h.url}"`;
+  });
+  const csv = ['Timestamp,Platforms,Search String,URL',...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `talentxray_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV exported','ok');
+}
+
+/* ─── Contact modal ─── */
+function openModal(){ document.getElementById('modalOverlay').classList.add('open'); }
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+function closeModalOutside(e){ if(e.target===document.getElementById('modalOverlay')) closeModal(); }
+
+/* ─── Toast ─── */
+function toast(msg, type){
+  const t = document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+(type||'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+
+/* ─── Paywall ─── */
+let txrSearchCount = parseInt(localStorage.getItem('txr_pro_searches') || '0');
+const TXR_LIMIT = 1;
+
+function checkPaywall(){
+  if(txrSearchCount >= TXR_LIMIT){
+    document.getElementById('pwOverlay').classList.add('open');
+    return false;
+  }
+  return true;
+}
+function consumeSearch(){
+  txrSearchCount++;
+  localStorage.setItem('txr_pro_searches', txrSearchCount);
+  updateSearchBadge();
+}
+function updateSearchBadge(){
+  const badge = document.getElementById('searchUsedBadge');
+  if(!badge) return;
+  if(txrSearchCount >= TXR_LIMIT){
+    badge.textContent = 'Trial used'; badge.classList.add('show');
+  }
+}
+function closePw(){
+  document.getElementById('pwOverlay').classList.remove('open');
+}
+function trackUpgrade(){ /* analytics hook */ }
+document.getElementById('pwOverlay').addEventListener('click', e=>{
+  if(e.target===document.getElementById('pwOverlay')) closePw();
+});
+updateSearchBadge();
+
+/* ─── Init ─── */
+renderHistory();
+renderTemplates();
+updateLinkedInUI();
+renderAllBubbles();
+
+/* ─── Read URL params from SkillMapper ─── */
+(function readUrlParams(){
+  const p = new URLSearchParams(window.location.search);
+  const title    = p.get('title');
+  const altRaw   = p.get('alt');
+  const skillRaw = p.get('skills');
+  const fromSM   = p.get('from') === 'skillmapper';
+
+  if(!title && !skillRaw) return;
+
+  // Pre-fill job title
+  if(title){
+    document.getElementById('jobTitle').value = title;
+  }
+
+  // Alt titles → altBubbles
+  if(altRaw){
+    altBubbles = altRaw.split(',').map(s=>s.trim()).filter(Boolean).slice(0,4);
+  }
+
+  // Skills → mustBubbles (first 3) + orBubbles (rest)
+  if(skillRaw){
+    const allSkills = skillRaw.split(',').map(s=>s.trim()).filter(Boolean);
+    const mustOnes  = allSkills.slice(0,3).map(s=>({text:s, mode:'and'}));
+    const orOnes    = allSkills.slice(3).map(s=>({text:s, mode:'or'}));
+    mustBubbles = mustOnes;
+    orBubbles   = [...orBubbles, ...orOnes];
+  }
+
+  renderAllBubbles();
+  liveUpdate();
+
+  // Show from-SkillMapper banner
+  if(fromSM && title){
+    const banner = document.getElementById('fromSmBanner');
+    document.getElementById('fsmRole').textContent = title;
+    const skillsEl = document.getElementById('fsmSkills');
+    const displaySkills = skillRaw ? skillRaw.split(',').slice(0,6) : [];
+    skillsEl.innerHTML = displaySkills.map(s=>`<span class="fsm-skill">${s.trim()}</span>`).join('');
+    banner.classList.add('show');
+    // Scroll past suite bar smoothly
+    setTimeout(()=>banner.scrollIntoView({behavior:'smooth', block:'nearest'}), 200);
+  }
+})();
+</script>
+
+<!-- Paywall Modal -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-modal">
+    <div class="pw-top">
+      <h2>You've used your complimentary search</h2>
+      <p>Unlock unlimited searches, saved templates, history export, and query variations with TalentXRay Pro.</p>
+    </div>
+    <div class="pw-body">
+      <div class="pw-used">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L14.9 14H1.1L8 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7v3M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        1 of 1 complimentary search used
+      </div>
+      <div class="pw-features">
+        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited X-Ray searches across all 7 platforms</div>
+        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Save unlimited role templates</div>
+        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Query variations engine — beat the 10-result cap</div>
+        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Full search history with CSV export</div>
+        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Pair with SkillMapper — identify role then source</div>
+      </div>
+      <div class="pw-price">
+        <span class="pw-amount">₹999</span>
+        <span class="pw-period">one-time · lifetime access</span>
+      </div>
+      <a class="pw-cta" href="https://gumroad.com/l/talentxray" target="_blank" onclick="trackUpgrade()">Get TalentXRay Pro →</a>
+      <span class="pw-skip" onclick="closePw()">I'll use my one search for now</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

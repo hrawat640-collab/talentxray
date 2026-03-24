@@ -124,8 +124,6 @@ body{
 .fsm-back{font-size:12px;color:var(--ink3);text-decoration:none;align-self:center;white-space:nowrap;padding:6px 12px;border:1px solid var(--border);border-radius:7px;transition:all .15s;flex-shrink:0;}
 .fsm-back:hover{color:var(--ink);border-color:var(--border2);}
 
-
-
 /* ── Hero ── */
 .hero{
   background:var(--white);
@@ -156,7 +154,7 @@ body{
   border-radius:14px;
   margin-bottom:14px;
   box-shadow:var(--shadow);
-  overflow:hidden;
+  overflow:visible; /* FIXED DROPDOWN ISSUE */
   transition:border-color .2s;
 }
 .step-card:focus-within{border-color:var(--accent-md);}
@@ -165,6 +163,7 @@ body{
   padding:16px 20px;
   border-bottom:1px solid var(--border);
   background:var(--surface);
+  border-radius: 14px 14px 0 0;
 }
 .step-num{
   width:26px;height:26px;border-radius:8px;
@@ -302,7 +301,7 @@ input::placeholder{color:var(--ink3);}
 /* ── Skill suggestions dropdown ── */
 .skill-field-wrap{position:relative;}
 .suggestions{
-  position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:50;
+  position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:999;
   background:var(--white);border:1.5px solid var(--accent);
   border-radius:10px;box-shadow:var(--shadow-md);
   max-height:220px;overflow-y:auto;
@@ -497,8 +496,8 @@ input::placeholder{color:var(--ink3);}
 
 /* ── Contact modal ── */
 .modal-overlay{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(15,14,12,0.45);
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(15,14,12,0.65);
   display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;transition:opacity .2s;
   padding:20px;
@@ -539,8 +538,6 @@ input::placeholder{color:var(--ink3);}
   flex-shrink:0;
 }
 .co-icon.email{background:var(--accent-lt);}
-.co-icon.linkedin{background:rgba(10,102,194,0.1);}
-.co-icon.whatsapp{background:rgba(37,211,102,0.1);}
 .co-text strong{display:block;font-size:13px;font-weight:700;color:var(--ink);}
 .co-text span{font-size:12px;color:var(--ink3);}
 .modal-footer{margin-top:16px;font-size:12px;color:var(--ink3);text-align:center;line-height:1.5;}
@@ -636,54 +633,6 @@ input::placeholder{color:var(--ink3);}
 }
 .faq-item.open .faq-a{display:block;}
 
-/* ── About page ── */
-.about-hero{
-  background:var(--white);border:1px solid var(--border);border-radius:16px;
-  padding:32px 36px;margin-bottom:20px;box-shadow:var(--shadow);
-  display:flex;gap:28px;align-items:flex-start;
-}
-.about-avatar{
-  width:80px;height:80px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,#1a3a8f,#6b84c5);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.02em;
-}
-.about-info h2{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;}
-.about-info .role{font-size:14px;color:var(--accent);font-weight:600;margin-bottom:12px;}
-.about-info p{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:16px;}
-.about-links{display:flex;gap:10px;flex-wrap:wrap;}
-.about-link{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);
-  font-size:13px;font-weight:600;text-decoration:none;color:var(--ink2);
-  transition:all .15s;background:var(--white);
-}
-.about-link:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lt);}
-.value-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
-.value-card{
-  background:var(--white);border:1px solid var(--border);border-radius:12px;
-  padding:20px;box-shadow:var(--shadow);text-align:center;
-}
-.value-card .vc-icon{font-size:24px;margin-bottom:10px;}
-.value-card h4{font-size:13px;font-weight:700;margin-bottom:6px;}
-.value-card p{font-size:12px;color:var(--ink3);line-height:1.6;}
-.cta-band{
-  background:linear-gradient(135deg,#1a3a8f 0%,#2d5bc7 100%);
-  border-radius:14px;padding:28px 32px;color:#fff;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  flex-wrap:wrap;margin-bottom:20px;
-}
-.cta-band h3{font-size:18px;font-weight:800;letter-spacing:-0.02em;margin-bottom:5px;}
-.cta-band p{font-size:13.5px;opacity:.85;max-width:400px;}
-.btn-cta-white{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:12px 22px;border-radius:9px;border:none;
-  background:#fff;color:var(--accent);
-  font-family:var(--sans);font-size:14px;font-weight:700;
-  cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
-  letter-spacing:-0.01em;
-}
-.btn-cta-white:hover{background:#e8edf8;transform:translateY(-1px);}
 
 /* ── Footer ── */
 .site-footer{
@@ -699,8 +648,6 @@ input::placeholder{color:var(--ink3);}
   .tip-grid,.value-grid{grid-template-columns:1fr;}
   .pt-head,.pt-row{grid-template-columns:1fr 1fr;}
   .pt-tip{display:none;}
-  .about-hero{flex-direction:column;}
-  .cta-band{flex-direction:column;}
 }
 .toast{
   position:fixed;bottom:24px;left:50%;
@@ -724,35 +671,24 @@ input::placeholder{color:var(--ink3);}
   .btn-primary,.btn-secondary,.btn-ghost{justify-content:center;}
 }
 
-/* ── Paywall modal ── */
-.pw-overlay{position:fixed;inset:0;z-index:500;background:rgba(15,14,12,0.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s;}
-.pw-overlay.open{opacity:1;pointer-events:auto;}
-.pw-modal{background:var(--white);border-radius:18px;padding:0;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,0.18);overflow:hidden;transform:translateY(10px);transition:transform .2s;}
-.pw-overlay.open .pw-modal{transform:translateY(0);}
-.pw-top{background:linear-gradient(135deg,#1a3a8f 0%,#2d5bc7 100%);padding:28px 32px;color:#fff;}
-.pw-top h2{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px;}
-.pw-top p{font-size:13.5px;opacity:.85;line-height:1.55;}
-.pw-body{padding:24px 32px;}
-.pw-used{display:flex;align-items:center;gap:10px;background:var(--amber-lt);border:1px solid rgba(180,83,9,0.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--amber);font-weight:500;}
-.pw-features{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
-.pw-feat{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink2);}
-.pw-feat svg{color:var(--green);flex-shrink:0;}
-.pw-price{display:flex;align-items:baseline;gap:6px;margin-bottom:18px;}
-.pw-amount{font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-0.03em;}
-.pw-period{font-size:13px;color:var(--ink3);}
-.pw-cta{display:block;width:100%;padding:14px;border-radius:10px;background:var(--accent);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;border:none;cursor:pointer;text-align:center;text-decoration:none;transition:all .15s;letter-spacing:-0.01em;margin-bottom:10px;}
-.pw-cta:hover{background:#152e78;transform:translateY(-1px);}
-.pw-skip{display:block;text-align:center;font-size:12px;color:var(--ink3);cursor:pointer;padding:6px;}
-.pw-skip:hover{color:var(--ink2);}
-.search-used-badge{display:none;font-size:11px;font-family:var(--mono);color:var(--amber);background:var(--amber-lt);border:1px solid rgba(180,83,9,0.2);padding:3px 9px;border-radius:20px;margin-left:8px;}
-.search-used-badge.show{display:inline;}
 </style>
 </head>
 <body>
 
-<!-- Topbar -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" style="text-align:center; padding: 40px 30px;">
+    <h2 style="margin-bottom:10px; font-size:22px;">Welcome to TalentXRay</h2>
+    <p style="color:var(--ink2); margin-bottom:24px; font-size: 14px;">Please enter your email to access this tool for free.</p>
+    <form name="txr-users" method="POST" data-netlify="true" onsubmit="handleLogin(event)">
+      <input type="email" name="email" required placeholder="name@company.com or Gmail" style="width:100%; padding:14px; margin-bottom:16px; border-radius:8px; border:1.5px solid var(--border); font-family:var(--sans); font-size:14px; outline:none;">
+      <button type="submit" style="width:100%; padding:14px; background:var(--accent); color:var(--white); border:none; border-radius:8px; font-weight:700; font-family:var(--sans); font-size:15px; cursor:pointer; box-shadow:0 4px 12px rgba(26,58,143,0.2);">Unlock Tool</button>
+    </form>
+    <p style="font-size:12px; color:var(--ink3); margin-top:20px;">100% Free · No Paywall</p>
+  </div>
+</div>
+
 <div class="suite-bar">
-  <span class="suite-brand">HR Founders Kit</span>
+  <span class="suite-brand">Talent Intelligence Tools</span>
   <div class="suite-steps">
     <a class="suite-step" href="skillmapper.html">
       <span class="suite-step-num">1</span>
@@ -776,27 +712,24 @@ input::placeholder{color:var(--ink3);}
       </svg>
     </div>
     <span class="topbar-name">Talent<span>XRay</span></span>
-    <span class="topbar-tag">X-Ray Sourcing</span>
+    <span class="topbar-tag">Free Tool</span>
   </div>
   <div class="topbar-right">
     <button class="btn-contact" onclick="openModal()">
       <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4z" stroke="currentColor" stroke-width="1.4"/><path d="M2 4l6 5 6-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-      Get a custom version
+      Inquire for Team Edition
     </button>
   </div>
 </header>
 
-<!-- Tab nav -->
 <nav class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('tool',this)">🔍 Tool</button>
   <button class="tab-btn" onclick="switchTab('howto',this)">📖 How to Use</button>
-  <button class="tab-btn" onclick="switchTab('about',this)">👋 About</button>
 </nav>
 
 <div id="page-tool" class="page active">
 <main class="main">
 
-  <!-- From SkillMapper banner -->
   <div class="from-sm-banner" id="fromSmBanner">
     <div class="fsm-icon">
       <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M8 3l5 5-5 5" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -809,20 +742,18 @@ input::placeholder{color:var(--ink3);}
     <a class="fsm-back" href="skillmapper.html">← Back to SkillMapper</a>
   </div>
 
-  <!-- Hero -->
   <div class="hero">
     <div class="hero-text">
       <h1>Source the right talent,<br><em>faster than ever.</em></h1>
-      <p>TalentXRay generates precision Google X-Ray search strings across 7 platforms — no Boolean expertise required. Built for founders, HR leaders, and talent teams who need pipeline, not process. Includes one complimentary search.</p>
+      <p>TalentXRay generates precision Google X-Ray search strings across 7 platforms — no Boolean expertise required. Built for founders, HR leaders, and talent teams who need pipeline, not process. 100% Free to use.</p>
     </div>
     <div class="hero-stats">
       <div class="stat"><div class="stat-num">7</div><div class="stat-lbl">Platforms</div></div>
       <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">Regions</div></div>
-      <div class="stat"><div class="stat-num">1</div><div class="stat-lbl">Search free</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-lbl">Unlimited</div></div>
     </div>
   </div>
 
-  <!-- Step 1: Platform -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn1">1</div>
@@ -880,7 +811,6 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
-  <!-- Step 2: Role & Seniority -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn2">2</div>
@@ -924,7 +854,6 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
-  <!-- Step 3: Skills -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn3">3</div>
@@ -966,7 +895,6 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
-  <!-- Step 4: Location & Companies -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn4">4</div>
@@ -999,7 +927,6 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
-  <!-- Strength meter -->
   <div class="strength-wrap" id="strengthWrap">
     <div class="strength-top">
       <span class="strength-label">Query strength</span>
@@ -1009,13 +936,11 @@ input::placeholder{color:var(--ink3);}
     <div class="strength-tip" id="strengthTip"></div>
   </div>
 
-  <!-- Action bar -->
   <div class="action-bar">
     <button class="btn-primary" onclick="openSearch()">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       Open in Google
     </button>
-    <span class="search-used-badge" id="searchUsedBadge"></span>
     <button class="btn-secondary" onclick="copyStr()">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="9" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M3 11V3a2 2 0 0 1 2-2h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
       <span id="copyLbl">Copy string</span>
@@ -1032,7 +957,6 @@ input::placeholder{color:var(--ink3);}
     <button class="btn-ghost" onclick="resetAll()">Reset</button>
   </div>
 
-  <!-- Output -->
   <div class="output-panel" id="outputPanel">
     <div class="output-head">
       <div class="output-meta">
@@ -1052,7 +976,6 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
-  <!-- Variations -->
   <div class="var-panel" id="varPanel">
     <div class="step-card" style="margin-bottom:0">
       <div class="step-header">
@@ -1066,7 +989,6 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
-  <!-- Templates -->
   <div class="tpl-panel" id="tplPanel">
     <div class="sdiv"></div>
     <div class="hist-head">
@@ -1075,7 +997,6 @@ input::placeholder{color:var(--ink3);}
     <div id="tplList"></div>
   </div>
 
-  <!-- History -->
   <div class="hist-panel" id="histPanel">
     <div class="sdiv"></div>
     <div class="hist-head">
@@ -1092,10 +1013,7 @@ input::placeholder{color:var(--ink3);}
   </div>
 
 </main>
-</div><!-- end page-tool -->
-
-<!-- HOW TO USE PAGE -->
-<div id="page-howto" class="page">
+</div><div id="page-howto" class="page">
 <main class="main">
   <div class="how-hero">
     <h2>How to use TalentXRay</h2>
@@ -1179,86 +1097,72 @@ input::placeholder{color:var(--ink3);}
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I use this for non-tech roles?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Absolutely. TalentXRay works for any role with a professional presence online. Finance, HR, Operations, Marketing, Sales — all work well on LinkedIn. The skills suggestion library includes HR & People, Finance & Ops, and Design categories specifically for non-technical searches.</div></div>
   </div>
 </main>
-</div><!-- end page-howto -->
-
-<!-- ABOUT PAGE -->
-<div id="page-about" class="page">
-<main class="main">
-  <div class="about-hero">
-    <div class="about-avatar">HR</div>
-    <div class="about-info">
-      <h2>Himani Rawat</h2>
-      <div class="role">Fractional HR Leader · People Business Partner · Digital HR Tools Builder</div>
-      <p>I'm an experienced HR leader and People Business Partner who has spent years helping startups build their teams from the ground up. I built TalentXRay because I watched too many founders and junior recruiters waste hours on Boolean syntax when they should be spending that time talking to candidates.</p>
-      <p>TalentXRay is part of a growing digital product portfolio I'm building for startup founders who need HR systems without the enterprise price tag.</p>
-      <div class="about-links">
-        <a class="about-link" href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="#0a66c2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-          LinkedIn
-        </a>
-
-      </div>
-    </div>
-  </div>
-  <div style="font-size:14px;font-weight:700;color:var(--ink2);margin-bottom:12px;letter-spacing:-0.01em;">What I can help you with</div>
-  <div class="value-grid">
-    <div class="value-card"><div class="vc-icon">🔍</div><h4>Sourcing strategy</h4><p>End-to-end top-of-funnel setup — Boolean search, sourcing channels, outreach templates, pipeline tracking.</p></div>
-    <div class="value-card"><div class="vc-icon">🏗️</div><h4>HR OS for startups</h4><p>Lightweight headcount planning, budget dashboards, and org structure design without enterprise HRIS costs.</p></div>
-    <div class="value-card"><div class="vc-icon">📋</div><h4>Hiring process design</h4><p>Interview frameworks, offer letter templates, onboarding checklists — built for 5–50 person teams.</p></div>
-    <div class="value-card"><div class="vc-icon">🎯</div><h4>Custom tool builds</h4><p>TalentXRay branded for your company — your logo, colour scheme, and integrated into your existing workflow.</p></div>
-    <div class="value-card"><div class="vc-icon">📊</div><h4>People analytics</h4><p>Attrition analysis, salary benchmarking, diversity hiring metrics — simple dashboards founders actually use.</p></div>
-    <div class="value-card"><div class="vc-icon">🤝</div><h4>Fractional CHRO</h4><p>Part-time HR leadership for Series A/B startups that need senior People ops without a full-time hire.</p></div>
-  </div>
-  <div class="cta-band">
-    <div>
-      <h3>Want TalentXRay branded for your company?</h3>
-      <p>Add your company branding, connect it to your hiring workflow, and tailor it to the platforms and roles your team actually uses. Typical turnaround is 48–72 hours.</p>
-    </div>
-    <button class="btn-cta-white" onclick="openModal()">Get in touch</button>
-  </div>
-</main>
-</div><!-- end page-about -->
-
-<!-- FOOTER -->
-<footer class="site-footer">
-  <strong>TalentXRay</strong> · <a href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">Himani Rawat</a> · HR Founders Kit · Pair with <a href="skillmapper.html">SkillMapper</a> to identify roles first
+</div><footer class="site-footer">
+  <p>© 2025 TalentXRay — Advanced search string generator for recruiters, founders, and talent teams.</p>
+  <p style="margin-top: 6px; font-size: 12px; opacity: 0.7;">Pair with <a href="skillmapper.html">SkillMapper</a> to identify roles before sourcing.</p>
 </footer>
 
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)" style="z-index: 9999;">
   <div class="modal" style="position:relative">
     <button class="modal-close" onclick="closeModal()">×</button>
     <div class="modal-icon">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="#1a3a8f"><path d="M21 6.5A2.5 2.5 0 0 0 18.5 4h-13A2.5 2.5 0 0 0 3 6.5v11A2.5 2.5 0 0 0 5.5 20h13a2.5 2.5 0 0 0 2.5-2.5v-11zm-9 8.5L3 8.5V7l9 6 9-6v1.5L12 15z"/></svg>
     </div>
-    <h2>Want TalentXRay for your company?</h2>
-    <p>Add your company branding, integrate it into your hiring workflow, or tailor it to your specific platforms and markets. Used by individual recruiters and teams alike.</p>
+    <h2>Scaling your recruitment team?</h2>
+    <p>Upgrade to a <strong>Custom Enterprise Edition</strong> of TalentXRay designed specifically for your organization's workflow.</p>
+    
+    <ul style="margin: 12px 0 24px; padding-left: 18px; color: var(--ink2); font-size: 13.5px; line-height: 1.6;">
+      <li><strong>Full Branding:</strong> Integrated company logo and brand theme.</li>
+      <li><strong>Workflow Automation:</strong> Connect results directly to your ATS or CRM.</li>
+      <li><strong>Team Deployment:</strong> Secure hosting on your private company domain.</li>
+    </ul>
+
     <div class="modal-options">
-      <a class="contact-option" href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">
+      <a class="contact-option" href="mailto:Hrawat640@gmail.com?subject=TalentXRay%20Enterprise%20Edition" target="_blank">
         <div class="co-icon email">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#1a3a8f" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="#1a3a8f" stroke-width="1.8" stroke-linejoin="round"/></svg>
         </div>
         <div class="co-text">
-          <strong>Send a message</strong>
-          <span>Describe what you need — reply within 24 hrs</span>
-        </div>
-      </a>
-      <a class="contact-option" href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">
-        <div class="co-icon linkedin">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#0a66c2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-        </div>
-        <div class="co-text">
-          <strong>Himani Rawat on LinkedIn</strong>
-          <span>Connect and discuss your requirements</span>
+          <strong>Contact our Enterprise Team</strong>
+          <span>Inquire about custom implementation</span>
         </div>
       </a>
     </div>
-    <div class="modal-footer">Used by individual recruiters, HR teams, and growing companies · Customisation available</div>
+    <div class="modal-footer">Built for modern recruitment teams and founders.</div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
+/* ─── Email Capture Logic (Netlify Forms) ─── */
+document.addEventListener('DOMContentLoaded', () => {
+    if(!localStorage.getItem('user_logged_in_email')) {
+        document.getElementById('loginModal').classList.add('open');
+    }
+});
+
+function handleLogin(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const email = formData.get('email');
+
+    // Submit silently to Netlify
+    fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
+    }).then(() => {
+        localStorage.setItem('user_logged_in_email', email);
+        document.getElementById('loginModal').classList.remove('open');
+    }).catch(() => {
+        // Fallback for local testing
+        localStorage.setItem('user_logged_in_email', email);
+        document.getElementById('loginModal').classList.remove('open');
+    });
+}
+
 /* ─── Tab switching ─── */
 function switchTab(tab, btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1279,9 +1183,9 @@ function toggleFaq(qEl){
 let selPlatforms = new Set(['linkedin']);
 let mustBubbles  = [];
 let orBubbles    = [];
-let altBubbles   = [];   // alternative titles  → OR
-let compBubbles  = [];   // target companies    → AND
-let excBubbles   = [];   // exclude keywords    → NOT
+let altBubbles   = [];   
+let compBubbles  = [];   
+let excBubbles   = [];   
 let curStr = '', curUrl = '';
 let searchHistory = JSON.parse(localStorage.getItem('txr_history') || '[]');
 let templates     = JSON.parse(localStorage.getItem('txr_templates') || '[]');
@@ -1734,8 +1638,7 @@ function renderHL(str){
 function openSearch(){
   const {str,url} = buildString();
   if(!str){ toast('Fill in a job title or skills first','err'); return; }
-  if(!checkPaywall()) return;
-  consumeSearch();
+  
   curStr=str; curUrl=url; liveUpdate();
   saveHist(str,url);
   window.open(url,'_blank');
@@ -1982,39 +1885,6 @@ function toast(msg, type){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-
-/* ─── Paywall ─── */
-let txrSearchCount = parseInt(localStorage.getItem('txr_pro_searches') || '0');
-const TXR_LIMIT = 1;
-
-function checkPaywall(){
-  if(txrSearchCount >= TXR_LIMIT){
-    document.getElementById('pwOverlay').classList.add('open');
-    return false;
-  }
-  return true;
-}
-function consumeSearch(){
-  txrSearchCount++;
-  localStorage.setItem('txr_pro_searches', txrSearchCount);
-  updateSearchBadge();
-}
-function updateSearchBadge(){
-  const badge = document.getElementById('searchUsedBadge');
-  if(!badge) return;
-  if(txrSearchCount >= TXR_LIMIT){
-    badge.textContent = 'Trial used'; badge.classList.add('show');
-  }
-}
-function closePw(){
-  document.getElementById('pwOverlay').classList.remove('open');
-}
-function trackUpgrade(){ /* analytics hook */ }
-document.getElementById('pwOverlay').addEventListener('click', e=>{
-  if(e.target===document.getElementById('pwOverlay')) closePw();
-});
-updateSearchBadge();
-
 /* ─── Init ─── */
 renderHistory();
 renderTemplates();
@@ -2066,35 +1936,6 @@ renderAllBubbles();
   }
 })();
 </script>
-
-<!-- Paywall Modal -->
-<div class="pw-overlay" id="pwOverlay">
-  <div class="pw-modal">
-    <div class="pw-top">
-      <h2>You've used your complimentary search</h2>
-      <p>Unlock unlimited searches, saved templates, history export, and query variations with TalentXRay Pro.</p>
-    </div>
-    <div class="pw-body">
-      <div class="pw-used">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L14.9 14H1.1L8 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7v3M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        1 of 1 complimentary search used
-      </div>
-      <div class="pw-features">
-        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Unlimited X-Ray searches across all 7 platforms</div>
-        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Save unlimited role templates</div>
-        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Query variations engine — beat the 10-result cap</div>
-        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Full search history with CSV export</div>
-        <div class="pw-feat"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Pair with SkillMapper — identify role then source</div>
-      </div>
-      <div class="pw-price">
-        <span class="pw-amount">₹999</span>
-        <span class="pw-period">one-time · lifetime access</span>
-      </div>
-      <a class="pw-cta" href="https://gumroad.com/l/talentxray" target="_blank" onclick="trackUpgrade()">Get TalentXRay Pro →</a>
-      <span class="pw-skip" onclick="closePw()">I'll use my one search for now</span>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>

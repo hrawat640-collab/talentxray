@@ -1283,7 +1283,18 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
     </div>
   </div>
 
-
+  <!-- Quick start presets -->
+  <div style="margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Quick start</div>
+    <div class="presets-bar">
+      <button class="preset-chip" onclick="loadPreset('backend')">⚙️ Backend Engineer</button>
+      <button class="preset-chip" onclick="loadPreset('frontend')">🖥️ Frontend Engineer</button>
+      <button class="preset-chip" onclick="loadPreset('dataeng')">📊 Data Engineer</button>
+      <button class="preset-chip" onclick="loadPreset('product')">🎯 Product Manager</button>
+      <button class="preset-chip" onclick="loadPreset('salesforce')">☁️ Salesforce Developer</button>
+      <button class="preset-chip" onclick="loadPreset('design')">🎨 UI/UX Designer</button>
+    </div>
+  </div>
 
   <!-- Step 1: Platform -->
   <div class="step-card">
@@ -1394,7 +1405,7 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
     <div class="step-body">
       <div class="warn-banner" id="skillWarn">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14.9 14H1.1L8 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7v3M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        <span>LinkedIn works best with <strong>2–3 must-have skills max</strong>. Extra AND skills have been moved to nice-to-have automatically.</span>
+        <span>LinkedIn works best with <strong>2–3 must-have skills max</strong>. Extra AND skills have been moved to "Broaden results" automatically.</span>
       </div>
       <div class="form-row">
         <div class="field">
@@ -1411,14 +1422,14 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
 
         </div>
         <div class="field">
-          <label>Nice-to-have skills</label>
+          <label>Broaden results <span style="font-size:10px;color:var(--ink3);font-weight:400;">(OR)</span></label>
           <div class="skill-field-wrap">
             <div class="bubble-wrap" id="orWrap" onclick="focusBubble('orInput')">
               <input class="bubble-input" id="orInput" placeholder="e.g. Docker, AWS, TypeScript" onkeydown="handleBubble(event,'or')" oninput="onSkillInput(event,'or')" onfocus="onSkillFocus('or')" onblur="onSkillBlur('or')">
             </div>
             <div class="suggestions sug-scroll" id="orSug" onmousedown="event.preventDefault()"></div>
           </div>
-
+          <span class="hint">At least one should appear — widens the result pool</span>
         </div>
       </div>
     </div>
@@ -1428,7 +1439,7 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
     <div class="step-header">
       <div class="step-num" id="sn4">4</div>
       <div>
-        <div class="step-title">Location &amp; companies</div>
+        <div class="step-title">Location &amp; company keywords</div>
       </div>
       
     </div>
@@ -1447,10 +1458,11 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
 
         </div>
         <div class="field">
-          <label>Target companies</label>
+          <label>Company keywords</label>
           <div class="bubble-wrap" id="compWrap" onclick="focusBubble('compInput')">
             <input class="bubble-input" id="compInput" placeholder="e.g. Google, Microsoft" onkeydown="handleGenBubble(event,'comp')" oninput="liveUpdate()">
           </div>
+          <span class="hint">Searches company name as a keyword — best for people who mention it in their headline or profile</span>
 
         </div>
         <div class="field span2">
@@ -1638,7 +1650,7 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
         <h3>Add skills — keep it lean</h3>
         <p>Use the skills field autocomplete — type any skill and suggestions appear from a 1,400+ skill database. Press Enter or click to add.</p>
         <p><strong>Must-have (AND)</strong> — the 2–3 non-negotiable skills. Every extra AND halves your result pool. More than 3 on LinkedIn = near-zero results.</p>
-        <p><strong>Nice-to-have (OR)</strong> — everything else. The candidate only needs <em>one</em> of these to appear in results.</p>
+        <p><strong>Broaden results (OR)</strong> — adds extra skills that widen the pool. At least one of these should appear in the profile. Use this for secondary skills — the candidate doesn't need all of them.</p>
         <div class="how-example">
           ✅ <strong>Good:</strong> Must-have: Python, AWS · Nice-to-have: Docker, Terraform, GCP<br>
           ❌ <strong>Bad:</strong> Must-have: Python, AWS, Docker, Terraform, GCP, Kubernetes, FastAPI
@@ -1649,9 +1661,9 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
     <div class="how-step">
       <div class="how-step-num">5</div>
       <div class="how-step-body">
-        <h3>Location, companies and exclusions</h3>
+        <h3>Location, company keywords and exclusions</h3>
         <p>Type a city or country in the Location field and press Enter — add multiple locations for OR logic (finds candidates in any of them).</p>
-        <p><strong>Target companies</strong> — adds companies to the AND conditions. Great for finding candidates with a specific pedigree combination (e.g. "worked at both Google and a startup").</p>
+        <p><strong>Company keywords</strong> — adds a company name as a keyword. Works best for people who mention the company in their LinkedIn headline or profile summary. Not a strict "worked at" filter — Google X-Ray doesn't support section-level search.</p>
         <p><strong>Exclude keywords</strong> — removes noise instantly. Add "Recruiter", "Fresher", "Student", "Intern" to filter ~30% of irrelevant profiles from results.</p>
       </div>
     </div>
@@ -1692,7 +1704,7 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why am I only getting 10 results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Google limits X-Ray to ~10–30 results per query. Use <strong>Variations</strong> to generate 5 different versions — each returns a fresh batch. Together you get 50–200+ unique profiles per session.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why does US LinkedIn return almost no results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">LinkedIn blocks Google from indexing US profiles to push companies toward LinkedIn Recruiter (their paid product). For US hiring use GitHub or Stack Overflow. India, UK, and Canada subdomains are still well-indexed.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I get email addresses from profiles?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">TalentXRay finds profiles — contact extraction needs a Chrome extension. Install <strong>Apollo.io</strong>, <strong>ContactOut</strong>, or <strong>Hunter.io</strong> (all free). Open a LinkedIn profile from results and the extension surfaces the email automatically.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why do my searches return zero results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Too many AND (must-have) skills is the most common cause. Remove 2–3 from must-have and move them to nice-to-have. Also try removing location — many profiles do not explicitly state their city.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why do my searches return zero results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Too many AND (must-have) skills is the most common cause. Remove 2–3 from must-have and move them to "Broaden results". Also try removing location — many profiles do not explicitly state their city.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why does seniority not appear in my Stack Overflow search?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Stack Overflow and Behance profiles do not contain job title prefixes like "Senior" or "Lead" in indexed text. Applying seniority there would return zero results. The tool automatically skips seniority for those platforms and applies it only to LinkedIn and GitHub where it works.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Will Open in Google work on my computer?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">If you are running the file directly from your computer (file:// in the address bar), the link may not open due to browser security restrictions on local files. Once deployed on a website (https://) it works perfectly. In the meantime, use <strong>Copy search string</strong> and paste it into Google manually.</div></div>
   </div>
@@ -1714,13 +1726,13 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
     <h2 style="font-size:20px;margin-bottom:6px;">Want a custom version for your team?</h2>
     <p style="font-size:13.5px;color:var(--ink3);line-height:1.6;margin-bottom:20px;">TalentXRay can be set up with your company branding, role presets specific to your industry, and integrated into your hiring workflow. Typical turnaround 48–72 hours.</p>
     <div class="modal-options">
-      <a class="contact-option" href="/cdn-cgi/l/email-protection#6a02180b1d0b1e5c5e5a2a0d070b03064409050755191f08000f091e573e0b060f041e32380b134a291f191e05074a3c0f18190305044c08050e135722034a2203070b0403464a234a0b074a03041e0f180f191e0f0e4a03044a0b4a091f191e05074a1c0f18190305044a050c4a3e0b060f041e32380b134a0c05184a07134a0905071a0b041344" target="_blank">
+      <a class="contact-option" href="mailto:hrawat640@gmail.com?subject=TalentXRay Custom Version&body=Hi Himani, I am interested in a custom version of TalentXRay for my company." target="_blank">
         <div class="co-icon email">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#0f766e" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="#0f766e" stroke-width="1.8" stroke-linejoin="round"/></svg>
         </div>
         <div class="co-text">
           <strong>Email Himani directly</strong>
-          <span><span class="__cf_email__" data-cfemail="c9a1bba8bea8bdfffdf989aea4a8a0a5e7aaa6a4">[email&#160;protected]</span> · Reply within 24 hours</span>
+          <span>hrawat640@gmail.com · Reply within 24 hours</span>
         </div>
       </a>
       <a class="contact-option" href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">
@@ -1739,7 +1751,7 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* ─── Email Capture (Netlify Forms) ─── */
 /* email capture handled by inline script in modal */
 
@@ -2979,7 +2991,7 @@ function updateSmartTips(str){
 
   // Too many AND skills
   if(andCount >= 3)
-    tips.push({icon:'🎯', title:'Too many must-have skills', action:'Move 1–2 skills from Must-have to Nice-to-have', fn:'relaxMustSkills'});
+    tips.push({icon:'🎯', title:'Too many must-have skills', action:'Move 1–2 skills from Must-have to Broaden results', fn:'relaxMustSkills'});
 
   // Too many title variants
   if(titleCount >= 4)
@@ -3014,7 +3026,7 @@ function relaxMustSkills(){
     mustBubbles = mustBubbles.filter(b=>b!==last);
     orBubbles.push({text:last.text, mode:'or'});
     renderBubbles(); liveUpdate();
-    toast('Moved "'+last.text+'" to Nice-to-have','ok');
+    toast('Moved "'+last.text+'" to Broaden results','ok');
   }
 }
 function removeLastTitle(){
@@ -3136,7 +3148,7 @@ function updateStrength(str){
     tip='Sweet spot for X-Ray searches.';
   } else if(total<=6){
     width=30; color='#b45309'; status='Tight — fewer results';
-    tip='Remove 1–2 must-have skills or convert to nice-to-have.';
+    tip='Remove 1–2 must-have skills or move to Broaden results.';
   } else {
     width=8; color='#b91c1c'; status='Over-constrained — likely zero results';
     tip='Too many AND conditions. Remove at least 3 to get results.';
@@ -3323,7 +3335,7 @@ function generateVars(){
   const vars = [];
 
   if(andSkills.length>=2){
-    const {str:s,url:u}=buildString({mustBubbles:andSkills.slice(0,2)});
+    const {str:s,url:u}=buildString({mustBubbles:andSkills.slice(0,2), orBubbles:orBubbles});
     if(s) vars.push({label:'Minimal — title + top 2 skills only', str:s, url:u});
   }
   if(altTitles.length>0){
@@ -3554,7 +3566,7 @@ updateLinkedInUI();
 renderAllBubbles();
 
 /* ─── Read URL params from SkillMapper ─── */
-function preFillFromSkillMapper(){
+document.addEventListener('DOMContentLoaded', function(){
   const p = new URLSearchParams(window.location.search);
   const title    = p.get('title');
   const altRaw   = p.get('alt');
@@ -3575,28 +3587,20 @@ function preFillFromSkillMapper(){
   renderTitleBubbles();
 
   // Skills: max 2 AND (must-have) + rest as OR (nice-to-have)
-  // More than 2 AND skills overloads query — LinkedIn blocks results
+  // More than 2 AND skills on LinkedIn = near-zero results
   if(skillRaw){
-    const skills = decodeURIComponent(skillRaw).split(',').map(s=>s.trim()).filter(Boolean);
-    // First 2 as must-have (AND)
-    skills.slice(0,2).forEach(sk=>mustBubbles.push({text:sk, mode:'and'}));
-    // Rest as nice-to-have (OR)
-    skills.slice(2).forEach(sk=>orBubbles.push({text:sk, mode:'or'}));
+    const allSkills = decodeURIComponent(skillRaw).split(',').map(s=>s.trim()).filter(Boolean);
+    mustBubbles = allSkills.slice(0,2).map(s=>({text:s, mode:'and'}));
+    orBubbles   = allSkills.slice(2).map(s=>({text:s, mode:'or'}));
   }
-  renderBubbles();
 
-  // Auto-update query
+  renderAllBubbles();
   liveUpdate();
 
-  // If came from SkillMapper, show toast
-  if(fromSM){
-    toast('Pre-filled from SkillMapper — adjust and search','ok');
-  }
-}
 
-// Run on load
-document.addEventListener('DOMContentLoaded', preFillFromSkillMapper);
-
+});
 </script>
+
+
 </body>
 </html>

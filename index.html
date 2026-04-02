@@ -137,7 +137,7 @@ body{
 
 /* ── Tool Hero ── */
 .tool-hero{
-  background:linear-gradient(135deg,#0f766e 0%,#0d9488 60%,#14b8a6 100%);
+  background:linear-gradient(135deg,#0f766e 0%,#14b8a6 60%,#14b8a6 100%);
   border-radius:16px;padding:28px 32px;margin-bottom:20px;
   box-shadow:0 4px 24px rgba(15,118,110,0.25);
 }
@@ -549,7 +549,7 @@ input::placeholder{color:var(--ink3);}
 .tag-gh{background:#f3f4f6;color:#374151;border-color:#d1d5db;}
 .tag-be{background:rgba(59,130,246,0.08);color:#2563eb;border-color:rgba(37,99,235,0.2);}
 .tag-dr{background:rgba(236,72,153,0.08);color:#db2777;border-color:rgba(219,39,119,0.2);}
-.tag-kg{background:rgba(20,184,166,0.08);color:#0d9488;border-color:rgba(13,148,136,0.2);}
+.tag-kg{background:rgba(20,184,166,0.08);color:#0f766e;border-color:rgba(15,118,110,0.2);}
 .hist-text{flex:1;font-family:var(--mono);font-size:11.5px;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .hist-time{font-size:10.5px;color:var(--ink3);font-family:var(--mono);flex-shrink:0;}
 .hist-reuse{padding:3px 9px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--ink3);font-family:var(--sans);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;flex-shrink:0;}
@@ -632,7 +632,7 @@ input::placeholder{color:var(--ink3);}
 
 /* ── How to use page ── */
 .how-hero{
-  background:linear-gradient(135deg,#0f766e 0%,#0d9488 100%);
+  background:linear-gradient(135deg,#0f766e 0%,#14b8a6 100%);
   border-radius:16px;padding:36px 40px;margin-bottom:24px;color:#fff;
 }
 .how-hero h2{font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
@@ -1346,14 +1346,11 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
     </div>
   </div>
 
-  <!-- Step 2: Role & Seniority -->
+  <!-- Step 2: Role -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn2">2</div>
-      <div>
-        <div class="step-title">Role &amp; seniority</div>
-      </div>
-
+      <div><div class="step-title">Role</div></div>
     </div>
     <div class="step-body">
       <div class="form-row single">
@@ -1367,27 +1364,6 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
             </div>
             <div id="titleSug" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:300;background:var(--white);border:1.5px solid var(--accent);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.14);max-height:240px;overflow-y:auto;"></div>
           </div>
-
-
-        </div>
-      </div>
-      <div class="form-row">
-
-        <div class="field">
-          <label>Seniority level(s)
-            <span id="seniorityAutoLabel" style="font-size:11px;color:var(--green);font-weight:600;margin-left:6px;"></span>
-          </label>
-          <div style="position:relative;">
-            <div class="bubble-wrap" id="seniorityWrap" onclick="focusBubble('seniorityInput')" style="min-height:46px;">
-              <input class="bubble-input" id="seniorityInput"
-                placeholder="Optional — e.g. Senior, Lead"
-                oninput="onSeniorityInput(event)" onkeydown="onSeniorityKeydown(event)"
-                onfocus="onSeniorityFocus()" onblur="onSeniorityBlur()"
-                autocomplete="off">
-            </div>
-            <div id="senioritySug" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:300;background:var(--white);border:1.5px solid var(--accent);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.14);max-height:200px;overflow-y:auto;"></div>
-          </div>
-
         </div>
       </div>
     </div>
@@ -1400,77 +1376,67 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
       <div>
         <div class="step-title">Skills</div>
       </div>
-      
     </div>
     <div class="step-body">
       <div class="warn-banner" id="skillWarn">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14.9 14H1.1L8 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7v3M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        <span>LinkedIn works best with <strong>2–3 must-have skills max</strong>. Extra AND skills have been moved to "Broaden results" automatically.</span>
+        <span>Best results with <strong>2–3 skills max</strong>. More skills = fewer results.</span>
       </div>
-      <div class="form-row">
-        <div class="field">
-          <label>
-            Must-have skills
-            <span class="skill-count" id="skillCount" style="display:none"></span>
-          </label>
+      <div class="form-row single">
+        <div class="field span2">
+          <label>Key skills <span style="font-size:10.5px;color:var(--ink3);font-weight:400;">— add 2–3 that this role must have</span></label>
           <div class="skill-field-wrap">
             <div class="bubble-wrap" id="mustWrap" onclick="focusBubble('mustInput')">
-              <input class="bubble-input" id="mustInput" placeholder="e.g. Python, React, Salesforce" onkeydown="handleBubble(event,'must')" oninput="onSkillInput(event,'must')" onfocus="onSkillFocus('must')" onblur="onSkillBlur('must')">
+              <input class="bubble-input" id="mustInput" placeholder="e.g. Python, React, Salesforce — press Enter after each" onkeydown="handleBubble(event,'must')" oninput="onSkillInput(event,'must')" onfocus="onSkillFocus('must')" onblur="onSkillBlur('must')">
             </div>
             <div class="suggestions sug-scroll" id="mustSug" onmousedown="event.preventDefault()"></div>
           </div>
-
-        </div>
-        <div class="field">
-          <label>Broaden results <span style="font-size:10px;color:var(--ink3);font-weight:400;">(OR)</span></label>
-          <div class="skill-field-wrap">
-            <div class="bubble-wrap" id="orWrap" onclick="focusBubble('orInput')">
-              <input class="bubble-input" id="orInput" placeholder="e.g. Docker, AWS, TypeScript" onkeydown="handleBubble(event,'or')" oninput="onSkillInput(event,'or')" onfocus="onSkillFocus('or')" onblur="onSkillBlur('or')">
-            </div>
-            <div class="suggestions sug-scroll" id="orSug" onmousedown="event.preventDefault()"></div>
-          </div>
-          <span class="hint">At least one should appear — widens the result pool</span>
+          <span class="hint">These go into your search as AND conditions — all must appear</span>
         </div>
       </div>
     </div>
   </div>
-  <!-- Step 4: Location & Companies -->
+
+  <!-- Step 4: Location -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn4">4</div>
-      <div>
-        <div class="step-title">Location &amp; company keywords</div>
-      </div>
-      
+      <div><div class="step-title">Location</div></div>
     </div>
     <div class="step-body">
-      <div class="form-row">
-        <div class="field">
-          <label>Location</label>
+      <div class="form-row single">
+        <div class="field span2">
+          <label>Where are you hiring? <span style="font-size:10.5px;color:var(--ink3);font-weight:400;">(optional)</span></label>
           <div style="position:relative;">
             <div class="bubble-wrap" id="locWrap" onclick="focusBubble('locInput')" style="min-height:46px;">
-              <input class="bubble-input" id="locInput" placeholder="Type city or country, press Enter"
+              <input class="bubble-input" id="locInput" placeholder="Type city or country — e.g. Bangalore, India, Remote"
                 oninput="onLocInput(event)" onkeydown="onLocKeydown(event)" onblur="onLocBlur()"
                 autocomplete="off">
             </div>
             <div id="locSug" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:300;background:var(--white);border:1.5px solid var(--accent);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.14);max-height:220px;overflow-y:auto;"></div>
           </div>
-
+          <span class="hint">Leave empty for global results — many profiles don't list their city explicitly</span>
         </div>
-        <div class="field">
-          <label>Company keywords</label>
-          <div class="bubble-wrap" id="compWrap" onclick="focusBubble('compInput')">
-            <input class="bubble-input" id="compInput" placeholder="e.g. Google, Microsoft" onkeydown="handleGenBubble(event,'comp')" oninput="liveUpdate()">
-          </div>
-          <span class="hint">Searches company name as a keyword — best for people who mention it in their headline or profile</span>
+      </div>
+    </div>
+  </div>
 
-        </div>
+  <!-- Step 5: Extra keywords -->
+  <div class="step-card">
+    <div class="step-header">
+      <div class="step-num" id="sn5">5</div>
+      <div>
+        <div class="step-title">Extra keywords <span style="font-size:11px;color:var(--ink3);font-weight:400;">(optional)</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="form-row single">
         <div class="field span2">
-          <label>Exclude keywords</label>
-          <div class="bubble-wrap" id="excWrap" onclick="focusBubble('excInput')">
-            <input class="bubble-input" id="excInput" placeholder="e.g. Recruiter, Intern" onkeydown="handleGenBubble(event,'exc')" oninput="liveUpdate()">
+          <label>Add anything that helps narrow results</label>
+          <div class="bubble-wrap" id="compWrap" onclick="focusBubble('compInput')">
+            <input class="bubble-input" id="compInput" placeholder="Company name, specific tool, person name, certification…" onkeydown="handleGenBubble(event,'comp')" oninput="liveUpdate()">
           </div>
-          <span class="hint">Each tag removed from results</span>
+          <span class="hint">Works for company names (Google, Atlassian), tools (Kubernetes), certifications (AWS Solutions Architect), or any keyword</span>
         </div>
       </div>
     </div>
@@ -1715,9 +1681,9 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
 
 <!-- FOOTER -->
 <footer class="site-footer">
-  <strong>TalentXRay</strong> · Built by <a href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">Himani Rawat</a> · Powered by Google X-Ray
-  <span style="display:block;font-size:10.5px;color:rgba(255,255,255,0.45);margin-top:5px;">Free sourcing tool · No LinkedIn Recruiter licence needed · Works best with specific job titles and 2–3 skills</span>
-  <span style="display:block;font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">© 2026 Himani Rawat · All rights reserved</span>
+  <strong>TalentXRay</strong> · Built by an HR Industry Expert · Powered by Google X-Ray
+  <span style="display:block;font-size:10.5px;color:rgba(255,255,255,0.45);margin-top:5px;">Salary ranges are market estimates sourced from open sources and crowdsourcing from professionals. Indicative only — verify before making offers.</span>
+  <span style="display:block;font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">© 2026 Himani Rawat</span>
 </footer>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
@@ -1741,11 +1707,11 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
         </div>
         <div class="co-text">
           <strong>Connect on LinkedIn</strong>
-          <span>Himani Rawat · HR Tools Builder</span>
+          <span>HR Industry Expert · Talent Acquisition Specialist</span>
         </div>
       </a>
     </div>
-    <div class="modal-footer">Used by individual recruiters, HR teams, and growing startups · Built by Himani Rawat, HR Tools Builder</div>
+    <div class="modal-footer">Used by individual recruiters, HR teams, and growing startups · Built by an HR Industry Expert with 8+ years in talent acquisition</div>
   </div>
 </div>
 

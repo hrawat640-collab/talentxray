@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-59QDBJYDPN"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -86,7 +87,7 @@ body{
 .btn-contact svg{width:14px;height:14px;}
 
 /* ── Suite bar ── */
-.suite-bar{display:none;}
+.suite-bar{display:none;} /* merged into topbar */
 .suite-steps{display:flex;align-items:center;gap:4px;}
 .suite-step{
   display:flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;
@@ -105,6 +106,10 @@ body{
 }
 .suite-step.active .suite-step-num{background:var(--accent);color:#fff;}
 .suite-arrow{color:var(--border2);font-size:13px;margin:0 1px;}
+
+
+
+
 
 /* ── Hero ── */
 .hero{
@@ -128,7 +133,7 @@ body{
 .stat-num{font-size:20px;font-weight:800;color:var(--accent);letter-spacing:-0.03em;}
 .stat-lbl{font-size:11px;color:var(--ink3);font-weight:500;margin-top:1px;}
 
-.steps-row{display:none;}
+.steps-row{display:none;}/* unused */
 
 /* ── Tool Hero ── */
 .tool-hero{
@@ -696,6 +701,7 @@ input::placeholder{color:var(--ink3);}
 }
 .faq-item.open .faq-a{display:block;}
 
+
 /* ── Footer ── */
 .site-footer{
   background:var(--ink);color:rgba(255,255,255,0.6);
@@ -735,8 +741,11 @@ input::placeholder{color:var(--ink3);}
   .btn-primary,.btn-secondary,.btn-ghost{justify-content:center;}
 }
 
+
+
 /* Seniority only shown for LinkedIn/GitHub */
 .seniority-hidden { display:none !important; }
+
 
 /* ── Multi-platform per-search links ── */
 .platform-links{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
@@ -748,6 +757,7 @@ input::placeholder{color:var(--ink3);}
 .pl-open:hover{background:#0d5e58;}
 .pl-note{font-size:11px;color:var(--ink3);font-style:italic;margin-left:4px;}
 .single-search-note{font-size:11.5px;color:var(--ink3);margin-top:6px;padding:6px 10px;background:var(--bg);border-radius:7px;border:1px solid var(--border);}
+
 
 .main{
   max-width:860px;
@@ -761,36 +771,58 @@ input::placeholder{color:var(--ink3);}
   .tool-hero{padding:20px 18px;}
   .tool-hero-h1{font-size:19px;}
   .tool-hero-p{font-size:13px;}
+  /* Suite bar — compact on mobile */
   .suite-steps{display:flex;gap:3px;}
   .suite-step{font-size:10.5px;padding:3px 8px;gap:4px;}
   .suite-step-num{width:14px;height:14px;font-size:8px;}
   .suite-arrow{font-size:10px;margin:0;}
+  
+  /* Topbar */
   .topbar{padding:0 14px;height:52px;}
   .topbar-name{font-size:15px;}
   .topbar-tag{display:none;}
   .btn-contact{font-size:11px;padding:7px 10px;min-width:36px;justify-content:center;}
   .btn-contact .btn-contact-text{display:none;}
+  /* Main */
   .main{padding:14px 14px 60px;}
   .tab-nav{padding:0 12px;}
   .tab-btn{font-size:12px;padding:10px 10px;}
+  
+  /* Main content */
   .main{padding:14px 20px 80px;}
+  
+  /* Step cards */
   .step-card{border-radius:12px;margin-bottom:10px;}
   .step-header{padding:11px 14px 9px;}
   .step-body{padding:10px 14px 14px;}
   .step-title{font-size:13.5px;}
   .step-num{width:22px;height:22px;font-size:10px;}
+  
+  /* Platform grid */
   .platform-grid{grid-template-columns:1fr 1fr;gap:7px;}
+  
+  /* LinkedIn row */
   .li-row{flex-direction:column;gap:8px;}
   .li-lbl{font-size:12px;}
   #liCountry{font-size:13px;width:100%;}
+  
+  /* Form rows */
   .form-row{grid-template-columns:1fr !important;}
   .field.span2{grid-column:1;}
   .field label{font-size:12px;}
+  
+  /* Bubble inputs */
   .bubble-wrap{min-height:44px;}
   .bubble-input{font-size:13px;}
   .bubble{font-size:12px;padding:4px 8px;}
+  
+  /* Exp row */
   .exp-row{gap:6px;}
   .exp-row input{width:80px !important;font-size:13px;}
+  
+  /* Action bar removed */
+  
+  /* Results card */
   .results-card{border-radius:12px;}
   .rc-header{padding:10px 14px;}
   .rc-preview{padding:12px 14px;}
@@ -800,21 +832,35 @@ input::placeholder{color:var(--ink3);}
   .btn-primary{width:100%;padding:13px;}
   .rc-bottom-row{flex-direction:row;}
   .rc-copy-btn,.rc-var-btn{padding:10px 12px;font-size:12.5px;}
+
+  /* Platform link rows */
   .plat-link-row{flex-wrap:wrap;gap:8px;}
   .plat-link-name{min-width:80px;font-size:11px;}
   .plat-str{width:100%;order:3;font-size:10px;}
   .plat-open-btn{width:100%;justify-content:center;padding:10px;}
+  
+  /* LI row */
   #liCountry{max-width:100% !important;width:100% !important;}
+  
+  /* Strength meter */
   .strength-wrap{padding:12px 14px;}
+  
+  /* History panel */
   .hist-item{flex-wrap:wrap;gap:6px;}
   .hist-text{width:100%;order:2;font-size:11px;}
+  
+  /* Suggestions dropdown */
   .sug-item{padding:8px 12px;}
   #titleSug,#senioritySug,#locSug,#mustSug,#orSug{font-size:13px;}
+  
+  /* How to use */
   .how-step{flex-direction:column;gap:10px;}
   .how-step-num{width:28px;height:28px;font-size:13px;flex-shrink:0;}
   .tip-grid{grid-template-columns:1fr;}
   .platform-table{overflow-x:auto;}
   .faq-q{font-size:13px;}
+  
+  /* Footer */
   .site-footer{font-size:11px;padding:16px 14px;text-align:center;}
 }
 
@@ -823,6 +869,7 @@ input::placeholder{color:var(--ink3);}
   .platform-btn{font-size:11px;padding:8px 6px;}
   .main{padding:10px 10px;}
 }
+
 
 /* ── Smart tips panel ── */
 .smart-tips{background:var(--white);border:1.5px solid #fbbf24;border-radius:12px;padding:14px 18px;margin:12px 0;display:none;}
@@ -835,11 +882,13 @@ input::placeholder{color:var(--ink3);}
 .stc-text{font-size:12.5px;color:var(--ink2);line-height:1.4;}
 .stc-text strong{color:var(--ink);display:block;font-size:12.5px;}
 
+
 /* ── Smart presets ── */
 .presets-bar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px;}
 .preset-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s;font-family:var(--sans);}
 .preset-chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lt);}
 @media(max-width:640px){.preset-chip{font-size:11.5px;padding:6px 10px;}}
+
 
 /* ── Onboarding card ── */
 .onboard-overlay{position:fixed;inset:0;z-index:9000;background:rgba(15,14,12,0.7);display:none;align-items:center;justify-content:center;padding:20px;}
@@ -854,11 +903,13 @@ input::placeholder{color:var(--ink3);}
 .onboard-btn:hover{background:#0d5e58;}
 @media(max-width:480px){.onboard-card{padding:24px 18px;}}
 
+
 /* ── Search feedback ── */
 .hist-feedback{display:flex;gap:4px;margin-left:auto;}
 .fb-btn{border:none;background:none;cursor:pointer;font-size:14px;padding:3px 5px;border-radius:6px;opacity:0.5;transition:opacity .15s;}
 .fb-btn:hover{opacity:1;background:var(--bg);}
 .fb-btn.selected{opacity:1;}
+
 
 /* ── 30-day trial upgrade wall ── */
 .upgrade-wall{position:fixed;inset:0;z-index:99998;background:rgba(15,14,12,0.92);display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);}
@@ -879,6 +930,7 @@ input::placeholder{color:var(--ink3);}
 .upgrade-note{font-size:11.5px;color:#999;font-family:Outfit,sans-serif;}
 @media(max-width:480px){.upgrade-card{padding:28px 20px;} .upgrade-price strong{font-size:24px;}}
 
+
 /* ── Trial badge in suite bar ── */
 .trial-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap;}
 .trial-badge.warning{background:rgba(251,191,36,0.2);border-color:rgba(251,191,36,0.4);color:#fbbf24;}
@@ -887,9 +939,21 @@ input::placeholder{color:var(--ink3);}
 @media(max-width:640px){.trial-badge{font-size:10px;padding:2px 7px;}}
 
 </style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-59QDBJYDPN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-59QDBJYDPN');
+</script>
 </head>
 <body>
 
+
+<!-- Onboarding flow — shown once after first login -->
+
+<!-- 30-day upgrade wall -->
 <div class="upgrade-wall" id="upgradeWall">
   <div class="upgrade-card">
     <div class="upgrade-icon">🔍</div>
@@ -944,21 +1008,26 @@ input::placeholder{color:var(--ink3);}
   </div>
 </div>
 
+<!-- Topbar -->
+<!-- Email Login Modal -->
 <div id="loginModal" style="position:fixed;inset:0;z-index:99999;background:rgba(15,14,12,0.85);display:none;align-items:center;justify-content:center;padding:20px;">
   <div style="background:#fff;border-radius:18px;padding:36px 32px;width:100%;max-width:420px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.22);">
     <h2 style="margin-bottom:6px;font-size:22px;letter-spacing:-0.02em;font-family:Outfit,sans-serif;">Welcome to TalentXRay</h2>
     <p style="color:#6b6963;margin-bottom:20px;font-size:13px;line-height:1.6;font-family:Outfit,sans-serif;">30-day free trial</p>
 
+    <!-- Google Sign-In -->
     <div id="txrGoogleBtn" style="margin-bottom:14px;">
       <div id="g_txr_signin" style="display:flex;justify-content:center;"></div>
     </div>
 
+    <!-- Divider -->
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
       <div style="flex:1;height:1px;background:#e4e2db;"></div>
       <span style="font-size:11.5px;color:#aaa;font-family:Outfit,sans-serif;">or continue with email</span>
       <div style="flex:1;height:1px;background:#e4e2db;"></div>
     </div>
 
+    <!-- Email step -->
     <div id="txrEmailStep">
       <input type="email" id="txrEmailInput" placeholder="your@email.com"
         style="width:100%;padding:13px 16px;margin-bottom:10px;border-radius:9px;border:1.5px solid #e4e2db;font-family:Outfit,sans-serif;font-size:14px;outline:none;box-sizing:border-box;"
@@ -970,6 +1039,7 @@ input::placeholder{color:var(--ink3);}
       <p id="txrEmailErr" style="font-size:12px;color:#b91c1c;margin-top:8px;display:none;">Please enter a valid email address.</p>
     </div>
 
+    <!-- OTP step (hidden initially) -->
     <div id="txrOtpStep" style="display:none;">
       <p style="font-size:13px;color:#4a4843;margin-bottom:12px;font-family:Outfit,sans-serif;">
         Code sent to <strong id="txrOtpEmail"></strong>
@@ -993,6 +1063,180 @@ input::placeholder{color:var(--ink3);}
     <p style="font-size:11px;color:#bbb;margin-top:12px;font-family:Outfit,sans-serif;">30-day free trial · Unlimited searches</p>
   </div>
 </div>
+<script>
+/* ── EmailJS + Google OAuth init ── */
+(function(){
+  // Load Google Identity Services
+  const gs = document.createElement('script');
+  gs.src = 'https://accounts.google.com/gsi/client';
+  gs.async = true; gs.defer = true;
+  gs.crossOrigin = 'anonymous';
+  gs.onload = function(){
+    try {
+      google.accounts.id.initialize({
+        client_id: '63435915694-ug0ina6m7jqvm7m0f22qq4gqrsgieoha.apps.googleusercontent.com',
+        callback: txrHandleGoogle
+      });
+      google.accounts.id.renderButton(
+        document.getElementById('g_txr_signin'),
+        {theme:'outline', size:'large', width:356, text:'continue_with', shape:'rectangular'}
+      );
+    } catch(e) { console.warn('Google Sign-In unavailable:', e.message); }
+  };
+  gs.onerror = function(){ console.warn('Google Sign-In script blocked or failed to load'); };
+  document.head.appendChild(gs);
+
+  // Load EmailJS v4 (latest stable)
+  const ej = document.createElement('script');
+  ej.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+  ej.onload = function(){
+    emailjs.init({ publicKey: 'fJHhZObCpSxH0HS4P' });
+    window._emailjsReady = true;
+  };
+  ej.onerror = function(){ window._emailjsReady = false; };
+  document.head.appendChild(ej);
+})();
+
+let txrOtpCode = '';
+
+/* ── Page load: check login ── */
+(function(){
+  // Auto-login via URL param (passed from SkillMapper)
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlEmail = urlParams.get('au');
+  if(urlEmail && !localStorage.getItem('txr_user_email')){
+    const decoded = decodeURIComponent(urlEmail);
+    localStorage.setItem('txr_user_email', decoded);
+    localStorage.setItem('txr_user_name', '');
+    localStorage.setItem('tr_shared_email', decoded);
+    if(!localStorage.getItem('txr_login_date')) localStorage.setItem('txr_login_date', Date.now().toString());
+    // Clean URL
+    window.history.replaceState({}, '', window.location.pathname + window.location.search.replace(/[?&]au=[^&]*/,'').replace(/^&/,'?') || window.location.pathname);
+  }
+  // Auto-login if already logged into SkillMapper via localStorage (same browser, same domain edge case)
+  const sharedEmail = localStorage.getItem('tr_shared_email');
+  const sharedName  = localStorage.getItem('tr_shared_name');
+  if(!localStorage.getItem('txr_user_email') && sharedEmail){
+    localStorage.setItem('txr_user_email', sharedEmail);
+    localStorage.setItem('txr_user_name', sharedName || '');
+    if(!localStorage.getItem('txr_login_date')) localStorage.setItem('txr_login_date', Date.now().toString());
+  }
+  if(!localStorage.getItem('txr_user_email')){
+    document.getElementById('loginModal').style.display='flex';
+  } else {
+    checkTrialExpiry('txr');
+    renderTrialBadge();
+  }
+})();
+
+/* ── Google callback ── */
+function txrHandleGoogle(response){
+  const payload = JSON.parse(atob(response.credential.split('.')[1]));
+  const email = payload.email;
+  const name  = payload.name || '';
+  txrCompleteLogin(email, name);
+}
+
+/* ── Email OTP flow ── */
+function txrSendOtp(){
+  const val = document.getElementById('txrEmailInput').value.trim();
+  const err = document.getElementById('txrEmailErr');
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!val || !emailRe.test(val)){
+    err.style.display='block'; err.textContent='Please enter a valid email address.';
+    document.getElementById('txrEmailInput').focus(); return;
+  }
+  err.style.display='none';
+  // Generate 6-digit OTP
+  txrOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const btn = document.getElementById('txrOtpBtn');
+  btn.textContent = 'Sending...'; btn.disabled = true;
+  // Guard: check emailjs fully loaded and initialised
+  if(typeof emailjs === 'undefined' || !window._emailjsReady){
+    btn.textContent = 'Send verification code →'; btn.disabled = false;
+    err.style.display='block';
+    err.textContent='Email service still loading — please try again in a few seconds.';
+    return;
+  }
+  emailjs.send('service_xi5bbol', 'template_kexeatw', {
+    to_email: val,
+    passcode: txrOtpCode,
+    tool_name: 'TalentXRay'
+  }).then(function(){
+    document.getElementById('txrEmailStep').style.display='none';
+    document.getElementById('txrOtpStep').style.display='block';
+    document.getElementById('txrOtpEmail').textContent = val;
+    document.getElementById('txrOtpInput').focus();
+  }, function(error){
+    btn.textContent = 'Send verification code →'; btn.disabled = false;
+    err.style.display='block';
+    const errMsg = error && error.text ? error.text : (error && error.status ? 'Error '+error.status : 'Unknown error');
+    err.textContent = 'Could not send code: ' + errMsg + '. Try again or refresh the page.';
+    console.error('EmailJS error:', error);
+  });
+}
+
+function txrVerifyOtp(){
+  const entered = document.getElementById('txrOtpInput').value.trim();
+  const err = document.getElementById('txrOtpErr');
+  if(entered !== txrOtpCode){
+    err.style.display='block'; 
+    document.getElementById('txrOtpInput').value='';
+    document.getElementById('txrOtpInput').focus(); return;
+  }
+  err.style.display='none';
+  const email = document.getElementById('txrEmailInput').value.trim();
+  txrCompleteLogin(email, '');
+}
+
+function txrBackToEmail(){
+  document.getElementById('txrOtpStep').style.display='none';
+  document.getElementById('txrEmailStep').style.display='block';
+  document.getElementById('txrOtpInput').value='';
+  txrOtpCode = '';
+}
+
+/* ── Inject shared email into SkillMapper nav links ── */
+function txrUpdateNavLinks(){
+  const email = localStorage.getItem('txr_user_email');
+  if(!email) return;
+  const enc = encodeURIComponent(email);
+  ['suiteNavSM','smLinkLogin'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){
+      const base = el.href.split('?')[0];
+      const params = new URLSearchParams(el.href.includes('?') ? el.href.split('?')[1] : '');
+      params.set('au', enc);
+      el.href = base + '?' + params.toString();
+    }
+  });
+}
+
+/* ── Complete login (called by both Google + OTP) ── */
+function txrCompleteLogin(email, name){
+  const consent = document.getElementById('txrConsent').checked;
+  localStorage.setItem('txr_user_email', email);
+  localStorage.setItem('txr_user_name', name);
+  localStorage.setItem('txr_consent', consent?'yes':'no');
+  // Shared key — so SkillMapper recognises the user too
+  localStorage.setItem('tr_shared_email', email);
+  localStorage.setItem('tr_shared_name', name);
+  if(!localStorage.getItem('txr_login_date')) localStorage.setItem('txr_login_date', Date.now().toString());
+  document.getElementById('loginModal').style.display='none';
+  renderTrialBadge();
+  txrUpdateNavLinks();
+  if(!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}
+  try{
+    fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+(consent?'yes':'no')
+    });
+  }catch(e){}
+}
+
+/* ── Legacy txrDoLogin / smDoLogin alias (kept for safety) ── */
+function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
+</script>
+
 
 <header class="topbar">
   <div class="topbar-brand">
@@ -1001,6 +1245,7 @@ input::placeholder{color:var(--ink3);}
     </div>
     <span class="topbar-name">Talent<span>XRay</span></span>
   </div>
+  <!-- Suite nav centred -->
   <div class="suite-steps">
     <a class="suite-step" id="suiteNavSM" href="https://skillmapper-hrfk.netlify.app">
       <span class="suite-step-num">1</span>
@@ -1021,6 +1266,7 @@ input::placeholder{color:var(--ink3);}
   </div>
 </header>
 
+<!-- Tab nav -->
 <nav class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('tool',this)">Tool</button>
   <button class="tab-btn" onclick="switchTab('howto',this)">How to Use</button>
@@ -1029,6 +1275,7 @@ input::placeholder{color:var(--ink3);}
 <div id="page-tool" class="page active">
 <main class="main">
 
+  <!-- Hero -->
   <div class="tool-hero">
     <div class="tool-hero-text">
       <h1 class="tool-hero-h1">Hire or grow your network</h1>
@@ -1036,6 +1283,7 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+  <!-- Quick start presets -->
   <div style="margin-bottom:16px;">
     <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Quick start</div>
     <div class="presets-bar">
@@ -1048,6 +1296,7 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+  <!-- Step 1: Platform -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn1">1</div>
@@ -1097,6 +1346,7 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+  <!-- Step 2: Role -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn2">2</div>
@@ -1119,6 +1369,7 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+  <!-- Step 3: Skills -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn3">3</div>
@@ -1146,6 +1397,7 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+  <!-- Step 4: Location -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn4">4</div>
@@ -1169,6 +1421,7 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+  <!-- Step 5: Extra keywords -->
   <div class="step-card">
     <div class="step-header">
       <div class="step-num" id="sn5">5</div>
@@ -1189,6 +1442,7 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+  <!-- Results card — search string + actions all in one clean panel -->
   <div class="results-card" id="resultsCard">
     <div class="rc-header">
       <div class="rc-header-left">
@@ -1199,6 +1453,7 @@ input::placeholder{color:var(--ink3);}
       <button class="rc-reset" onclick="resetAll()">↺ Reset</button>
     </div>
 
+    <!-- Live preview -->
     <div class="rc-preview" id="singlePlatformOutput">
       <div class="rc-str" id="outputStr">
         <span class="rc-str-empty">Fill in a job title above — your Google search string builds in real time</span>
@@ -1207,13 +1462,16 @@ input::placeholder{color:var(--ink3);}
         style="display:none;width:100%;margin-top:10px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;border:1.5px solid var(--border);border-radius:8px;background:var(--white);color:var(--ink);resize:vertical;min-height:60px;box-sizing:border-box;cursor:text;"></textarea>
     </div>
 
+    <!-- Multi-platform output -->
     <div id="multiPlatformOutput" style="display:none;padding:14px 18px;">
       <div id="platformLinks"></div>
       <div class="single-search-note" id="multiNote"></div>
     </div>
 
+    <!-- Actions -->
     <div class="rc-actions">
       <div class="rc-top-row">
+        <!-- Primary: Open in Google -->
         <a id="openGoogleLink" href="#" target="_blank" rel="noopener noreferrer"
           class="btn-primary" onclick="return handleOpenClick(event)"
           style="opacity:0.4;pointer-events:none;"
@@ -1223,10 +1481,12 @@ input::placeholder{color:var(--ink3);}
         </a>
       </div>
       <div class="rc-bottom-row">
+        <!-- Copy -->
         <button class="rc-copy-btn" onclick="copyStr()" id="copyBtn">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="9" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M3 11V3a2 2 0 0 1 2-2h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           <span id="copyLbl">Copy</span>
         </button>
+        <!-- Variations -->
         <button class="rc-var-btn" onclick="generateVars()">
           <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           Variations
@@ -1234,6 +1494,7 @@ input::placeholder{color:var(--ink3);}
       </div>
     </div>
 
+    <!-- Strength meter inside card -->
     <div class="rc-strength">
       <div class="strength-wrap" id="strengthWrap">
         <div class="strength-top">
@@ -1246,6 +1507,8 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+
+  <!-- Smart tips — shown when query might be over-constrained -->
   <div class="smart-tips" id="smartTips">
     <div class="smart-tips-title">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1l1.5 4.5H14l-3.5 2.5L12 13 8 10l-4 3 1.5-5L2 5.5h4.5L8 1z" stroke="#92400e" stroke-width="1.3" stroke-linejoin="round"/></svg>
@@ -1254,6 +1517,7 @@ input::placeholder{color:var(--ink3);}
     <div id="smartTipsList"></div>
   </div>
 
+  <!-- Variations -->
   <div class="var-panel" id="varPanel">
     <div class="step-card" style="margin-bottom:0">
       <div class="step-header">
@@ -1267,6 +1531,7 @@ input::placeholder{color:var(--ink3);}
     </div>
   </div>
 
+  <!-- Templates -->
   <div class="tpl-panel" id="tplPanel">
     <div class="sdiv"></div>
     <div class="hist-head">
@@ -1275,6 +1540,7 @@ input::placeholder{color:var(--ink3);}
     <div id="tplList"></div>
   </div>
 
+  <!-- History -->
   <div class="hist-panel" id="histPanel">
     <div class="sdiv"></div>
     <div class="hist-head">
@@ -1291,7 +1557,10 @@ input::placeholder{color:var(--ink3);}
   </div>
 
 </main>
-</div><div id="page-howto" class="page">
+</div><!-- end page-tool -->
+
+<!-- HOW TO USE PAGE -->
+<div id="page-howto" class="page">
 <main class="main">
   <div class="how-hero">
     <h2>How TalentXRay works</h2>
@@ -1406,7 +1675,12 @@ input::placeholder{color:var(--ink3);}
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Will Open in Google work on my computer?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">If you are running the file directly from your computer (file:// in the address bar), the link may not open due to browser security restrictions on local files. Once deployed on a website (https://) it works perfectly. In the meantime, use <strong>Copy search string</strong> and paste it into Google manually.</div></div>
   </div>
 </main>
-</div><footer class="site-footer">
+</div><!-- end page-howto -->
+
+
+
+<!-- FOOTER -->
+<footer class="site-footer">
   <strong>TalentXRay</strong> · Built by an HR Industry Expert · Powered by Google X-Ray
   <span style="display:block;font-size:10.5px;color:rgba(255,255,255,0.45);margin-top:5px;">Salary ranges are market estimates sourced from open sources and crowdsourcing from professionals. Indicative only — verify before making offers.</span>
   <span style="display:block;font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">© 2026 Himani Rawat</span>
@@ -1442,6 +1716,7 @@ input::placeholder{color:var(--ink3);}
 </div>
 
 <div class="toast" id="toast"></div>
+
 <script>
 /* ─── Email Capture (Netlify Forms) ─── */
 /* email capture handled by inline script in modal */
@@ -1476,7 +1751,7 @@ let searchHistory = JSON.parse(localStorage.getItem('txr_history') || '[]');
 let templates     = JSON.parse(localStorage.getItem('txr_templates') || '[]');
 
 const PLATFORMS = {
-  linkedin:     {site:'site:linkedin.com/in/', label:'LinkedIn',      intitle:true,  tc:'tag-li', noise:'-inurl:jobs -inurl:groups -inurl:company -inurl:posts'},
+  linkedin:     {site:'site:linkedin.com/in/', label:'LinkedIn',       intitle:true,  tc:'tag-li', noise:'-inurl:jobs -inurl:groups -inurl:company -inurl:posts'},
   github:       {site:'site:github.com',        label:'GitHub',        intitle:false, tc:'tag-gh', noise:'-inurl:issues -inurl:pulls -inurl:commits -inurl:blob -inurl:tree'},
   stackoverflow:{site:'site:stackoverflow.com/users', label:'Stack Overflow', intitle:false, tc:'tag-so', noise:''},
   behance:      {site:'site:behance.net',        label:'Behance',       intitle:false, tc:'tag-be', noise:''},
@@ -1884,6 +2159,7 @@ const JOB_TITLES = [
   'Corporate Lawyer','Legal Counsel','Company Lawyer','IP Lawyer',
   'Instructional Designer','L&D Specialist','Training Designer',
 
+
   // ── Additional roles (synced from SkillMapper) ──
   'Cloud Architect','Cloud Solutions Architect','AWS Architect','Azure Architect',
   'Platform Engineer','DevEx Engineer','Internal Tooling Engineer',
@@ -2010,6 +2286,7 @@ function renderJobTitleSug(query, dropId){
   jobTitleFocused=-1;
 }
 
+
 /* ─── Location bubbles ─── */
 const LOCATIONS = [
   // India cities
@@ -2073,6 +2350,7 @@ function pickLoc(loc){
   locFocused=-1;
   renderLocBubbles(); liveUpdate();
 }
+
 
 /* ─── Seniority bubbles ─── */
 let seniorityBubbles = [];
@@ -2193,8 +2471,10 @@ function onSkillInput(e, type){
 }
 
 function onSkillFocus(type){
-  const val = document.getElementById(type==='must'?'mustInput':'orInput').value.trim();
-  renderSuggestions(type, val);
+  const inputId = type==='must' ? 'mustInput' : 'orInput';
+  const el = document.getElementById(inputId);
+  if(!el) return;
+  renderSuggestions(type, el.value.trim());
 }
 
 function onSkillBlur(type){
@@ -2205,6 +2485,7 @@ function onSkillBlur(type){
 function renderSuggestions(type, query){
   const dropId = type==='must' ? 'mustSug' : 'orSug';
   const drop   = document.getElementById(dropId);
+  if(!drop) return;
   const already = type==='must' ? mustBubbles.map(b=>b.text.toLowerCase()) : orBubbles.map(b=>b.text.toLowerCase());
 
   sugFocused[type] = -1;
@@ -2256,7 +2537,8 @@ function renderSuggestions(type, query){
 }
 
 function hideSuggestions(type){
-  document.getElementById(type==='must'?'mustSug':'orSug').classList.remove('open');
+  const el = document.getElementById(type==='must'?'mustSug':'orSug');
+  if(el) el.classList.remove('open');
   sugFocused[type] = -1;
 }
 
@@ -2298,8 +2580,6 @@ function renderGenBubbleList(type){
   const cfg   = GEN_BUBBLE_CFG[type];
   const wrap  = document.getElementById(cfg.wrapId);
   const input = document.getElementById(cfg.inputId);
-  if(!wrap || !input) return; // FIX APPLIED
-
   [...wrap.querySelectorAll('.bubble')].forEach(b=>b.remove());
   cfg.arr().forEach((text,i)=>{
     const el = document.createElement('span');
@@ -2325,7 +2605,7 @@ function handleBubble(e, type){
   const input = e.target;
   const dropId = type==='must' ? 'mustSug' : 'orSug';
   const drop   = document.getElementById(dropId);
-  const items  = [...drop.querySelectorAll('.sug-item')];
+  const items  = drop ? [...drop.querySelectorAll('.sug-item')] : [];
 
   // Arrow navigation
   if(e.key==='ArrowDown' && items.length){
@@ -2375,7 +2655,7 @@ function removeBubble(type, idx){
 
 function renderBubbles(){
   renderBubbleList('mustWrap','mustInput',mustBubbles,'must');
-  renderBubbleList('orWrap','orInput',orBubbles,'or');
+  // orWrap removed from UI — orBubbles still used in buildString but not displayed
   updateSkillCount();
 }
 
@@ -2390,7 +2670,7 @@ function renderAllBubbles(){
 function renderBubbleList(wrapId, inputId, bubbles, type){
   const wrap  = document.getElementById(wrapId);
   const input = document.getElementById(inputId);
-  if(!wrap || !input) return;
+  if(!wrap || !input) return; // element removed from UI — skip silently
   [...wrap.querySelectorAll('.bubble')].forEach(b=>b.remove());
   bubbles.forEach((b,i)=>{
     const el = document.createElement('span');
@@ -2405,7 +2685,6 @@ function updateSkillCount(){
   const andCount = mustBubbles.filter(b=>b.mode==='and').length;
   const cnt = document.getElementById('skillCount');
   const warn = document.getElementById('skillWarn');
-  if(!cnt) return;
   if(!mustBubbles.length){ cnt.style.display='none'; warn.classList.remove('show'); return; }
   cnt.style.display = 'inline';
   if(isLI && andCount>3){
@@ -2422,28 +2701,36 @@ function updateSkillCount(){
 /* ─── Build string ─── */
 function parseList(s){ return s.split(',').map(x=>x.trim()).filter(Boolean); }
 
+
+/* ─── Build an optimised string for a specific single platform ─── */
 function buildStringForPlatform(platformKey, baseOv){
   const ov = {...(baseOv||{})};
 
+  // Platforms where seniority title-prefix is useful (profile headlines/bios)
   const seniorityWorks = ['linkedin','github'];
   if(!seniorityWorks.includes(platformKey)){
-    ov.seniority = null; 
+    // Strip seniority for SO / Behance — just use bare titles
+    ov.seniority = null; // null means "use empty array" in buildString
     ov._stripSeniority = true;
   }
 
+  // Temporarily override selPlatforms to just this one platform
   const savedPlatforms = new Set(selPlatforms);
   selPlatforms = new Set([platformKey]);
 
   const result = buildString(ov);
 
+  // Restore
   selPlatforms = savedPlatforms;
   return result;
 }
 
+/* ─── Emoji + label for each platform ─── */
 const PLATFORM_ICONS = {
   linkedin:'💼', github:'🐙', stackoverflow:'📚', behance:'🎨'
 };
 
+/* ─── Render per-platform links in the output panel ─── */
 function renderMultiPlatformOutput(str, url){
   const single  = document.getElementById('singlePlatformOutput');
   const multi   = document.getElementById('multiPlatformOutput');
@@ -2457,9 +2744,11 @@ function renderMultiPlatformOutput(str, url){
     return;
   }
 
+  // Multi-platform mode
   single.style.display = 'none';
   multi.style.display  = '';
 
+  // Build per-platform rows using DOM (avoids all quote/escape issues)
   links.innerHTML = '';
   [...selPlatforms].forEach(key=>{
     const {str:ps, url:pu} = buildStringForPlatform(key);
@@ -2499,6 +2788,7 @@ function renderMultiPlatformOutput(str, url){
     links.appendChild(row);
   });
 
+  // Note about seniority
   if(seniorityBubbles.length){
     const hasNonSen = [...selPlatforms].some(k=>!['linkedin','github'].includes(k));
     if(hasNonSen){
@@ -2513,18 +2803,24 @@ function renderMultiPlatformOutput(str, url){
 }
 
 function savePlatformHist(key, str, url){
+  // Save each platform click to history
   const savedPlatforms = new Set(selPlatforms);
   selPlatforms = new Set([key]);
   saveHist(str, url);
   selPlatforms = savedPlatforms;
 }
 
+
+
+
+
+/* ─── 30-day trial check ─── */
 const TRIAL_DAYS = 30;
 
 function checkTrialExpiry(prefix){
   const email     = localStorage.getItem(prefix+'_user_email');
   const loginDate = localStorage.getItem(prefix+'_login_date');
-  if(!email || !loginDate) return; 
+  if(!email || !loginDate) return; // not logged in yet
   const daysSince = (Date.now() - parseInt(loginDate)) / (1000*60*60*24);
   if(daysSince >= TRIAL_DAYS){
     document.getElementById('upgradeWall').classList.add('show');
@@ -2534,6 +2830,7 @@ function checkTrialExpiry(prefix){
 function requestUpgrade(prefix){
   const email = localStorage.getItem(prefix+'_user_email') || 'unknown';
   const tool  = prefix==='txr' ? 'TalentXRay' : 'SkillMapper';
+  // Send notification to Himani via Netlify form
   try{
     fetch('/',{
       method:'POST',
@@ -2541,12 +2838,15 @@ function requestUpgrade(prefix){
       body:'form-name=upgrade-requests&email='+encodeURIComponent(email)+'&tool='+encodeURIComponent(tool)+'&date='+encodeURIComponent(new Date().toLocaleDateString())
     });
   }catch(e){}
+  // Show confirmation
   const sentEl = document.getElementById(prefix+'UpgradeSent');
   const btnEl  = document.getElementById(prefix+'UpgradeBtn');
   if(sentEl) sentEl.style.display='block';
   if(btnEl)  btnEl.style.display='none';
 }
 
+
+/* ─── Trial badge renderer ─── */
 function renderTrialBadge(){
   const loginDate = localStorage.getItem('txr_login_date');
   const badge = document.getElementById('trialBadge');
@@ -2570,11 +2870,13 @@ function renderTrialBadge(){
   }
 }
 
+/* ─── Onboarding ─── */
 function closeOnboard(){
   document.getElementById('onboardOverlay').classList.remove('show');
   localStorage.setItem('txr_onboarded','1');
 }
 
+/* ─── Smart presets ─── */
 const PRESETS = {
   backend: {
     titles:['Backend Engineer','Backend Developer'],
@@ -2623,8 +2925,10 @@ const PRESETS = {
 function loadPreset(key){
   const p = PRESETS[key];
   if(!p) return;
+  // Clear existing
   titleBubbles.length=0; mustBubbles=[]; orBubbles=[]; seniorityBubbles.length=0;
   locBubbles.length=0; compBubbles=[]; excBubbles=[];
+  // Load preset
   p.titles.forEach(t=>titleBubbles.push(t));
   mustBubbles = [...p.must];
   orBubbles   = [...p.or];
@@ -2635,9 +2939,11 @@ function loadPreset(key){
   updateLinkedInUI();
   liveUpdate();
   toast(p.hint, 'ok');
+  // Scroll to output
   setTimeout(()=>document.getElementById('resultsCard').scrollIntoView({behavior:'smooth',block:'nearest'}), 400);
 }
 
+/* ─── Smart tips — context-aware suggestions when query may be over-constrained ─── */
 function updateSmartTips(str){
   const panel  = document.getElementById('smartTips');
   const list   = document.getElementById('smartTipsList');
@@ -2654,18 +2960,23 @@ function updateSmartTips(str){
   const hasSen     = seniorityBubbles.length > 0;
   const charLen    = str.length;
 
+  // Too many AND skills
   if(andCount >= 3)
     tips.push({icon:'🎯', title:'Too many must-have skills', action:'Move 1–2 skills from Must-have to Broaden results', fn:'relaxMustSkills'});
 
+  // Too many title variants
   if(titleCount >= 4)
     tips.push({icon:'📝', title:'Many job titles in query', action:'Remove 1–2 alternative titles — keep only the most common ones', fn:'removeLastTitle'});
 
+  // Location + seniority + skills all together (very restrictive)
   if(locCount > 0 && hasSen && andCount >= 2)
     tips.push({icon:'📍', title:'Location + seniority + skills is very narrow', action:'Try removing the location filter to widen the search', fn:'clearLoc'});
 
+  // Long query string
   if(charLen > 280)
     tips.push({icon:'✂️', title:'Query is very long ('+charLen+' chars)', action:'Google X-Ray works best under 250 chars — remove some filters', fn:null});
 
+  // No location — suggest adding one
   if(locCount === 0 && andCount <= 1 && titleCount === 1 && !tips.length)
     tips.push({icon:'🌏', title:'Add a location to narrow results', action:'E.g. Bengaluru, India — reduces irrelevant global profiles', fn:null});
 
@@ -2679,6 +2990,7 @@ function updateSmartTips(str){
 }
 
 function relaxMustSkills(){
+  // Move last AND skill to OR
   const andOnes = mustBubbles.filter(b=>b.mode==='and');
   if(andOnes.length){
     const last = andOnes[andOnes.length-1];
@@ -2703,6 +3015,7 @@ function buildString(ov={}){
   const titles      = ov.titles    ?? [...titleBubbles];
   const jobTitle    = titles[0] || '';
   const altTitles   = titles.slice(1);
+  // seniority: use bubble array; ov.seniority for variations override
   const seniorityArr = ov.seniority!=null ? (ov.seniority?[ov.seniority]:[]) : [...seniorityBubbles];
   const locations   = ov.locations ?? [...locBubbles];
   const companies   = ov.companies ?? compBubbles.map(c=>c);
@@ -2711,6 +3024,7 @@ function buildString(ov={}){
   let allMust = ov.mustBubbles ?? mustBubbles;
   let allOr   = ov.orBubbles   ?? orBubbles;
 
+  // Cap AND skills at 3 for LinkedIn
   if(hasLI){
     const andB    = allMust.filter(b=>b.mode==='and');
     const overflow = andB.slice(3);
@@ -2722,17 +3036,19 @@ function buildString(ov={}){
 
   let parts = [];
 
+  // Site
   if(platforms.length===1){
     parts.push(hasLI ? `site:${liCountry}` : PLATFORMS[platforms[0]].site);
   } else {
     parts.push('('+platforms.map(k=> k==='linkedin'?`site:${liCountry}`:PLATFORMS[k].site).join(' OR ')+')');
   }
 
+  // Per-platform noise filters (defined in PLATFORMS config)
   platforms.forEach(k=>{
     const noise=(k==='linkedin'?PLATFORMS.linkedin.noise:PLATFORMS[k]?.noise)||'';
     if(noise) parts.push(noise);
   });
-  
+  // Deduplicate noise tokens
   if(parts.length>1){
     const noisePart=parts.filter(p=>p.startsWith('-inurl:'));
     const uniqueNoise=[...new Set(noisePart.join(' ').split(' '))].join(' ');
@@ -2740,14 +3056,16 @@ function buildString(ov={}){
     if(uniqueNoise) parts.splice(1,0,uniqueNoise);
   }
 
+  // Titles
   if(jobTitle){
     const titles = [jobTitle, ...altTitles];
     let variants = [];
     if(seniorityArr.length){
+      // Each seniority level paired with each title — e.g. "Senior Engineer" OR "Lead Engineer" OR "Engineer"
       seniorityArr.forEach(sen=>{
         titles.forEach(t=>variants.push(`"${sen} ${t}"`));
       });
-      titles.forEach(t=>variants.push(`"${t}"`));
+      titles.forEach(t=>variants.push(`"${t}"`)); // always include bare title too
       variants = [...new Set(variants)];
     } else {
       variants = titles.map(t=>`"${t}"`);
@@ -2756,25 +3074,31 @@ function buildString(ov={}){
     parts.push(isLIOnly ? `intitle:${expr}` : expr);
   }
 
+
+  // Location + Companies
   if(locations.length===1) parts.push(`"${locations[0]}"`);
   else if(locations.length>1) parts.push('('+ locations.map(l=>`"${l}"`).join(' OR ')+ ')');
   companies.forEach(c=>parts.push(`"${c}"`));
 
+  // Must-have skills
   allMust.filter(b=>b.mode==='and').forEach(b=>parts.push(`"${b.text}"`));
   const mustOrArr = allMust.filter(b=>b.mode==='or').map(b=>b.text);
   if(mustOrArr.length===1) parts.push(`"${mustOrArr[0]}"`);
   else if(mustOrArr.length>1) parts.push(`(${mustOrArr.map(s=>`"${s}"`).join(' OR ')})`);
 
+  // Nice-to-have
   const orArr = allOr.map(b=>typeof b==='string'?b:b.text);
   if(orArr.length===1) parts.push(`"${orArr[0]}"`);
   else if(orArr.length>1) parts.push(`(${orArr.map(s=>`"${s}"`).join(' OR ')})`);
 
+  // Exclusions
   excludeKw.forEach(k=>parts.push(`-"${k}"`));
 
   const str = parts.join(' ');
   return {str, url:`https://www.google.com/search?q=${encodeURIComponent(str)}&num=100`};
 }
 
+/* ─── Strength meter ─── */
 function updateStrength(str){
   const wrap = document.getElementById('strengthWrap');
   if(!str){ wrap.classList.remove('show'); return; }
@@ -2807,6 +3131,7 @@ function updateStrength(str){
   document.getElementById('strengthTip').textContent = tip;
 }
 
+/* ─── Live update ─── */
 function liveUpdate(){
   updateLinkedInUI();
   updateSkillCount();
@@ -2829,6 +3154,7 @@ function liveUpdate(){
     chars.textContent = `${str.length} chars`;
 
     if(!isMulti){
+      // Single platform — show textarea + open link as before
       if(ta){ ta.value=str; ta.style.display='block'; }
       if(hint){ hint.style.display='block'; }
       if(lnk){
@@ -2836,10 +3162,12 @@ function liveUpdate(){
         lnk.style.opacity='1'; lnk.style.pointerEvents='auto';
       }
     } else {
+      // Multi-platform — hide single-platform controls, show per-platform rows
       if(ta){ ta.style.display='none'; }
       if(hint){ hint.style.display='none'; }
       if(lnk){ lnk.style.opacity='0.4'; lnk.style.pointerEvents='none'; lnk.href='#'; }
     }
+    // Always render the multi-platform panel (it self-hides for single)
     renderMultiPlatformOutput(str, url);
 
   } else {
@@ -2868,22 +3196,29 @@ function renderHL(str){
     .replace(/\b(OR)\b/g,'<span class="tok-op">$1</span>');
 }
 
+/* ─── Actions ─── */
+
 function handleOpenClick(e){
+  // href is already set by liveUpdate() — just save history and let browser follow it
   const lnk = document.getElementById('openGoogleLink');
   if(!lnk||lnk.href===window.location.href||lnk.getAttribute('href')==='#'){
     toast('Add a job title or skill first','err');
     e.preventDefault(); return false;
   }
+  // Auto-add typed-but-not-entered title if any
   const ti = document.getElementById('titleInput');
   if(ti&&ti.value.trim()&&!titleBubbles.length){
     titleBubbles.push(ti.value.trim()); ti.value='';
     renderTitleBubbles(); liveUpdate();
+    // liveUpdate just set a new href — proceed with that
   }
+  // Save to history
   const {str, url} = buildString();
   if(str) saveHist(str, url);
-  return true; 
+  return true; // browser follows the already-set href
 }
 
+/* ─── openUrl kept for variation panel buttons ─── */
 function openUrl(url){
   try{
     const a=document.createElement('a');
@@ -2892,7 +3227,9 @@ function openUrl(url){
   }catch(e){ window.open(url,'_blank'); }
 }
 
+/* ─── copyStr: multi-method clipboard copy ─── */
 function copyStr(){
+  // Auto-add typed-but-not-entered title
   const ti=document.getElementById('titleInput');
   if(ti&&ti.value.trim()&&!titleBubbles.length){
     titleBubbles.push(ti.value.trim()); ti.value='';
@@ -2904,6 +3241,7 @@ function copyStr(){
   const lbl=document.getElementById('copyLbl');
   const showCopied=()=>{ lbl.textContent='✓ Copied!'; setTimeout(()=>lbl.textContent='Copy search string',2000); };
 
+  // Method 1: modern clipboard API (works on https://)
   if(navigator.clipboard&&window.isSecureContext){
     navigator.clipboard.writeText(str).then(()=>{ showCopied(); toast('Copied ✓','ok'); }).catch(()=>fallbackCopy(str,showCopied));
     return;
@@ -2912,6 +3250,7 @@ function copyStr(){
 }
 
 function fallbackCopy(text,onSuccess){
+  // Use the visible output textarea — selecting a visible element works reliably on file:// too
   const outTa=document.getElementById('outputTa');
   if(outTa){
     outTa.value=text;
@@ -2923,6 +3262,7 @@ function fallbackCopy(text,onSuccess){
       if(ok){ onSuccess&&onSuccess(); toast('Copied ✓','ok'); return; }
     }catch(e){}
   }
+  // Last resort: hidden textarea
   const ta=document.createElement('textarea');
   ta.value=text; ta.style.cssText='position:fixed;top:0;left:0;width:2em;height:2em;opacity:0.01;border:0;padding:0;';
   document.body.appendChild(ta); ta.focus(); ta.select();
@@ -2941,7 +3281,7 @@ function copyToClipboard(text){
 
 function resetAll(){
   renderSeniorityBubbles();
-  document.getElementById('seniorityAutoLabel')?.textContent='';
+  document.getElementById('seniorityAutoLabel').textContent='';
   seniorityBubbles.length=0; renderSeniorityBubbles();
   mustBubbles=[]; orBubbles=[]; titleBubbles.length=0; locBubbles.length=0; compBubbles=[]; excBubbles=[]; seniorityBubbles.length=0;
   renderAllBubbles();
@@ -2960,7 +3300,7 @@ function generateVars(){
   if(!str){ toast('Fill in fields first','err'); return; }
   const jobTitle  = titleBubbles[0]||'';
   const altTitles = titleBubbles.slice(1);
-  const seniority = document.getElementById('seniority')?.value;
+  const seniority = document.getElementById('seniority').value;
   const location  = locBubbles[0]||'';
   const andSkills = mustBubbles.filter(b=>b.mode==='and');
   const vars = [];
@@ -2973,12 +3313,12 @@ function generateVars(){
     const {str:s,url:u}=buildString({jobTitle:altTitles[0], altTitles:altTitles.slice(1)});
     if(s) vars.push({label:`Alt title — "${altTitles[0]}"`, str:s, url:u});
   }
-  if(seniorityBubbles.length){
-    const {str:s,url:u}=buildString({seniority:null});
+  if(seniority){
+    const {str:s,url:u}=buildString({seniority:''});
     if(s) vars.push({label:'Without seniority — broader pool', str:s, url:u});
   }
   if(location){
-    const {str:s,url:u}=buildString({locations:[]});
+    const {str:s,url:u}=buildString({location:''});
     if(s) vars.push({label:'Without location — catches unlisted cities', str:s, url:u});
   }
   if(andSkills.length>0){
@@ -3007,7 +3347,7 @@ function generateVars(){
   toast(`${vars.length} variations ready`,'ok');
 }
 
-/* ─── Templates (FIXED) ─── */
+/* ─── Templates ─── */
 function saveTpl(){
   const {str} = buildString();
   if(!str){ toast('Fill in fields before saving','err'); return; }
@@ -3019,8 +3359,8 @@ function saveTpl(){
     platforms:[...selPlatforms],
     liCountry:document.getElementById('liCountry').value,
     titleBubbles:[...titleBubbles],
-    seniority: seniorityBubbles.join(', '),
-    location: locBubbles.join(', '),
+    seniority:document.getElementById('seniority').value,
+    location:document.getElementById('location').value,
     compBubbles:[...compBubbles],
     mustBubbles:[...mustBubbles], orBubbles:[...orBubbles],
     excBubbles:[...excBubbles], str
@@ -3035,16 +3375,11 @@ function loadTpl(id){
   const t = templates.find(x=>x.id===id);
   if(!t) return;
   titleBubbles.length=0; (t.titleBubbles||[t.jobTitle]).filter(Boolean).forEach(x=>titleBubbles.push(x));
-  
   seniorityBubbles.length=0; if(t.seniority) t.seniority.split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>seniorityBubbles.push(s)); renderSeniorityBubbles();
-  locBubbles.length=0; if(t.location) t.location.split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>locBubbles.push(s)); renderLocBubbles();
-  
+  document.getElementById('location').value   = t.location||'';
   document.getElementById('liCountry').value  = t.liCountry||'in.linkedin.com/in/';
   mustBubbles=[...(t.mustBubbles||[])]; orBubbles=[...(t.orBubbles||[])];
-  
-  compBubbles=[...(t.compBubbles||[])]; 
-  excBubbles=[...(t.excBubbles||[])];
-  
+// altBubbles is now titleBubbles — already handled above compBubbles=[...(t.compBubbles||[])]; excBubbles=[...(t.excBubbles||[])];
   renderAllBubbles();
   selPlatforms = new Set(t.platforms||['linkedin']);
   document.querySelectorAll('.platform-btn').forEach(b=>b.classList.toggle('active',selPlatforms.has(b.dataset.platform)));
@@ -3117,6 +3452,7 @@ function reuseSearch(id){
   toast('Loaded — click Open in Google','ok');
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
 
 function giveFeedback(id, val){
   const item = searchHistory.find(h=>h.id===id);
@@ -3200,8 +3536,8 @@ renderTemplates();
 updateLinkedInUI();
 renderAllBubbles();
 
-/* ─── Read URL params from SkillMapper (FIXED) ─── */
-(function(){
+/* ─── Read URL params from SkillMapper ─── */
+document.addEventListener('DOMContentLoaded', function(){
   const p = new URLSearchParams(window.location.search);
   const title    = p.get('title');
   const altRaw   = p.get('alt');
@@ -3210,22 +3546,39 @@ renderAllBubbles();
 
   if(!title && !skillRaw) return;
 
-  if(title){
-    titleBubbles.push(decodeURIComponent(title));
-  }
-  if(altRaw){
-    const alts = decodeURIComponent(altRaw).split(',').map(s=>s.trim()).filter(Boolean);
-    if(alts[0]) titleBubbles.push(alts[0]);
-  }
-  renderTitleBubbles();
+  // rAF ensures all bubble wrap elements are rendered in DOM before we try to fill them
+  requestAnimationFrame(function(){
 
-  if(skillRaw){
-    const allSkills = decodeURIComponent(skillRaw).split(',').map(s=>s.trim()).filter(Boolean);
-    mustBubbles = allSkills.slice(0,2).map(s=>({text:s, mode:'and'}));
-    orBubbles   = allSkills.slice(2).map(s=>({text:s, mode:'or'}));
-  }
+    // Titles
+    if(title) titleBubbles.push(decodeURIComponent(title));
+    if(altRaw){
+      const alts = decodeURIComponent(altRaw).split(',').map(s=>s.trim()).filter(Boolean);
+      if(alts[0]) titleBubbles.push(alts[0]);
+    }
 
-  renderAllBubbles();
-  liveUpdate();
-})();
+    // Skills → mustBubbles, capped at 3 (more = too restrictive for LinkedIn)
+    if(skillRaw){
+      const allSkills = decodeURIComponent(skillRaw).split(',').map(s=>s.trim()).filter(Boolean);
+      mustBubbles = allSkills.slice(0,3).map(s=>({text:s, mode:'and'}));
+      orBubbles   = [];
+    }
+
+    renderTitleBubbles();
+    renderBubbles();
+    liveUpdate();
+
+    // Brief toast when coming from SkillMapper
+    if(fromSM && (title || skillRaw)){
+      const toast = document.createElement('div');
+      toast.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#0f766e;color:white;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;font-family:Outfit,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:9999;white-space:nowrap;transition:opacity .5s;pointer-events:none;';
+      toast.textContent = '✅ Loaded from SkillMapper — review and search!';
+      document.body.appendChild(toast);
+      setTimeout(()=>{ toast.style.opacity='0'; setTimeout(()=>toast.remove(),500); }, 3000);
+    }
+  });
+});
 </script>
+
+
+</body>
+</html>

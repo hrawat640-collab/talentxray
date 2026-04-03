@@ -833,11 +833,15 @@ input::placeholder{color:var(--ink3);}
   .rc-bottom-row{flex-direction:row;}
   .rc-copy-btn,.rc-var-btn{padding:10px 12px;font-size:12.5px;}
 
-  /* Platform link rows */
+  /* Platform link rows — both old (.plat-) and new (.platform-link-row / .pl-) classes */
   .plat-link-row{flex-wrap:wrap;gap:8px;}
   .plat-link-name{min-width:80px;font-size:11px;}
   .plat-str{width:100%;order:3;font-size:10px;}
   .plat-open-btn{width:100%;justify-content:center;padding:10px;}
+  .platform-link-row{flex-wrap:wrap;gap:6px;padding:8px 10px;}
+  .pl-name{min-width:70px;font-size:11px;}
+  .pl-str{width:100%;order:3;font-size:10px;white-space:normal;word-break:break-all;}
+  .pl-open{width:100%;text-align:center;padding:9px;font-size:12px;}
   
   /* LI row */
   #liCountry{max-width:100% !important;width:100% !important;}
@@ -853,6 +857,20 @@ input::placeholder{color:var(--ink3);}
   .sug-item{padding:8px 12px;}
   #titleSug,#senioritySug,#locSug,#mustSug,#orSug{font-size:13px;}
   
+  /* Hero */
+  .hero{padding:16px 16px;margin-bottom:14px;}
+  .hero-text h1{font-size:20px;}
+  .hero-text p{font-size:13px;}
+  .hero-stats{gap:8px;margin-top:14px;}
+  .stat{padding:8px 12px;}
+  .stat-num{font-size:16px;}
+  .stat-lbl{font-size:10px;}
+  
+  /* rc-bottom-row — keep as row but allow wrap */
+  .rc-bottom-row{flex-wrap:wrap;}
+  .rc-copy-btn{flex:1 1 auto;}
+  .rc-var-btn{flex:1 1 auto;}
+
   /* How to use */
   .how-step{flex-direction:column;gap:10px;}
   .how-step-num{width:28px;height:28px;font-size:13px;flex-shrink:0;}
@@ -1451,7 +1469,7 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
           <div class="bubble-wrap" id="compWrap" onclick="focusBubble('compInput')">
             <input class="bubble-input" id="compInput" placeholder="e.g. Google, Microsoft" onkeydown="handleGenBubble(event,'comp')" oninput="liveUpdate()">
           </div>
-          <span class="hint" style="color:#999;">
+<span class="hint" style="color:#999;">
   *Works best for people who mention their company name in profile headline
   (e.g. “Engineer at Google”). Leave blank for broader results.
 </span>
@@ -1719,13 +1737,13 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
     <h2 style="font-size:20px;margin-bottom:6px;">Want a custom version for your team?</h2>
     <p style="font-size:13.5px;color:var(--ink3);line-height:1.6;margin-bottom:20px;">TalentXRay can be set up with your company branding, role presets specific to your industry, and integrated into your hiring workflow. Typical turnaround 48–72 hours.</p>
     <div class="modal-options">
-      <a class="contact-option" href="mailto:hrawat640@gmail.com?subject=TalentXRay Custom Version&body=Hi Himani, I am interested in a custom version of TalentXRay for my company." target="_blank">
+      <a class="contact-option" href="/cdn-cgi/l/email-protection#0f677d6e786e7b393b3f4f68626e6663216c6062307c7a6d656a6c7b325b6e636a617b575d6e762f4c7a7c7b60622f596a7d7c666061296d606b763247662f4766626e6166232f462f6e622f66617b6a7d6a7c7b6a6b2f66612f6e2f6c7a7c7b60622f796a7d7c6660612f60692f5b6e636a617b575d6e762f69607d2f62762f6c60627f6e617621" target="_blank">
         <div class="co-icon email">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#0f766e" stroke-width="1.8"/><polyline points="22,6 12,13 2,6" stroke="#0f766e" stroke-width="1.8" stroke-linejoin="round"/></svg>
         </div>
         <div class="co-text">
           <strong>Email Himani directly</strong>
-          <span>hrawat640@gmail.com · Reply within 24 hours</span>
+          <span><span class="__cf_email__" data-cfemail="fa92889b8d9b8ecccecaba9d979b9396d4999597">[email&#160;protected]</span> · Reply within 24 hours</span>
         </div>
       </a>
       <a class="contact-option" href="https://www.linkedin.com/in/himani-rawat-339324132/" target="_blank">
@@ -1744,7 +1762,7 @@ function txrDoLogin(){ document.getElementById('txrEmailInput').focus(); }
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ─── Email Capture (Netlify Forms) ─── */
 /* email capture handled by inline script in modal */
 
@@ -3580,20 +3598,4 @@ document.addEventListener('DOMContentLoaded', function(){
   renderTitleBubbles();
 
   // Skills: max 2 AND (must-have) + rest as OR (nice-to-have)
-  // More than 2 AND skills on LinkedIn = near-zero results
-  if(skillRaw){
-    const allSkills = decodeURIComponent(skillRaw).split(',').map(s=>s.trim()).filter(Boolean);
-    mustBubbles = allSkills.slice(0,2).map(s=>({text:s, mode:'and'}));
-    orBubbles   = allSkills.slice(2).map(s=>({text:s, mode:'or'}));
-  }
-
-  renderAllBubbles();
-  liveUpdate();
-
-
-});
-</script>
-
-
-</body>
-</html>
+  // More than 2 AND skills o

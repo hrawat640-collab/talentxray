@@ -1228,7 +1228,79 @@ function txrCompleteLogin(email, name){
   if(!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}
   try{
     fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+(consent?'yes':'no')
+#!/usr/bin/env python3
+"""
+TalentXRay Netlify Forms Patcher
+==================================
+Adds the two missing hidden Netlify form declarations to TalentXRay's index.html.
+
+Usage:
+    python3 patch_talentxray.py talentxray_index.html
+
+Output:
+    talentxray_index_patched.html   (complete updated file, ready to deploy)
+"""
+
+import sys, os
+
+def patch(path):
+    with open(path, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    has_txr_users = 'name="txr-users"' in html
+    has_upgrade   = 'name="upgrade-requests"' in html
+
+    print(f"  txr-users:        {'OK - already present, skipping' if has_txr_users else 'MISSING - will add'}")
+    print(f"  upgrade-requests: {'OK - already present, skipping' if has_upgrade else 'MISSING - will add'}")
+
+    if has_txr_users and has_upgrade:
+        print("\nAll forms already present. No changes needed.")
+        return
+
+    forms_to_add = "\n"
+    if not has_txr_users:
+        forms_to_add += """<!-- Hidden Netlify form for txr-users (login/signup) -->
+<form name="txr-users" data-netlify="true" hidden>
+  <input type="text" name="email" />
+  <input type="text" name="name" />
+  <input type="text" name="consent" />
+</form>
+
+"""
+    if not has_upgrade:
+        forms_to_add += """<!-- Hidden Netlify form for upgrade-requests -->
+<form name="upgrade-requests" data-netlify="true" hidden>
+  <input type="text" name="email" />
+  <input type="text" name="tool" />
+  <input type="text" name="date" />
+</form>
+
+"""
+
+    if '</body>' not in html:
+        print("ERROR: </body> not found. Wrong file?")
+        sys.exit(1)
+
+    html = html.replace('</body>', forms_to_add + '</body>', 1)
+
+    out = path.rsplit('.html', 1)[0] + '_patched.html'
+    with open(out, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    print(f"\nSaved: {out}")
+    print("Deploy to Netlify. Check Netlify Dashboard -> Forms after deploy.")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python3 patch_talentxray.py <talentxray_index.html>")
+        sys.exit(1)
+    p = sys.argv[1]
+    if not os.path.exists(p):
+        print(f"File not found: {p}"); sys.exit(1)
+    print(f"Patching: {p}\n")
+    patch(p)
+      
+body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+(consent?'yes':'no')
     });
   }catch(e){}
 }

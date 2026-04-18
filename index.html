@@ -400,10 +400,10 @@ input::placeholder{color:var(--ink3);}
 let txrOtpCode='';
 (function(){
   const urlParams=new URLSearchParams(window.location.search);const urlEmail=urlParams.get('au');
-  if(urlEmail&&!localStorage.getItem('txr_user_email')){const decoded=decodeURIComponent(urlEmail);localStorage.setItem('txr_user_email',decoded);localStorage.setItem('txr_user_name','');localStorage.setItem('tr_shared_email',decoded);if(!localStorage.getItem('txr_login_date'))localStorage.setItem('txr_login_date',Date.now().toString());window.history.replaceState({},'',(window.location.search.replace(/[?&]au=[^&]*/,'').replace(/^&/,'?'))||window.location.pathname);}
+  if(urlEmail&&!localStorage.getItem('txr_user_email')){const decoded=decodeURIComponent(urlEmail);const smName=localStorage.getItem('sm_user_name')||'';localStorage.setItem('txr_user_email',decoded);localStorage.setItem('txr_user_name',smName);localStorage.setItem('tr_shared_email',decoded);if(smName)localStorage.setItem('tr_shared_name',smName);if(!localStorage.getItem('txr_login_date'))localStorage.setItem('txr_login_date',Date.now().toString());window.history.replaceState({},'',(window.location.search.replace(/[?&]au=[^&]*/,'').replace(/^&/,'?'))||window.location.pathname);}
   const sharedEmail=localStorage.getItem('tr_shared_email');const sharedName=localStorage.getItem('tr_shared_name');
   if(!localStorage.getItem('txr_user_email')&&sharedEmail){localStorage.setItem('txr_user_email',sharedEmail);localStorage.setItem('txr_user_name',sharedName||'');if(!localStorage.getItem('txr_login_date'))localStorage.setItem('txr_login_date',Date.now().toString());}
-  if(!localStorage.getItem('txr_user_email')){document.getElementById('loginModal').style.display='flex';}else{checkTrialExpiry('txr');renderTrialBadge();}
+  if(!localStorage.getItem('txr_user_email')){document.getElementById('loginModal').style.display='flex';}else{checkTrialExpiry('txr');renderTrialBadge();}txrRenderUserChip();
 })();
 function txrHandleGoogle(response){const payload=JSON.parse(atob(response.credential.split('.')[1]));txrCompleteLogin(payload.email,payload.name||'');}
 function txrSendOtp(){
@@ -417,7 +417,23 @@ function txrSendOtp(){
 function txrVerifyOtp(){const entered=document.getElementById('txrOtpInput').value.trim();const err=document.getElementById('txrOtpErr');if(entered!==txrOtpCode){err.style.display='block';document.getElementById('txrOtpInput').value='';document.getElementById('txrOtpInput').focus();return;}err.style.display='none';txrCompleteLogin(document.getElementById('txrEmailInput').value.trim(),'');}
 function txrBackToEmail(){document.getElementById('txrOtpStep').style.display='none';document.getElementById('txrEmailStep').style.display='block';document.getElementById('txrOtpInput').value='';txrOtpCode='';}
 function txrUpdateNavLinks(){const email=localStorage.getItem('txr_user_email');if(!email)return;const enc=encodeURIComponent(email);['suiteNavSM','smLinkLogin'].forEach(id=>{const el=document.getElementById(id);if(el){const base=el.href.split('?')[0];const params=new URLSearchParams(el.href.includes('?')?el.href.split('?')[1]:'');params.set('au',enc);el.href=base+'?'+params.toString();}});}
-function txrCompleteLogin(email,name){const consent=document.getElementById('txrConsent').checked;localStorage.setItem('txr_user_email',email);localStorage.setItem('txr_user_name',name);localStorage.setItem('txr_consent',consent?'yes':'no');localStorage.setItem('tr_shared_email',email);localStorage.setItem('tr_shared_name',name);if(!localStorage.getItem('txr_login_date'))localStorage.setItem('txr_login_date',Date.now().toString());document.getElementById('loginModal').style.display='none';renderTrialBadge();txrUpdateNavLinks();if(!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+(consent?'yes':'no')});}catch(e){}}
+function txrRenderUserChip(){
+  const email=localStorage.getItem('txr_user_email');
+  const chip=document.getElementById('txrUserChip');
+  if(!chip)return;
+  if(!email){chip.style.display='none';return;}
+  const name=localStorage.getItem('txr_user_name')||'';
+  const initials=name.trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase()||email[0].toUpperCase();
+  document.getElementById('txrInitials').textContent=initials;
+  document.getElementById('txrUserEmail').textContent=name||email;
+  if(document.getElementById('txrMenuName'))document.getElementById('txrMenuName').textContent=name||'';
+  if(document.getElementById('txrMenuEmail'))document.getElementById('txrMenuEmail').textContent=email;
+  chip.style.display='flex';
+}
+function txrToggleUserMenu(){const m=document.getElementById('txrUserMenu');if(m)m.style.display=m.style.display==='none'?'block':'none';}
+document.addEventListener('click',function(e){const m=document.getElementById('txrUserMenu');const chip=document.getElementById('txrUserChip');if(m&&!m.contains(e.target)&&!chip.contains(e.target))m.style.display='none';});
+function txrSignOut(){['txr_user_email','txr_user_name','txr_login_date','txr_consent'].forEach(k=>localStorage.removeItem(k));const chip=document.getElementById('txrUserChip');if(chip)chip.style.display='none';document.getElementById('loginModal').style.display='flex';}
+function txrCompleteLogin(email,name){const consent=document.getElementById('txrConsent').checked;localStorage.setItem('txr_user_email',email);localStorage.setItem('txr_user_name',name);localStorage.setItem('txr_consent',consent?'yes':'no');localStorage.setItem('tr_shared_email',email);localStorage.setItem('tr_shared_name',name);if(!localStorage.getItem('txr_login_date'))localStorage.setItem('txr_login_date',Date.now().toString());document.getElementById('loginModal').style.display='none';renderTrialBadge();txrUpdateNavLinks();txrRenderUserChip();if(!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+(consent?'yes':'no')});}catch(e){}}
 function txrDoLogin(){document.getElementById('txrEmailInput').focus();}
 </script>
 
@@ -437,6 +453,14 @@ function txrDoLogin(){document.getElementById('txrEmailInput').focus();}
       <svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4z" stroke="currentColor" stroke-width="1.4"/><path d="M2 4l6 5 6-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
       <span class="btn-contact-text">Get a custom version</span>
     </button>
+    <div id="txrUserChip" style="display:none;align-items:center;gap:7px;padding:5px 12px 5px 7px;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;font-family:var(--sans);font-size:12.5px;cursor:pointer;" onclick="txrToggleUserMenu()" title="Signed in via SkillMapper">
+      <span id="txrInitials" style="background:var(--accent);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;"></span>
+      <span id="txrUserEmail" style="color:var(--ink2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    </div>
+    <div id="txrUserMenu" style="display:none;position:absolute;top:56px;right:14px;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px 0;z-index:200;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,0.12);">
+      <div style="padding:8px 16px 10px;border-bottom:1px solid var(--border);"><div id="txrMenuName" style="font-size:13px;font-weight:700;color:var(--ink);"></div><div id="txrMenuEmail" style="font-size:11.5px;color:var(--ink3);margin-top:2px;"></div></div>
+      <button onclick="txrSignOut()" style="width:100%;padding:9px 16px;background:none;border:none;text-align:left;font-size:13px;color:#b91c1c;cursor:pointer;font-family:var(--sans);font-weight:600;">Sign out</button>
+    </div>
   </div>
 </header>
 

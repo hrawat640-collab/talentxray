@@ -530,6 +530,12 @@ function txrRenderUserChip(){
   }
   chip.style.display='flex';
 }
+function txrEnforceLoginGate(){
+  const modal=document.getElementById('loginModal');
+  if(!modal)return;
+  const hasEmail=!!(localStorage.getItem('txr_user_email')||'').trim();
+  modal.style.display=hasEmail?'none':'flex';
+}
 function txrToggleUserMenu(){const m=document.getElementById('txrUserMenu');if(m)m.style.display=m.style.display==='none'?'block':'none';}
 document.addEventListener('click',function(e){const m=document.getElementById('txrUserMenu');const chip=document.getElementById('txrUserChip');if(m&&!m.contains(e.target)&&!chip.contains(e.target))m.style.display='none';});
 function txrPrimaryAction(){
@@ -544,7 +550,7 @@ function txrPrimaryAction(){
 }
 async function txrSignOut(){['txr_user_email','txr_user_name','txr_consent'].forEach(k=>localStorage.removeItem(k));if(txrSupabaseClient){try{await txrSupabaseClient.auth.signOut();}catch(_err){}}txrRenderUserChip();document.getElementById('loginModal').style.display='flex';}
 function txrCompleteLogin(email,name,opts){const options=opts||{};const consent=document.getElementById('txrConsent')?.checked;localStorage.setItem('txr_user_email',email);localStorage.setItem('txr_user_name',name);if(typeof consent==='boolean')localStorage.setItem('txr_consent',consent?'yes':'no');localStorage.setItem('tr_shared_email',email);localStorage.setItem('tr_shared_name',name);localStorage.setItem('sm_user_email',email);localStorage.setItem('sm_user_name',name);document.getElementById('loginModal').style.display='none';txrUpdateNavLinks();txrRenderUserChip();if(!options.silent&&!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}txrUpsertSmUser(email,name);try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+encodeURIComponent(localStorage.getItem('txr_consent')||'yes')});}catch(e){}}
-document.addEventListener('DOMContentLoaded',function(){txrInitSupabaseAuth();});
+document.addEventListener('DOMContentLoaded',function(){txrEnforceLoginGate();txrInitSupabaseAuth();});
 </script>
 
 <header class="topbar">

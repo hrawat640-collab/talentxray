@@ -377,9 +377,13 @@ async function txrUpsertSmUser(email,name){
     const {error}=await txrSupabaseClient
       .from('sm_users')
       .upsert(payload,{onConflict:'email'});
-    if(error)console.warn('sm_users upsert failed:',error.message);
+    if(error){
+      console.warn('[TXR][SUPABASE] sm_users upsert failed:',error.message,error);
+      return;
+    }
+    console.info('[TXR][SUPABASE] sm_users upsert success for:',payload.email);
   }catch(err){
-    console.warn('sm_users upsert failed:',err?.message||err);
+    console.warn('[TXR][SUPABASE] sm_users upsert exception:',err?.message||err,err);
   }
 }
 
@@ -388,19 +392,24 @@ async function txrInitSupabaseAuth(){
   if(!window.TXR_SUPABASE_URL||!window.TXR_SUPABASE_ANON_KEY)return;
   try{
     txrSupabaseClient=window.supabase.createClient(window.TXR_SUPABASE_URL,window.TXR_SUPABASE_ANON_KEY);
+    console.info('[TXR][SUPABASE] auth client initialized');
     const {data:{session}}=await txrSupabaseClient.auth.getSession();
     if(session?.user?.email){
       const name=session.user.user_metadata?.full_name||session.user.user_metadata?.name||'';
+      console.info('[TXR][SUPABASE] existing session detected for:',session.user.email);
       txrCompleteLogin(session.user.email,name,{silent:true});
+    }else{
+      console.info('[TXR][SUPABASE] no existing session on load');
     }
-    txrSupabaseClient.auth.onAuthStateChange((_event,sessionData)=>{
+    txrSupabaseClient.auth.onAuthStateChange((event,sessionData)=>{
+      console.info('[TXR][SUPABASE] auth state change:',event,sessionData?.user?.email||'no-user');
       if(sessionData?.user?.email){
         const name=sessionData.user.user_metadata?.full_name||sessionData.user.user_metadata?.name||'';
         txrCompleteLogin(sessionData.user.email,name,{silent:true});
       }
     });
   }catch(err){
-    console.warn('Supabase auth init failed:',err?.message||err);
+    console.warn('[TXR][SUPABASE] auth init failed:',err?.message||err,err);
   }
 }
 
@@ -415,6 +424,7 @@ async function txrSignInWithGoogle(){
   if(btn){btn.disabled=true;btn.textContent='Redirecting...';}
   try{
     const redirectTo=window.location.origin+window.location.pathname;
+    console.info('[TXR][SUPABASE] starting Google OAuth, redirectTo:',redirectTo);
     const {error}=await txrSupabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
     if(error)throw error;
   }catch(err){

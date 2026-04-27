@@ -10,4 +10,6 @@
 window.__SKILLMAPPER_SUPABASE__ = {
   url: 'https://oqknepaevzhcmmmatame.supabase.co',
   anonKey: 'sb_publishable_ZwdxLA2twuvjkBug6JPxxA_zlWzaVN2',
+  /** Return URL for email auth + OAuth when not on localhost (must be in Supabase → Auth → URL Configuration). */
+  authEmailBase: 'https://talentxray.talentsradar.com',
 };

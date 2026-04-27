@@ -333,8 +333,8 @@ input::placeholder{color:var(--ink3);}
 <!-- Login Modal -->
 <div id="loginModal" style="position:fixed;inset:0;z-index:99999;background:rgba(15,14,12,0.85);display:none;align-items:center;justify-content:center;padding:20px;">
   <div style="background:#fff;border-radius:18px;padding:36px 32px;width:100%;max-width:420px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.22);">
-    <h2 style="margin-bottom:6px;font-size:22px;letter-spacing:-0.02em;font-family:Outfit,sans-serif;">Welcome to Talentxray</h2>
-    <p style="color:#6b6963;margin-bottom:20px;font-size:13px;line-height:1.6;font-family:Outfit,sans-serif;">Sign in with Google to use the tool.</p>
+    <h2 id="txrLoginTitle" style="margin-bottom:6px;font-size:22px;letter-spacing:-0.02em;font-family:Outfit,sans-serif;">Welcome to Talentxray</h2>
+    <p id="txrLoginSub" style="color:#6b6963;margin-bottom:20px;font-size:13px;line-height:1.6;font-family:Outfit,sans-serif;">Sign in with Google to use the tool.</p>
     <div id="txrGoogleBtn" style="margin-bottom:14px;">
       <button id="txrGoogleSignInBtn" onclick="txrSignInWithGoogle()" style="width:100%;padding:13px;background:#fff;color:#111;border:1.5px solid #d9d9d9;border-radius:9px;font-weight:700;font-family:Outfit,sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
         <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.6 3.9-5.5 3.9-3.3 0-6-2.8-6-6.2s2.7-6.2 6-6.2c1.9 0 3.2.8 3.9 1.5l2.7-2.7C16.9 2.8 14.7 2 12 2 6.9 2 2.8 6.2 2.8 11.5S6.9 21 12 21c6.9 0 9.1-4.9 9.1-7.4 0-.5 0-.9-.1-1.3H12z"/></svg>
@@ -342,8 +342,8 @@ input::placeholder{color:var(--ink3);}
       </button>
       <p id="txrAuthErr" style="font-size:12px;color:#b91c1c;margin-top:8px;display:none;text-align:left;"></p>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><div style="flex:1;height:1px;background:#e4e2db;"></div><span style="font-size:11.5px;color:#aaa;font-family:Outfit,sans-serif;">or use email</span><div style="flex:1;height:1px;background:#e4e2db;"></div></div>
-    <div style="display:flex;gap:8px;margin-bottom:10px;">
+    <div id="txrAuthDivider" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><div style="flex:1;height:1px;background:#e4e2db;"></div><span style="font-size:11.5px;color:#aaa;font-family:Outfit,sans-serif;">or use email</span><div style="flex:1;height:1px;background:#e4e2db;"></div></div>
+    <div id="txrAuthTabsRow" style="display:flex;gap:8px;margin-bottom:10px;">
       <button id="txrAuthTabSignup" type="button" onclick="txrSwitchAuthTab('signup')" style="flex:1;padding:10px;background:#0f766e;color:#fff;border:1.5px solid #0f766e;border-radius:9px;font-weight:700;font-family:Outfit,sans-serif;font-size:13px;cursor:pointer;">Sign up</button>
       <button id="txrAuthTabSignin" type="button" onclick="txrSwitchAuthTab('signin')" style="flex:1;padding:10px;background:#fff;color:#111827;border:1.5px solid #d9d9d9;border-radius:9px;font-weight:700;font-family:Outfit,sans-serif;font-size:13px;cursor:pointer;">Sign in</button>
     </div>
@@ -357,10 +357,21 @@ input::placeholder{color:var(--ink3);}
       <input type="email" id="txrSigninEmail" placeholder="Email" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Outfit,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
       <input type="password" id="txrSigninPassword" placeholder="Password" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Outfit,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
       <button onclick="txrSignInWithPassword()" style="width:100%;padding:11px;background:#111827;color:#fff;border:none;border-radius:8px;font-weight:700;font-family:Outfit,sans-serif;font-size:13px;cursor:pointer;">Sign in</button>
+      <div style="display:flex;justify-content:space-between;gap:10px;margin-top:8px;">
+        <button type="button" onclick="txrSendMagicLink()" style="background:none;border:none;padding:0;color:#0f766e;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;">Sign in with link</button>
+        <button type="button" onclick="txrForgotPassword()" style="background:none;border:none;padding:0;color:#0f766e;font-size:12px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;">Forgot password?</button>
+      </div>
+    </div>
+    <div id="txrResetForm" style="display:none;text-align:left;">
+      <p id="txrResetEmailLine" style="display:none;font-size:12.5px;font-weight:600;color:#0f0e0c;margin:0 0 10px;font-family:Outfit,sans-serif;">Account: </p>
+      <p style="font-size:12px;color:#6b6963;margin:0 0 8px;font-family:Outfit,sans-serif;">Choose a new password for this account. You can use the tool after you save it.</p>
+      <input type="password" id="txrResetPassword" placeholder="New password (min 6 chars)" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Outfit,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <input type="password" id="txrResetPassword2" placeholder="Confirm new password" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Outfit,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <button onclick="txrUpdatePassword()" style="width:100%;padding:11px;background:#111827;color:#fff;border:none;border-radius:8px;font-weight:700;font-family:Outfit,sans-serif;font-size:13px;cursor:pointer;">Update password</button>
     </div>
     <p id="txrCreateErr" style="font-size:12px;color:#b91c1c;margin-top:8px;display:none;text-align:left;">Please enter valid details.</p>
     <p id="txrCreateOk" style="font-size:12px;color:#0f766e;margin-top:8px;display:none;text-align:left;">Check your email to verify your account, then sign in.</p>
-    <label style="display:flex;align-items:flex-start;gap:10px;text-align:left;margin-top:14px;cursor:pointer;">
+    <label id="txrConsentBlock" style="display:flex;align-items:flex-start;gap:10px;text-align:left;margin-top:14px;cursor:pointer;">
       <input type="checkbox" id="txrConsent" checked style="margin-top:3px;flex-shrink:0;accent-color:#0f766e;">
       <span style="font-size:11.5px;color:#8a8780;line-height:1.5;font-family:Outfit,sans-serif;">Send me helpful hiring tools and insights. Unsubscribe anytime.</span>
     </label>
@@ -373,13 +384,26 @@ input::placeholder{color:var(--ink3);}
   const supabaseCfg=window.__SKILLMAPPER_SUPABASE__||window.TXR_SUPABASE_CONFIG||{};
   window.TXR_SUPABASE_URL=(supabaseCfg.url||'').trim();
   window.TXR_SUPABASE_ANON_KEY=(supabaseCfg.anonKey||'').trim();
+  window.TXR_AUTH_EMAIL_BASE=String(supabaseCfg.authEmailBase||'https://talentxray.talentsradar.com').replace(/\/+$/,'');
 })();
 let txrSupabaseClient=null;
+let txrSessionHydrated=false;
 function txrTrackEvent(eventName,params){
   try{
     if(typeof window.gtag!=='function')return;
     window.gtag('event',eventName,params||{});
   }catch(_err){}
+}
+function txrShowToast(msg,type){
+  if(typeof window.showToast==='function'){
+    window.showToast(msg,type);
+    return;
+  }
+  const node=document.getElementById('txrCreateOk')||document.getElementById('txrCreateErr');
+  if(!node)return;
+  node.style.display='block';
+  node.textContent=msg||'';
+  node.style.color=type==='err'?'#b91c1c':'#0f766e';
 }
 async function txrPostJson(url,payload){
   try{
@@ -452,26 +476,64 @@ async function txrInitSupabaseAuth(){
   if(!window.supabase||!window.supabase.createClient)return;
   if(!window.TXR_SUPABASE_URL||!window.TXR_SUPABASE_ANON_KEY)return;
   try{
-    txrSupabaseClient=window.supabase.createClient(window.TXR_SUPABASE_URL,window.TXR_SUPABASE_ANON_KEY);
+    txrSupabaseClient=window.supabase.createClient(window.TXR_SUPABASE_URL,window.TXR_SUPABASE_ANON_KEY,{
+      auth:{flowType:'pkce',detectSessionInUrl:true,persistSession:true,storage:window.localStorage}
+    });
     console.info('[TXR][SUPABASE] auth client initialized');
-    const {data:{session}}=await txrSupabaseClient.auth.getSession();
-    if(session?.user?.email){
-      const name=session.user.user_metadata?.full_name||session.user.user_metadata?.name||'';
-      console.info('[TXR][SUPABASE] existing session detected for:',session.user.email);
-      txrCompleteLogin(session.user.email,name,{silent:true});
-    }else{
-      console.info('[TXR][SUPABASE] no existing session on load');
+    function txrApplySessionLogin(user,label){
+      if(!user?.email)return;
+      const name=user.user_metadata?.full_name||user.user_metadata?.name||'';
+      setTimeout(function(){
+        if(txrSessionHydrated)return;
+        console.info('[TXR][SUPABASE] '+label+':',user.email);
+        txrCompleteLogin(user.email,name,{silent:true});
+      },0);
     }
     txrSupabaseClient.auth.onAuthStateChange((event,sessionData)=>{
-      console.info('[TXR][SUPABASE] auth state change:',event,sessionData?.user?.email||'no-user');
-      if(sessionData?.user?.email){
-        const name=sessionData.user.user_metadata?.full_name||sessionData.user.user_metadata?.name||'';
-        txrCompleteLogin(sessionData.user.email,name,{silent:true});
+      const u=sessionData?.user;
+      console.info('[TXR][SUPABASE] auth state change:',event,u?.email||'no-user');
+      if(event==='PASSWORD_RECOVERY'||event==='SIGNED_IN'||event==='INITIAL_SESSION'){
+        if(u?.email)txrApplySessionLogin(u,'session event '+event);
+        return;
       }
     });
+    const {data:{session}}=await txrSupabaseClient.auth.getSession();
+    if(session?.user?.email){
+      txrApplySessionLogin(session.user,'getSession');
+    }else{
+      console.info('[TXR][SUPABASE] no session on load');
+    }
   }catch(err){
     console.warn('[TXR][SUPABASE] auth init failed:',err?.message||err,err);
   }
+}
+function txrEnsureSupabaseClient(){
+  if(txrSupabaseClient)return txrSupabaseClient;
+  if(!window.supabase||!window.supabase.createClient)return null;
+  if(!window.TXR_SUPABASE_URL||!window.TXR_SUPABASE_ANON_KEY)return null;
+  try{
+    txrSupabaseClient=window.supabase.createClient(window.TXR_SUPABASE_URL,window.TXR_SUPABASE_ANON_KEY,{
+      auth:{flowType:'pkce',detectSessionInUrl:true,persistSession:true,storage:window.localStorage}
+    });
+    return txrSupabaseClient;
+  }catch(_err){
+    return null;
+  }
+}
+function txrSupabaseConfigError(){
+  if(!window.supabase||!window.supabase.createClient)return 'Supabase SDK not loaded.';
+  if(!window.TXR_SUPABASE_URL)return 'Supabase URL missing.';
+  if(!window.TXR_SUPABASE_ANON_KEY)return 'Supabase anon key missing.';
+  return 'Supabase client unavailable.';
+}
+function txrResolveSigninEmail(actionLabel){
+  const fromField=(document.getElementById('txrSigninEmail')?.value||'').trim().toLowerCase();
+  const email=fromField||window.prompt('Enter your email to '+actionLabel+':','')?.trim().toLowerCase()||'';
+  if(email&&!fromField){
+    const emailInput=document.getElementById('txrSigninEmail');
+    if(emailInput)emailInput.value=email;
+  }
+  return email;
 }
 
 async function txrSignInWithGoogle(){
@@ -484,7 +546,7 @@ async function txrSignInWithGoogle(){
   const btn=document.getElementById('txrGoogleSignInBtn');
   if(btn){btn.disabled=true;btn.textContent='Redirecting...';}
   try{
-    const redirectTo=window.location.origin+window.location.pathname;
+    const redirectTo=txrGetOAuthReturnUrl();
     txrTrackEvent('login_click',{method:'google',source:'login_modal'});
     console.info('[TXR][SUPABASE] starting Google OAuth, redirectTo:',redirectTo);
     const {error}=await txrSupabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo}});
@@ -541,16 +603,86 @@ function txrSwitchAuthTab(tab){
   const signup=tab!=='signin';
   const signupForm=document.getElementById('txrSignupForm');
   const signinForm=document.getElementById('txrSigninForm');
+  const resetForm=document.getElementById('txrResetForm');
   const signupBtn=document.getElementById('txrAuthTabSignup');
   const signinBtn=document.getElementById('txrAuthTabSignin');
   const err=document.getElementById('txrCreateErr');
   const ok=document.getElementById('txrCreateOk');
   if(signupForm)signupForm.style.display=signup?'block':'none';
   if(signinForm)signinForm.style.display=signup?'none':'block';
+  if(resetForm)resetForm.style.display='none';
   if(signupBtn){signupBtn.style.background=signup?'#0f766e':'#fff';signupBtn.style.color=signup?'#fff':'#111827';signupBtn.style.borderColor=signup?'#0f766e':'#d9d9d9';}
   if(signinBtn){signinBtn.style.background=signup?'#fff':'#111827';signinBtn.style.color=signup?'#111827':'#fff';signinBtn.style.borderColor=signup?'#d9d9d9':'#111827';}
   if(err)err.style.display='none';
   if(ok)ok.style.display='none';
+}
+function txrShowResetPasswordForm(){
+  const signupForm=document.getElementById('txrSignupForm');
+  const signinForm=document.getElementById('txrSigninForm');
+  const resetForm=document.getElementById('txrResetForm');
+  const signupBtn=document.getElementById('txrAuthTabSignup');
+  const signinBtn=document.getElementById('txrAuthTabSignin');
+  const err=document.getElementById('txrCreateErr');
+  const ok=document.getElementById('txrCreateOk');
+  if(signupForm)signupForm.style.display='none';
+  if(signinForm)signinForm.style.display='none';
+  if(resetForm)resetForm.style.display='block';
+  if(signupBtn){signupBtn.style.background='#fff';signupBtn.style.color='#111827';signupBtn.style.borderColor='#d9d9d9';}
+  if(signinBtn){signinBtn.style.background='#111827';signinBtn.style.color='#fff';signinBtn.style.borderColor='#111827';}
+  if(err)err.style.display='none';
+  if(ok){ok.style.display='block';ok.textContent='Recovery verified. Set your new password.';}
+}
+function txrApplyDefaultLoginModalView(){
+  const t=document.getElementById('txrLoginTitle');
+  const s=document.getElementById('txrLoginSub');
+  if(t)t.textContent='Welcome to Talentxray';
+  if(s)s.textContent='Sign in with Google to use the tool.';
+  const g=document.getElementById('txrGoogleBtn');
+  const d=document.getElementById('txrAuthDivider');
+  const r=document.getElementById('txrAuthTabsRow');
+  const c=document.getElementById('txrConsentBlock');
+  if(g)g.style.display='';
+  if(d)d.style.display='';
+  if(r)r.style.display='';
+  if(c)c.style.display='';
+  const resetForm=document.getElementById('txrResetForm');
+  const el=document.getElementById('txrResetEmailLine');
+  if(el)el.style.display='none';
+  if(resetForm)resetForm.style.display='none';
+  const signupForm=document.getElementById('txrSignupForm');
+  const signinForm=document.getElementById('txrSigninForm');
+  if(signupForm)signupForm.style.display='block';
+  if(signinForm)signinForm.style.display='none';
+  const su=document.getElementById('txrAuthTabSignup');
+  const si=document.getElementById('txrAuthTabSignin');
+  if(su){su.style.background='#0f766e';su.style.color='#fff';su.style.borderColor='#0f766e';}
+  if(si){si.style.background='#fff';si.style.color='#111827';si.style.borderColor='#d9d9d9';}
+}
+/* Email/OAuth return URLs: always use TXR_AUTH_EMAIL_BASE (supabase-config) for any host
+   that is not local dev. Using window.location (www, /index.html, previews) when that exact
+   URL is not in Supabase → Auth → Redirect URLs makes GoTrue fall back to Site URL. */
+function txrIsLocalDevHost(){
+  const h=(window.location.hostname||'').toLowerCase();
+  return h==='localhost'||h==='127.0.0.1'||h==='[::1]';
+}
+function txrAuthEmailBase(){
+  return(window.TXR_AUTH_EMAIL_BASE||'https://talentxray.talentsradar.com').replace(/\/+$/,'');
+}
+function txrAuthEmailReturnUrl(suffixQuery){
+  if(txrIsLocalDevHost())
+    return window.location.origin+window.location.pathname+suffixQuery;
+  return txrAuthEmailBase()+'/?'+String(suffixQuery).replace(/^\?/,'');
+}
+/** Google OAuth callback — root of the app, no email query params. */
+function txrGetOAuthReturnUrl(){
+  if(txrIsLocalDevHost())return window.location.origin+window.location.pathname;
+  return txrAuthEmailBase()+'/';
+}
+function txrGetResetRedirect(){
+  return txrAuthEmailReturnUrl('?txr_reset=1');
+}
+function txrGetMagicLinkRedirect(){
+  return txrAuthEmailReturnUrl('?txr_magic=1');
 }
 async function txrSignUpWithPassword(){
   const name=(document.getElementById('txrSignupName')?.value||'').trim();
@@ -572,13 +704,41 @@ async function txrSignUpWithPassword(){
   if(ok)ok.style.display='none';
   const consent=document.getElementById('txrConsent')?.checked?'yes':'no';
   try{
-    const {data,error}=await txrSupabaseClient.auth.signUp({email,password,options:{data:{name,full_name:name}}});
-    if(error)throw error;
+    const {data,error}=await txrSupabaseClient.auth.signUp({
+      email,
+      password,
+      options:{
+        data:{name,full_name:name},
+        emailRedirectTo:txrGetMagicLinkRedirect()
+      }
+    });
+    if(error){
+      const msg=String(error.message||'').toLowerCase();
+      if(msg.includes('already registered')||msg.includes('already been registered')||msg.includes('user already')||msg.includes('repeated_signup')){
+        txrSwitchAuthTab('signin');
+        const signInEmail=document.getElementById('txrSigninEmail');
+        if(signInEmail)signInEmail.value=email;
+        if(ok){ok.style.display='block';ok.textContent='We already have your email. Please sign in instead.';}
+        if(err)err.style.display='none';
+        return;
+      }
+      throw error;
+    }
+    const hasNoIdentity=(!data?.session && data?.user?.identities && Array.isArray(data.user.identities) && data.user.identities.length===0);
+    const looksExistingConfirmedUser=(!data?.session && data?.user && (data.user.email_confirmed_at||data.user.confirmed_at));
+    if(hasNoIdentity||looksExistingConfirmedUser){
+      txrSwitchAuthTab('signin');
+      const signInEmail=document.getElementById('txrSigninEmail');
+      if(signInEmail)signInEmail.value=email;
+      if(ok){ok.style.display='block';ok.textContent='We already have your email. Please sign in instead.';}
+      if(err)err.style.display='none';
+      return;
+    }
     if(data?.session?.user?.email){
       txrCompleteLogin(data.session.user.email,name,{silent:false});
       return;
     }
-    if(ok){ok.style.display='block';ok.textContent='Account created. Check your email to verify, then sign in.';}
+    if(ok){ok.style.display='block';ok.textContent='Account created. Check your email to verify, then sign in. If not found, check Spam/Promotions.';}
     txrTrackEvent('signup_success',{method:'email'});
     txrPostJson('/api/lead',{email,name,consent,source:'email_signup'});
   }catch(e){
@@ -607,6 +767,96 @@ async function txrSignInWithPassword(){
     txrTrackEvent('login_success',{method:'email_password',source:'interactive'});
   }catch(e){
     if(err){err.style.display='block';err.textContent=e?.message||'Sign in failed. Please try again.';}
+  }
+}
+async function txrForgotPassword(){
+  txrSwitchAuthTab('signin');
+  const email=txrResolveSigninEmail('reset your password');
+  const err=document.getElementById('txrCreateErr');
+  const ok=document.getElementById('txrCreateOk');
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!emailRe.test(email)){
+    if(err){err.style.display='block';err.textContent='Enter your email first to reset password.';}
+    return;
+  }
+  const sb=txrEnsureSupabaseClient();
+  if(!sb){
+    if(err){err.style.display='block';err.textContent='Password reset unavailable: '+txrSupabaseConfigError();}
+    return;
+  }
+  if(err)err.style.display='none';
+  try{
+    const redirectTo=txrGetResetRedirect();
+    if(/(?:\?|&)txr_debug=1(?:&|$)/.test(window.location.search+window.location.hash)||localStorage.getItem('txr_debug')==='1')
+      console.info('[TXR] resetPasswordForEmail redirectTo (must be allow-listed in Supabase):',redirectTo);
+    const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo});
+    if(error)throw error;
+    if(ok){ok.style.display='block';ok.textContent='Reset link sent. Check your inbox; if not found, check Spam/Promotions.';}
+    txrShowToast('Reset link sent to '+email,'ok');
+    txrTrackEvent('password_reset_requested',{method:'email'});
+  }catch(e){
+    if(err){err.style.display='block';err.textContent=e?.message||'Could not send reset email.';}
+    txrShowToast('Could not send reset email','err');
+  }
+}
+async function txrSendMagicLink(){
+  txrSwitchAuthTab('signin');
+  const email=txrResolveSigninEmail('sign in with a link');
+  const err=document.getElementById('txrCreateErr');
+  const ok=document.getElementById('txrCreateOk');
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!emailRe.test(email)){
+    if(err){err.style.display='block';err.textContent='Enter your email first for magic link sign-in.';}
+    return;
+  }
+  const sb=txrEnsureSupabaseClient();
+  if(!sb){
+    if(err){err.style.display='block';err.textContent='Sign-in link unavailable: '+txrSupabaseConfigError();}
+    return;
+  }
+  if(err)err.style.display='none';
+  try{
+    const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:txrGetMagicLinkRedirect()}});
+    if(error)throw error;
+    if(ok){ok.style.display='block';ok.textContent='Sign-in link sent. Check your inbox; if not found, check Spam/Promotions.';}
+    txrShowToast('Sign-in link sent to '+email,'ok');
+    txrTrackEvent('magic_link_sent',{method:'email_otp'});
+  }catch(e){
+    if(err){err.style.display='block';err.textContent=e?.message||'Could not send sign-in link.';}
+    txrShowToast('Could not send sign-in link','err');
+  }
+}
+async function txrUpdatePassword(){
+  const pwd1=(document.getElementById('txrResetPassword')?.value||'').trim();
+  const pwd2=(document.getElementById('txrResetPassword2')?.value||'').trim();
+  const err=document.getElementById('txrCreateErr');
+  const ok=document.getElementById('txrCreateOk');
+  if(pwd1.length<6||pwd2.length<6){
+    if(err){err.style.display='block';err.textContent='Password must be at least 6 characters.';}
+    return;
+  }
+  if(pwd1!==pwd2){
+    if(err){err.style.display='block';err.textContent='Passwords do not match.';}
+    return;
+  }
+  if(!txrSupabaseClient){
+    if(err){err.style.display='block';err.textContent='Password update unavailable. Check Supabase config.';}
+    return;
+  }
+  if(err)err.style.display='none';
+  try{
+    const {error}=await txrSupabaseClient.auth.updateUser({password:pwd1});
+    if(error)throw error;
+    if(ok){ok.style.display='block';ok.textContent='Password updated. You are now signed in.';}
+    const {data:{session}}=await txrSupabaseClient.auth.getSession();
+    if(session?.user?.email){
+      const name=session.user.user_metadata?.full_name||session.user.user_metadata?.name||'';
+      txrCompleteLogin(session.user.email,name,{silent:false});
+      return;
+    }
+    txrSwitchAuthTab('signin');
+  }catch(e){
+    if(err){err.style.display='block';err.textContent=e?.message||'Could not update password.';}
   }
 }
 function txrUpdateNavLinks(){const email=localStorage.getItem('txr_user_email');if(!email)return;const enc=encodeURIComponent(email);['suiteNavSM','smLinkLogin'].forEach(id=>{const el=document.getElementById(id);if(el){const base=el.href.split('?')[0];const params=new URLSearchParams(el.href.includes('?')?el.href.split('?')[1]:'');params.set('au',enc);el.href=base+'?'+params.toString();}});}
@@ -643,12 +893,25 @@ function txrPrimaryAction(){
   if(hasEmail){txrSignOut();return;}
   const modal=document.getElementById('loginModal');
   if(modal){
+    txrApplyDefaultLoginModalView();
     modal.style.display='flex';
   }
 }
-async function txrSignOut(){['txr_user_email','txr_user_name','txr_consent','tr_shared_email','tr_shared_name','sm_user_email','sm_user_name','sm_userbase'].forEach(k=>localStorage.removeItem(k));if(txrSupabaseClient){try{await txrSupabaseClient.auth.signOut();}catch(_err){}}txrRenderUserChip();document.getElementById('loginModal').style.display='flex';}
-function txrCompleteLogin(email,name,opts){const options=opts||{};const consent=document.getElementById('txrConsent')?.checked;localStorage.setItem('txr_user_email',email);localStorage.setItem('txr_user_name',name);if(typeof consent==='boolean')localStorage.setItem('txr_consent',consent?'yes':'no');localStorage.setItem('tr_shared_email',email);localStorage.setItem('tr_shared_name',name);localStorage.setItem('sm_user_email',email);localStorage.setItem('sm_user_name',name);document.getElementById('loginModal').style.display='none';txrUpdateNavLinks();txrRenderUserChip();if(!options.silent&&!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}txrTrackEvent('login_success',{method:'google',source:options.silent?'session_restore':'interactive'});txrUpsertSmUser(email,name);const consentValue=localStorage.getItem('txr_consent')||'yes';txrPostJson('/api/login-event',{email,name,consent:consentValue,method:'google'}).then(ok=>{if(ok)return;try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+encodeURIComponent(consentValue)});}catch(e){}});}
-document.addEventListener('DOMContentLoaded',function(){txrEnforceLoginGate();txrInitSupabaseAuth();});
+async function txrSignOut(){
+  txrSessionHydrated=false;
+  ['txr_user_email','txr_user_name','txr_consent','tr_shared_email','tr_shared_name','sm_user_email','sm_user_name','sm_userbase'].forEach(k=>localStorage.removeItem(k));
+  if(txrSupabaseClient){try{await txrSupabaseClient.auth.signOut();}catch(_err){}}
+  txrRenderUserChip();
+  txrApplyDefaultLoginModalView();
+  document.getElementById('loginModal').style.display='flex';
+}
+function txrCompleteLogin(email,name,opts){const options=opts||{};if(options.silent&&txrSessionHydrated)return;const consent=document.getElementById('txrConsent')?.checked;localStorage.setItem('txr_user_email',email);localStorage.setItem('txr_user_name',name);if(typeof consent==='boolean')localStorage.setItem('txr_consent',consent?'yes':'no');localStorage.setItem('tr_shared_email',email);localStorage.setItem('tr_shared_name',name);localStorage.setItem('sm_user_email',email);localStorage.setItem('sm_user_name',name);document.getElementById('loginModal').style.display='none';txrUpdateNavLinks();txrRenderUserChip();if(!options.silent&&!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}txrTrackEvent('login_success',{method:'google',source:options.silent?'session_restore':'interactive'});txrUpsertSmUser(email,name);txrSessionHydrated=true;const consentValue=localStorage.getItem('txr_consent')||'yes';txrPostJson('/api/login-event',{email,name,consent:consentValue,method:'google'}).then(ok=>{if(ok)return;try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+encodeURIComponent(consentValue)});}catch(e){}});}
+document.addEventListener('DOMContentLoaded',function(){
+  txrEnforceLoginGate();
+  txrInitSupabaseAuth().then(function(){
+    txrEnforceLoginGate();
+  }).catch(function(){txrEnforceLoginGate();});
+});
 </script>
 
 <header class="topbar">

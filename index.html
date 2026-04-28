@@ -507,6 +507,18 @@ async function txrInitSupabaseAuth(){
     console.warn('[TXR][SUPABASE] auth init failed:',err?.message||err,err);
   }
 }
+async function txrRecordToolLogin(){
+  if(!txrSupabaseClient)return;
+  try{
+    await txrSupabaseClient.rpc('record_tool_login',{
+      p_tool_name:'talentxray',
+      p_user_agent:navigator.userAgent,
+      p_referrer:document.referrer||null
+    });
+  }catch(err){
+    console.warn('[TXR][SUPABASE] record_tool_login failed:',err?.message||err);
+  }
+}
 function txrEnsureSupabaseClient(){
   if(txrSupabaseClient)return txrSupabaseClient;
   if(!window.supabase||!window.supabase.createClient)return null;
@@ -905,7 +917,7 @@ async function txrSignOut(){
   txrApplyDefaultLoginModalView();
   document.getElementById('loginModal').style.display='flex';
 }
-function txrCompleteLogin(email,name,opts){const options=opts||{};if(options.silent&&txrSessionHydrated)return;const consent=document.getElementById('txrConsent')?.checked;localStorage.setItem('txr_user_email',email);localStorage.setItem('txr_user_name',name);if(typeof consent==='boolean')localStorage.setItem('txr_consent',consent?'yes':'no');localStorage.setItem('tr_shared_email',email);localStorage.setItem('tr_shared_name',name);localStorage.setItem('sm_user_email',email);localStorage.setItem('sm_user_name',name);document.getElementById('loginModal').style.display='none';txrUpdateNavLinks();txrRenderUserChip();if(!options.silent&&!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}txrTrackEvent('login_success',{method:'google',source:options.silent?'session_restore':'interactive'});txrUpsertSmUser(email,name);txrSessionHydrated=true;const consentValue=localStorage.getItem('txr_consent')||'yes';txrPostJson('/api/login-event',{email,name,consent:consentValue,method:'google'}).then(ok=>{if(ok)return;try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+encodeURIComponent(consentValue)});}catch(e){}});}
+function txrCompleteLogin(email,name,opts){const options=opts||{};if(options.silent&&txrSessionHydrated)return;const consent=document.getElementById('txrConsent')?.checked;localStorage.setItem('txr_user_email',email);localStorage.setItem('txr_user_name',name);if(typeof consent==='boolean')localStorage.setItem('txr_consent',consent?'yes':'no');localStorage.setItem('tr_shared_email',email);localStorage.setItem('tr_shared_name',name);localStorage.setItem('sm_user_email',email);localStorage.setItem('sm_user_name',name);document.getElementById('loginModal').style.display='none';txrUpdateNavLinks();txrRenderUserChip();if(!options.silent&&!localStorage.getItem('txr_onboarded')){document.getElementById('onboardOverlay').classList.add('show');}txrTrackEvent('login_success',{method:'google',source:options.silent?'session_restore':'interactive'});txrUpsertSmUser(email,name);txrSessionHydrated=true;txrRecordToolLogin();const consentValue=localStorage.getItem('txr_consent')||'yes';txrPostJson('/api/login-event',{email,name,consent:consentValue,method:'google'}).then(ok=>{if(ok)return;try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'form-name=txr-users&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+'&consent='+encodeURIComponent(consentValue)});}catch(e){}});}
 document.addEventListener('DOMContentLoaded',function(){
   txrEnforceLoginGate();
   txrInitSupabaseAuth().then(function(){

@@ -93,6 +93,20 @@ await page.waitForTimeout(600);
 const prefilled = await page.locator('#outputStr').textContent();
 check('url prefill builds query', prefilled.includes('"Data Engineer"') && prefilled.includes('"Spark"') && prefilled.includes('"Airflow"'));
 
+// 13. XSS safety: malicious chip text renders inert
+await page.goto(BASE);
+await page.waitForTimeout(600);
+await page.fill('#titleInput', 'PM');
+await page.keyboard.press('Enter');
+await page.fill('#mustInput', '<img src=x onerror=window.__xss=1>');
+await page.keyboard.press('Enter');
+await page.waitForTimeout(400);
+check('xss: no <img> injected in chips', (await page.locator('#mustWrap img').count()) === 0);
+check('xss: no <img> injected in output', (await page.locator('#outputStr img').count()) === 0);
+check('xss: payload not executed', !(await page.evaluate(() => window.__xss)));
+const outTxt = await page.locator('#outputStr').textContent();
+check('xss: payload text preserved in query', outTxt.includes('<img src=x onerror=window.__xss=1>'));
+
 check('no page JS errors', consoleErrors.length === 0);
 if (consoleErrors.length) console.log('JS errors:', consoleErrors);
 

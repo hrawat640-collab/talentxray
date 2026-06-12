@@ -5,11 +5,15 @@ require('dotenv').config();
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
-const dataDir = path.join(__dirname, 'data');
+const rootDir = path.join(__dirname, '..');
+const dataDir = path.join(rootDir, 'data');
+const clientDist = path.join(rootDir, 'client', 'dist');
 
 app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname));
+// Serves the built frontend. In development the client runs on Vite (port 5173),
+// which proxies /api/* here.
+app.use(express.static(clientDist));
 
 function ensureDataDir() {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });

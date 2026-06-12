@@ -1,0 +1,8 @@
+import { toast } from './ui.js';
+
+function highlight(text,q){return text.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<span style="color:var(--accent);font-weight:700">$1</span>');}
+function renderHL(str){return str.replace(/(site:[^\s]+)/g,'<span class="tok-site">$1</span>').replace(/(intitle:\([^)]+\)|intitle:"[^"]+")/g,'<span class="tok-title">$1</span>').replace(/(-"[^"]+"|-inurl:\w+)/g,'<span class="tok-not">$1</span>').replace(/\b(OR)\b/g,'<span class="tok-op">$1</span>');}
+function openUrl(url){try{const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();document.body.removeChild(a);}catch(e){window.open(url,'_blank');}}
+function fallbackCopy(text,onSuccess){const outTa=document.getElementById('outputTa');if(outTa){outTa.value=text;outTa.style.display='block';outTa.select();outTa.setSelectionRange(0,99999);try{const ok=document.execCommand('copy');if(ok){onSuccess&&onSuccess();toast('Copied ✓','ok');return;}}catch(e){}}const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;top:0;left:0;width:2em;height:2em;opacity:0.01;border:0;padding:0;';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');onSuccess&&onSuccess();toast('Copied ✓','ok');}catch(e){toast('Press Ctrl+A then Ctrl+C in the box below','');}document.body.removeChild(ta);}
+function copyToClipboard(text){return new Promise(resolve=>{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(resolve).catch(()=>{fallbackCopy(text);resolve();});}else{fallbackCopy(text);resolve();}});}
+export { highlight, renderHL, openUrl, fallbackCopy, copyToClipboard };

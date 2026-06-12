@@ -1,15 +1,25 @@
 {
   "name": "talentxray",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Talentxray frontend with lightweight backend API",
-  "main": "server.js",
+  "description": "TalentXray — X-Ray sourcing assistant. Vite frontend (client/) + Express API (server/).",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "concurrently -n server,client -c blue,green \"node server/server.js\" \"vite client\"",
+    "dev:server": "node server/server.js",
+    "dev:client": "vite client",
+    "build": "vite build client",
+    "preview": "vite preview client",
+    "start": "node server/server.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.0",
     "dotenv": "^16.6.1",
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "playwright": "^1.60.0",
+    "vite": "^6.2.0"
   }
 }

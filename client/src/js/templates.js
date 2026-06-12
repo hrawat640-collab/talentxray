@@ -1,0 +1,11 @@
+import { state } from './state.js';
+import { renderAllBubbles, setTitleLogicMode } from './bubbles.js';
+import { liveUpdate } from './live-update.js';
+import { toast } from './ui.js';
+import { txrTrackTool } from './analytics.js';
+import { esc } from './util.js';
+
+function renderTemplates(){const panel=document.getElementById('tplPanel');const list=document.getElementById('tplList');if(!state.templates.length){panel.classList.remove('show');return;}panel.classList.add('show');list.innerHTML=state.templates.map(t=>`<div class="tpl-item"><span class="tpl-name">${esc(t.name)}</span><span class="tpl-date">${esc(t.date)}</span><button class="tpl-load" onclick="loadTpl(${t.id})">Load</button><button class="tpl-del" onclick="deleteTpl(${t.id})" title="Delete">×</button></div>`).join('');}
+function loadTpl(id){const t=state.templates.find(x=>x.id===id);if(!t)return;state.titleBubbles.length=0;(t.titleBubbles||[t.jobTitle]).filter(Boolean).forEach(x=>state.titleBubbles.push(x));state.seniorityBubbles.length=0;(t.seniority||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>state.seniorityBubbles.push(s));document.getElementById('liCountry').value=t.liCountry||'in.linkedin.com/in/';setTitleLogicMode(t.titleLogic||'OR');state.mustBubbles=[...(t.mustBubbles||[])];state.orBubbles=[...(t.orBubbles||[])];state.compBubbles=[...(t.compBubbles||[])];state.excBubbles=[...(t.excBubbles||[])];renderAllBubbles();state.selPlatforms=new Set(t.platforms||['linkedin']);document.querySelectorAll('.platform-btn').forEach(b=>b.classList.toggle('active',state.selPlatforms.has(b.dataset.platform)));document.getElementById('liRow').classList.toggle('hidden',!state.selPlatforms.has('linkedin'));txrTrackTool('template_loaded',{template_name:t.name});liveUpdate();window.scrollTo({top:0,behavior:'smooth'});toast(`"${t.name}" loaded`,'ok');}
+function deleteTpl(id){const tpl=state.templates.find(t=>t.id===id);state.templates=state.templates.filter(t=>t.id!==id);localStorage.setItem('txr_templates',JSON.stringify(state.templates));renderTemplates();txrTrackTool('template_deleted',{template_name:tpl?.name||''});}
+export { renderTemplates, loadTpl, deleteTpl };

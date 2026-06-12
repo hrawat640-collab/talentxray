@@ -240,3 +240,9 @@ Purpose of each **tracked / intentional** project file and folder at the repo ro
 ---
 
 *Last updated from repository analysis; adjust this file when architecture or deployment targets change.*
+
+---
+
+## 10. Restructure note (June 2026)
+
+The monolithic `index.html` was split into `client/` (Vite + vanilla ES modules) and `server/` (Express API). See README.md "Project structure" for the module map. Shared mutable state lives in `client/src/js/state.js`; inline `on*` handlers in HTML are exposed on `window` from `client/src/main.js`. Behavior is unchanged from the monolith except: the user chip now renders on first paint for identities seeded via `?au=`/shared localStorage (previously it silently skipped because the script ran before the DOM existed).

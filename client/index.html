@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-59QDBJYDPN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-59QDBJYDPN', {
+    send_page_view: true,
+    debug_mode: /localhost|127\.0\.0\.1|\[::1\]/.test(window.location.hostname)
+  });
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>TalentXray — X-Ray Sourcing Generator</title>
+<meta name="description" content="TalentXray helps you find candidates with precise Google X-Ray searches across LinkedIn, GitHub, and Behance.">
+<meta property="og:title" content="TalentXray">
+<meta property="og:description" content="Find hiring profiles faster with smart X-Ray search generation.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%236E56F0'/%3E%3Ccircle cx='6.5' cy='6.5' r='4' fill='none' stroke='white' stroke-width='1.4'/%3E%3Cpath d='M10.5 10.5L13.4 13.4' stroke='white' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-card">
+    <div style="font-size:36px;text-align:center;margin-bottom:8px;">🔍</div>
+    <h2 style="font-size:20px;text-align:center;margin-bottom:4px;letter-spacing:-0.02em;">Welcome to Talentxray</h2>
+    <p style="font-size:13px;color:var(--ink3);text-align:center;margin-bottom:0;">Here's how to find candidates in 3 steps:</p>
+    <div class="onboard-steps">
+      <div class="onboard-step"><div class="onboard-num">1</div><div class="onboard-text"><strong>Pick a platform</strong><span>LinkedIn for most roles · GitHub for engineers · Behance for designers</span></div></div>
+      <div class="onboard-step"><div class="onboard-num">2</div><div class="onboard-text"><strong>Add job title + skills</strong><span>Type the title candidates use on their profiles · Add 2–3 must-have skills</span></div></div>
+      <div class="onboard-step"><div class="onboard-num">3</div><div class="onboard-text"><strong>Click Open in Google</strong><span>See real profiles in Google · Use Variations to get 5× more results</span></div></div>
+    </div>
+    <button class="onboard-btn" onclick="closeOnboard()">Got it — let me search →</button>
+    <p style="font-size:11px;color:var(--ink3);text-align:center;margin-top:10px;">Not sure what role to hire? <a id="smLinkLogin" href="https://skillmapper.talentsradar.com" target="_blank" style="color:var(--accent);">Use SkillMapper first →</a></p>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" style="position:fixed;inset:0;z-index:99999;background:rgba(15,14,12,0.85);display:none;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:18px;padding:36px 32px;width:100%;max-width:420px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.22);">
+    <h2 id="txrLoginTitle" style="margin-bottom:6px;font-size:22px;letter-spacing:-0.02em;font-family:Inter,sans-serif;">Welcome to Talentxray</h2>
+    <p id="txrLoginSub" style="color:#6b6963;margin-bottom:20px;font-size:13px;line-height:1.6;font-family:Inter,sans-serif;">Create a free account or sign in to keep searching.</p>
+    <div id="txrAuthTabsRow" style="display:flex;gap:8px;margin-bottom:10px;">
+      <button id="txrAuthTabSignup" type="button" onclick="txrSwitchAuthTab('signup')" style="flex:1;padding:10px;background:#6E56F0;color:#fff;border:1.5px solid #6E56F0;border-radius:9px;font-weight:700;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;">Sign up</button>
+      <button id="txrAuthTabSignin" type="button" onclick="txrSwitchAuthTab('signin')" style="flex:1;padding:10px;background:#fff;color:#111827;border:1.5px solid #d9d9d9;border-radius:9px;font-weight:700;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;">Sign in</button>
+    </div>
+    <div id="txrSignupForm" style="text-align:left;">
+      <input type="text" id="txrSignupName" placeholder="Full name" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Inter,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <input type="email" id="txrSignupEmail" placeholder="Work email (e.g. name@company.com)" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Inter,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <input type="password" id="txrSignupPassword" placeholder="Password (min 6 characters)" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Inter,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <button onclick="txrSignUpWithPassword()" style="width:100%;padding:11px;background:#6E56F0;color:#fff;border:none;border-radius:8px;font-weight:700;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;">Create account</button>
+    </div>
+    <div id="txrSigninForm" style="display:none;text-align:left;">
+      <input type="email" id="txrSigninEmail" placeholder="Email" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Inter,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <input type="password" id="txrSigninPassword" placeholder="Password" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Inter,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <button onclick="txrSignInWithPassword()" style="width:100%;padding:11px;background:#111827;color:#fff;border:none;border-radius:8px;font-weight:700;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;">Sign in</button>
+      <div style="display:flex;justify-content:space-between;gap:10px;margin-top:8px;">
+        <button type="button" onclick="txrSendMagicLink()" style="background:none;border:none;padding:0;color:#6E56F0;font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">Sign in with link</button>
+        <button type="button" onclick="txrForgotPassword()" style="background:none;border:none;padding:0;color:#6E56F0;font-size:12px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;">Forgot password?</button>
+      </div>
+    </div>
+    <div id="txrResetForm" style="display:none;text-align:left;">
+      <p id="txrResetEmailLine" style="display:none;font-size:12.5px;font-weight:600;color:#0f0e0c;margin:0 0 10px;font-family:Inter,sans-serif;">Account: </p>
+      <p style="font-size:12px;color:#6b6963;margin:0 0 8px;font-family:Inter,sans-serif;">Choose a new password for this account. You can use the tool after you save it.</p>
+      <input type="password" id="txrResetPassword" placeholder="New password (min 6 chars)" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Inter,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <input type="password" id="txrResetPassword2" placeholder="Confirm new password" style="width:100%;padding:11px 12px;margin-bottom:8px;border-radius:8px;border:1.5px solid #e4e2db;font-family:Inter,sans-serif;font-size:13px;outline:none;box-sizing:border-box;">
+      <button onclick="txrUpdatePassword()" style="width:100%;padding:11px;background:#111827;color:#fff;border:none;border-radius:8px;font-weight:700;font-family:Inter,sans-serif;font-size:13px;cursor:pointer;">Update password</button>
+    </div>
+    <p id="txrCreateErr" style="font-size:12px;color:#b91c1c;margin-top:8px;display:none;text-align:left;">Please enter valid details.</p>
+    <p id="txrCreateOk" style="font-size:12px;color:#6E56F0;margin-top:8px;display:none;text-align:left;">Check your email to verify your account, then sign in.</p>
+    <div id="txrAuthDivider" style="display:flex;align-items:center;gap:10px;margin:16px 0 14px;"><div style="flex:1;height:1px;background:#e4e2db;"></div><span style="font-size:11.5px;color:#aaa;font-family:Inter,sans-serif;">or</span><div style="flex:1;height:1px;background:#e4e2db;"></div></div>
+    <div id="txrGoogleBtn" style="margin-bottom:4px;">
+      <button id="txrGoogleSignInBtn" onclick="txrSignInWithGoogle()" style="width:100%;padding:13px;background:#fff;color:#111;border:1.5px solid #d9d9d9;border-radius:9px;font-weight:700;font-family:Inter,sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.6 3.9-5.5 3.9-3.3 0-6-2.8-6-6.2s2.7-6.2 6-6.2c1.9 0 3.2.8 3.9 1.5l2.7-2.7C16.9 2.8 14.7 2 12 2 6.9 2 2.8 6.2 2.8 11.5S6.9 21 12 21c6.9 0 9.1-4.9 9.1-7.4 0-.5 0-.9-.1-1.3H12z"/></svg>
+        Continue with Google
+      </button>
+      <p id="txrAuthErr" style="font-size:12px;color:#b91c1c;margin-top:8px;display:none;text-align:left;"></p>
+    </div>
+    <label id="txrConsentBlock" style="display:flex;align-items:flex-start;gap:10px;text-align:left;margin-top:14px;cursor:pointer;">
+      <input type="checkbox" id="txrConsent" checked style="margin-top:3px;flex-shrink:0;accent-color:#6E56F0;">
+      <span style="font-size:11.5px;color:#8a8780;line-height:1.5;font-family:Inter,sans-serif;">Send me helpful hiring tools and insights. Unsubscribe anytime.</span>
+    </label>
+    <p style="font-size:11px;color:#bbb;margin-top:12px;font-family:Inter,sans-serif;">Unlimited searches</p>
+  </div>
+</div>
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo"><svg viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="white" stroke-width="1.6"/><path d="M10.5 10.5L14 14" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+    
+  </div>
+  <div class="suite-steps">
+    <a class="suite-step" id="suiteNavSM" href="https://skillmapper.talentsradar.com" target="_blank" rel="noopener noreferrer"><span class="suite-step-num">1</span>SkillMapper</a>
+    <span class="suite-arrow">›</span>
+    <span class="suite-step active"><span class="suite-step-num">2</span>TalentXray</span>
+  </div>
+  <div class="topbar-right">
+    <button id="helpLink" onclick="switchTab('howto')" class="btn-ghost" style="font-size:12.5px;padding:6px 12px;border-radius:18px;">? How to use</button>
+    <div id="txrUserChip" style="display:flex;align-items:center;gap:7px;padding:5px 12px 5px 7px;background:var(--bg);border:1.5px solid var(--border);border-radius:20px;font-family:var(--sans);font-size:12.5px;cursor:pointer;" onclick="txrToggleUserMenu()" title="Talentxray account">
+      <span id="txrInitials" style="background:var(--accent);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;"></span>
+      <span id="txrUserEmail" style="color:var(--ink2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    </div>
+    <div id="txrUserMenu" style="display:none;position:absolute;top:56px;right:14px;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px 0;z-index:200;min-width:200px;box-shadow:0 8px 24px rgba(0,0,0,0.12);">
+      <div style="padding:8px 16px 10px;border-bottom:1px solid var(--border);"><div id="txrMenuName" style="font-size:13px;font-weight:700;color:var(--ink);"></div><div id="txrMenuEmail" style="font-size:11.5px;color:var(--ink3);margin-top:2px;"></div></div>
+      <button id="txrMenuAction" onclick="txrPrimaryAction()" style="width:100%;padding:9px 16px;background:none;border:none;text-align:left;font-size:13px;cursor:pointer;font-family:var(--sans);font-weight:700;">Sign in</button>
+    </div>
+  </div>
+</header>
+
+<div id="page-tool" class="page active">
+<main class="main main-wide">
+<!-- VIEW 1: builder dashboard -->
+<div id="view-builder" class="xview active">
+<div class="builder-grid">
+<div class="builder-col">
+  <!-- Step 1: Platform -->
+  <div class="step-card">
+    <div class="step-header"><div class="step-num" id="sn1">1</div><div><div class="step-title">Where to search</div></div></div>
+    <div class="step-body">
+      <div class="platform-grid">
+        <button class="platform-btn active" data-platform="linkedin" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>LinkedIn
+        </button>
+        <button class="platform-btn" data-platform="github" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>GitHub
+        </button>
+        <button class="platform-btn" data-platform="behance" onclick="togglePlatform(this)">
+          <svg class="p-check" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Behance
+        </button>
+      </div>
+      <div class="p-hint" id="platformHint" style="display:none;"></div>
+      <div class="li-row" id="liRow" style="align-items:center;background:var(--accent-lt);border:1px solid rgba(15,118,110,0.15);border-radius:9px;padding:9px 14px;margin-top:12px;gap:12px;">
+        <span class="li-lbl" style="font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap;">LinkedIn region</span>
+        <select id="liCountry" onchange="liveUpdate()" style="flex:1;max-width:220px;">
+          <option value="in.linkedin.com/in/">India</option>
+          <option value="uk.linkedin.com/in/">United Kingdom</option>
+          <option value="ca.linkedin.com/in/">Canada</option>
+          <option value="www.linkedin.com/in/">USA</option>
+          <option value="ae.linkedin.com/in/">UAE</option>
+          <option value="fr.linkedin.com/in/">France</option>
+          <option value="au.linkedin.com/in/">Australia</option>
+          <option value="de.linkedin.com/in/">Germany</option>
+          <option value="sg.linkedin.com/in/">Singapore</option>
+          <option value="br.linkedin.com/in/">Brazil</option>
+          <option value="linkedin.com/in/">Global</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Role -->
+  <div class="step-card">
+    <div class="step-header"><div class="step-num" id="sn2">2</div><div><div class="step-title">Role</div></div></div>
+    <div class="step-body">
+      <div class="form-row single">
+        <div class="field span2">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;">
+            <label style="margin:0;">Role keywords</label>
+            <div style="display:flex;gap:6px;">
+              <button type="button" id="titleLogicOr" class="logic-chip active" onclick="setTitleLogicMode('OR','user')">OR</button>
+              <button type="button" id="titleLogicAnd" class="logic-chip" onclick="setTitleLogicMode('AND','user')">AND</button>
+            </div>
+          </div>
+          <div style="position:relative;">
+            <input type="hidden" id="titleLogicMode" value="OR">
+            <div class="bubble-wrap" id="titleWrap" onclick="focusBubble('titleInput')" style="min-height:46px;">
+              <input class="bubble-input" id="titleInput" placeholder="Examples: Product Manager, PM, Product Lead" oninput="onTitleInput(event)" onkeydown="onTitleKeydown(event)" onblur="onTitleBlur()" autocomplete="off" style="min-width:260px;">
+            </div>
+            <div id="titleSug" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:300;background:var(--white);border:1.5px solid var(--accent);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.14);max-height:240px;overflow-y:auto;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="field span2">
+          <label>Seniority</label>
+          <select id="senioritySelect" class="field-select" onchange="addSeniorityFromSelect()" style="max-width:240px;">
+            <option value="">Select seniority</option>
+            <option value="Junior">Junior</option>
+            <option value="Mid">Mid</option>
+            <option value="Senior">Senior</option>
+            <option value="Lead">Lead</option>
+            <option value="Manager">Manager</option>
+            <option value="Head">Head</option>
+            <option value="Director">Director</option>
+            <option value="VP">VP</option>
+            <option value="Principal">Principal</option>
+            <option value="Staff">Staff</option>
+          </select>
+          <div class="bubble-wrap" id="seniorityWrap" style="min-height:46px;margin-top:8px;">
+            <input class="bubble-input" id="seniorityInput" placeholder="Selected seniority levels" readonly style="min-width:200px;cursor:default;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Skills -->
+  <div class="step-card">
+    <div class="step-header"><div class="step-num" id="sn3">3</div><div><div class="step-title">Skills</div></div></div>
+    <div class="step-body">
+      <div class="warn-banner" id="skillWarn">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2L14.9 14H1.1L8 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 7v3M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span>LinkedIn works best with <strong>2–3 must-have skills max</strong>. Extra AND skills have been moved to nice-to-have automatically.</span>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Must-have skills<span class="skill-count" id="skillCount" style="display:none"></span></label>
+          <div class="skill-field-wrap">
+            <div class="bubble-wrap" id="mustWrap" onclick="focusBubble('mustInput')">
+              <input class="bubble-input" id="mustInput" placeholder="e.g. Python, React, Salesforce" onkeydown="handleBubble(event,'must')" oninput="onSkillInput(event,'must')" onfocus="onSkillFocus('must')" onblur="onSkillBlur('must')">
+            </div>
+            <div class="suggestions sug-scroll" id="mustSug" onmousedown="event.preventDefault()"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Nice-to-have skills</label>
+          <div class="skill-field-wrap">
+            <div class="bubble-wrap" id="orWrap" onclick="focusBubble('orInput')">
+              <input class="bubble-input" id="orInput" placeholder="e.g. Docker, AWS, TypeScript" onkeydown="handleBubble(event,'or')" oninput="onSkillInput(event,'or')" onfocus="onSkillFocus('or')" onblur="onSkillBlur('or')">
+            </div>
+            <div class="suggestions sug-scroll" id="orSug" onmousedown="event.preventDefault()"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Location & Companies -->
+  <div class="step-card">
+    <div class="step-header"><div class="step-num" id="sn4">4</div><div><div class="step-title">Location &amp; companies</div></div></div>
+    <div class="step-body">
+      <div class="form-row">
+        <div class="field">
+          <label>Location</label>
+          <div style="position:relative;">
+            <div class="bubble-wrap" id="locWrap" onclick="focusBubble('locInput')" style="min-height:46px;">
+              <input class="bubble-input" id="locInput" placeholder="Type city or country, press Enter" oninput="onLocInput(event)" onkeydown="onLocKeydown(event)" onblur="onLocBlur()" autocomplete="off">
+            </div>
+            <div id="locSug" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:300;background:var(--white);border:1.5px solid var(--accent);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.14);max-height:220px;overflow-y:auto;"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Target companies</label>
+          <div class="bubble-wrap" id="compWrap" onclick="focusBubble('compInput')" style="min-height:46px;">
+            <input class="bubble-input" id="compInput" placeholder="e.g. Google, Microsoft" onkeydown="handleGenBubble(event,'comp')" oninput="liveUpdate()">
+          </div>
+          <span class="hint" style="color:#999;">*Works best for people who mention their company name in profile headline. Leave blank for broader results.</span>
+        </div>
+        <div class="field span2">
+          <label>Exclude keywords</label>
+          <div class="bubble-wrap" id="excWrap" onclick="focusBubble('excInput')">
+            <input class="bubble-input" id="excInput" placeholder="e.g. Recruiter, Intern" onkeydown="handleGenBubble(event,'exc')" oninput="liveUpdate()">
+          </div>
+          <span class="hint">Each tag removed from results</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results card -->
+  <div class="results-card" id="resultsCard">
+    <div class="rc-header">
+      <div class="rc-header-left"><div class="rc-live-dot" id="outputDot"></div><span class="rc-label">Boolean query</span><span class="rc-chars" id="outputChars"></span></div>
+      <div class="rc-head-actions">
+        <button class="rc-reset" onclick="copyStr()" id="copyBtn" title="Copy query to clipboard"><span id="copyLbl">⧉ Copy</span></button>
+        <button class="rc-reset" onclick="resetAll()">↺ Reset</button>
+      </div>
+    </div>
+    <div class="rc-preview" id="singlePlatformOutput">
+      <div class="rc-str" id="outputStr"><span class="rc-str-empty">Fill in a job title above — your Google search string builds in real time</span></div>
+      <textarea id="outputTa" readonly onclick="this.select()" spellcheck="false" style="display:none;width:100%;margin-top:10px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;border:1.5px solid var(--border);border-radius:8px;background:var(--white);color:var(--ink);resize:vertical;min-height:60px;box-sizing:border-box;cursor:text;"></textarea>
+    </div>
+    <div id="multiPlatformOutput" style="display:none;padding:14px 18px;">
+      <div id="platformLinks"></div>
+      <div class="single-search-note" id="multiNote"></div>
+    </div>
+    <div class="rc-actions rc-actions-slim">
+      <span class="rc-open-note">Profiles appear in the panel on the right — or browse the raw results yourself:</span>
+      <a id="openGoogleLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary rc-open-link" onclick="return handleOpenClick(event)" style="opacity:0.4;pointer-events:none;" title="Fill in a job title first">
+        <span id="openBtnLabel">Open in Google</span> ↗
+      </a>
+    </div>
+  </div>
+
+  </div><!-- /builder-col -->
+
+  <aside class="builder-rail">
+    <div class="rail-card">
+      <div class="rail-title">Query health</div>
+      <div class="strength-wrap" id="strengthWrap">
+        <div class="strength-top"><span class="strength-label">Strength</span><span class="strength-status" id="strengthStatus"></span></div>
+        <div class="strength-track"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="strength-tip" id="strengthTip"></div>
+      </div>
+      <div class="smart-tips" id="smartTips">
+        <div id="smartTipsList"></div>
+      </div>
+      <button class="btn-primary" id="viewResultsBtn" onclick="switchView('results')" disabled style="width:100%;margin-top:12px;opacity:0.5;">View matching profiles →</button>
+      <button class="rc-var-btn" onclick="showVariations()" style="width:100%;justify-content:center;margin-top:8px;">↻ Generate variations</button>
+    </div>
+
+    <div class="hist-panel rail-card" id="histPanel">
+      <div class="hist-head">
+        <div class="rail-title" style="margin:0;">Recent searches</div>
+        <div class="hist-actions">
+          <button class="btn-ghost" style="font-size:11.5px;padding:4px 10px" onclick="exportCSV()">CSV</button>
+          <button class="btn-ghost" style="font-size:11.5px;padding:4px 10px" onclick="clearHist()">Clear</button>
+        </div>
+      </div>
+      <div id="histList"></div>
+    </div>
+
+    <div class="tpl-panel rail-card" id="tplPanel">
+      <div class="hist-head"><div class="rail-title" style="margin:0;">Saved templates</div></div>
+      <div id="tplList"></div>
+    </div>
+  </aside>
+</div><!-- /builder-grid -->
+</div><!-- /view-builder -->
+
+<!-- VIEW 2: results -->
+<div id="view-results" class="xview">
+<div class="results-grid">
+  <aside class="results-side">
+    <button class="btn-secondary" onclick="switchView('builder')" style="justify-content:flex-start;">← Refine search</button>
+    <div class="rail-card">
+      <div class="rail-title">Active filters</div>
+      <div id="activeFilters"></div>
+    </div>
+    <details class="bool-details rail-card">
+      <summary>Boolean query</summary>
+      <div id="booleanEcho" class="bool-echo"></div>
+    </details>
+  </aside>
+
+  <section class="results-main">
+    <div class="results-head">
+      <div>
+        <div class="rh-title">Matching profiles</div>
+        <div class="rh-sub"><span id="liveResultsCount"></span> · live from Google, no personalisation</div>
+      </div>
+      <div class="rh-actions">
+        <button class="btn-ghost" onclick="generateVars()">↻ Variations</button>
+        <button class="btn-ghost" onclick="exportResultsCSV()">Export CSV</button>
+        <button class="btn-primary" onclick="openCurrentInGoogle()" style="flex:0 0 auto;padding:9px 16px;font-size:13px;">Open in Google ↗</button>
+      </div>
+    </div>
+
+    <div id="liveResultsPanel" style="display:none;">
+      <div id="liveResultsList"></div>
+      <button class="btn-secondary" id="liveResultsMore" onclick="loadMoreResults()" style="display:none;margin-top:10px;">Load more profiles</button>
+    </div>
+    <div id="resultsEmpty" class="results-empty">Add a role or skills in the builder — matching profiles appear here live.</div>
+
+    <div class="var-panel" id="varPanel">
+      <div class="step-card" style="margin-bottom:0">
+        <div class="step-header"><div class="step-num" style="background:var(--accent-deep)">↻</div><div><div class="step-title">Query variations</div></div><div class="step-desc">Run each to beat the 10-result cap</div></div>
+        <div class="step-body" style="padding:14px 20px"><div id="varList"></div></div>
+      </div>
+    </div>
+  </section>
+</div><!-- /results-grid -->
+</div><!-- /view-results -->
+</main>
+</div>
+
+<!-- HOW TO USE PAGE -->
+<div id="page-howto" class="page">
+<main class="main">
+  <div class="how-hero">
+    <button onclick="switchTab('tool')" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:8px;padding:6px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--sans);margin-bottom:14px;">← Back to the tool</button>
+    <h2>How Talentxray works</h2>
+    <p>Google X-Ray search finds people on the internet without needing a LinkedIn Recruiter licence. This tool builds the search string for you — no Boolean knowledge needed.</p>
+  </div>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <div class="how-step-body">
+        <h3>Pick your platform(s)</h3>
+        <p>Select one or more platforms. Each has a different strength:</p>
+        <div class="platform-table" style="margin-top:10px">
+          <div class="pt-head"><div>Platform</div><div>Best for</div><div>What Google finds</div></div>
+          <div class="pt-row"><div class="pt-name">💼 LinkedIn</div><div class="pt-use">All professional roles</div><div class="pt-tip">Profile headline, skills section, job titles</div></div>
+          <div class="pt-row"><div class="pt-name">🐙 GitHub</div><div class="pt-use">Software engineers</div><div class="pt-tip">Bio, README files, pinned repos</div></div>
+          <div class="pt-row"><div class="pt-name">🎨 Behance</div><div class="pt-use">UI/UX and visual designers</div><div class="pt-tip">Portfolio project pages — see work quality immediately</div></div>
+        </div>
+        <p style="margin-top:10px">When <strong>multiple platforms</strong> are selected, the output panel shows a separate "Open ↗" button for each — each platform gets its own optimised query.</p>
+        <p>For LinkedIn, choose the correct <strong>region</strong> from the dropdown. India is the most-indexed globally. UK and Canada subdomains are also well indexed. US LinkedIn is largely blocked by Google — use GitHub instead for US hiring.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <div class="how-step-body">
+        <h3>Add job title(s)</h3>
+        <p>Type the title as candidates write it on their profiles, then press <strong>Enter</strong> — it becomes a chip. Add as many as you need. All titles are OR-combined in the search string.</p>
+        <div class="how-example">💡 <strong>Tip:</strong> Add abbreviations and alternate spellings people actually use — "Product Manager", "PM", "Product Lead" all get you different profiles.</div>
+        <p style="margin-top:8px">The title field has autocomplete — start typing and 80+ common titles appear as suggestions.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <div class="how-step-body">
+        <h3>Add skills — keep it lean</h3>
+        <p>Use the skills field autocomplete — type any skill and suggestions appear from a 1,400+ skill database. Press Enter or click to add.</p>
+        <p><strong>Must-have (AND)</strong> — the 2–3 non-negotiable skills. Every extra AND halves your result pool. More than 3 on LinkedIn = near-zero results.</p>
+        <p><strong>Nice-to-have (OR)</strong> — everything else. The candidate only needs <em>one</em> of these to appear in results.</p>
+        <div class="how-example">✅ <strong>Good:</strong> Must-have: Python, AWS · Nice-to-have: Docker, Terraform, GCP<br>❌ <strong>Bad:</strong> Must-have: Python, AWS, Docker, Terraform, GCP, Kubernetes, FastAPI</div>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">4</div>
+      <div class="how-step-body">
+        <h3>Location, companies and exclusions</h3>
+        <p>Type a city or country in the Location field and press Enter — add multiple locations for OR logic (finds candidates in any of them).</p>
+        <p><strong>Target companies</strong> — adds companies to the AND conditions. Great for finding candidates with a specific pedigree combination.</p>
+        <p><strong>Exclude keywords</strong> — removes noise instantly. Add "Recruiter", "Fresher", "Student", "Intern" to filter ~30% of irrelevant profiles from results.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">6</div>
+      <div class="how-step-body">
+        <h3>Open in Google</h3>
+        <p>The <strong>Open in Google</strong> button activates as soon as you fill in any field. It is a real link — click it and Google opens your results.</p>
+        <p>If you selected multiple platforms, the output panel shows a separate <strong>Open ↗</strong> button for each platform — open them one by one in separate tabs.</p>
+        <p>To get email addresses, install <strong>Apollo.io</strong>, <strong>ContactOut</strong>, or <strong>Hunter.io</strong> (free Chrome extensions). Open a LinkedIn profile from your results — the extension surfaces the email and phone number automatically.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">7</div>
+      <div class="how-step-body">
+        <h3>Variations and Search History</h3>
+        <p>Google caps X-Ray to ~10–30 results per query. Click <strong>Variations</strong> to generate 5 alternative versions of your query — each returns a fresh batch of profiles. Together that's 50–200+ unique candidates per session.</p>
+        <p><strong>Search History</strong> auto-saves every search you run. Click <strong>Reuse</strong> to reload a previous search instantly. Use <strong>Export CSV</strong> to download your full search history for reporting or sharing.</p>
+      </div>
+    </div>
+  </div>
+  <div style="font-size:14px;font-weight:700;color:var(--ink2);margin:24px 0 12px;letter-spacing:-0.01em;">Pro tips</div>
+  <div class="tip-grid">
+    <div class="tip-card"><div class="tip-card-icon">🔁</div><h4>Beat the 10-result cap</h4><p>Use Variations to generate 5 alternative queries. Each returns a fresh batch — 50–200+ unique profiles from one session.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">🌏</div><h4>India subdomain is best</h4><p>in.linkedin.com/in/ is the most-indexed LinkedIn subdomain globally. Start here even for non-India hires to gauge result volume.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">📊</div><h4>Watch the strength meter</h4><p>Aim for "Balanced". Too many AND skills → zero results. Too few → thousands of irrelevant profiles. The meter tells you which way you are.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">🚫</div><h4>Exclusions are underused</h4><p>Add "Recruiter", "HR Manager", "Hiring" to excludes — removes 20–30% of noise from LinkedIn results instantly.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">🎯</div><h4>Use SkillMapper first</h4><p>Not sure what skills to search for? Use SkillMapper (Step 1) to identify the right role title and skills, then click "Search in TalentXRay" — it pre-fills everything here.</p></div>
+    <div class="tip-card"><div class="tip-card-icon">🎨</div><h4>Behance for designers</h4><p>Behance profiles show actual portfolio work — you can assess quality before even reaching out. Perfect for UI/UX, brand, and motion roles.</p></div>
+  </div>
+  <div style="font-size:14px;font-weight:700;color:var(--ink2);margin:24px 0 12px;letter-spacing:-0.01em;">Frequently asked questions</div>
+  <div class="faq-list">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why am I only getting 10 results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Google limits X-Ray to ~10–30 results per query. Use <strong>Variations</strong> to generate 5 different versions — each returns a fresh batch. Together you get 50–200+ unique profiles per session.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why does US LinkedIn return almost no results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">LinkedIn blocks Google from indexing US profiles to push companies toward LinkedIn Recruiter (their paid product). For US hiring use GitHub. India, UK, and Canada subdomains are still well-indexed.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I get email addresses from profiles?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">TalentXRay finds profiles — contact extraction needs a Chrome extension. Install <strong>Apollo.io</strong>, <strong>ContactOut</strong>, or <strong>Hunter.io</strong> (all free). Open a LinkedIn profile from results and the extension surfaces the email automatically.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Why do my searches return zero results?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">Too many AND (must-have) skills is the most common cause. Remove 2–3 from must-have and move them to nice-to-have. Also try removing location — many profiles do not explicitly state their city.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Will Open in Google work on my computer?<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 6l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="faq-a">If you are running the file directly from your computer (file:// in the address bar), the link may not open due to browser security restrictions on local files. Once deployed on a website (https://) it works perfectly. In the meantime, use <strong>Copy search string</strong> and paste it into Google manually.</div></div>
+  </div>
+</main>
+</div>
+
+<footer class="site-footer">
+  <strong>TalentXray by <a href="https://talentsradar.com/" target="_blank" rel="noopener noreferrer">Talents Radar</a></strong>
+  <span style="display:block;font-size:10.5px;color:rgba(255,255,255,0.45);margin-top:5px;">Sourcing tool · No LinkedIn Recruiter licence needed · Works best with specific job titles and 2–3 skills</span>
+  <span style="display:block;font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">© 2026 Talents Radar · All rights reserved</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- Hidden Netlify forms -->
+<form name="txr-users" data-netlify="true" hidden><input type="text" name="email"/><input type="text" name="name"/><input type="text" name="consent"/></form>
+<form name="txr-leads" data-netlify="true" hidden><input type="text" name="email"/><input type="text" name="name"/><input type="text" name="profession"/><input type="text" name="country"/><input type="text" name="consent"/></form>
+<form name="txr-search-events" data-netlify="true" hidden><input type="text" name="email"/><input type="text" name="action"/><input type="text" name="platforms"/><input type="text" name="query"/><input type="text" name="feedback"/><input type="text" name="result_url"/></form>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

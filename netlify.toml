@@ -1,0 +1,5 @@
+# Static deploy of the frontend. The Express API (server/) is not hosted on Netlify;
+# /api/* calls fall back to the hidden Netlify forms declared in client/index.html.
+[build]
+  command = "npm install && npm run build"
+  publish = "client/dist"

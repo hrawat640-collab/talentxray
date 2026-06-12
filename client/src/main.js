@@ -8,7 +8,7 @@ import * as templates from './js/templates.js';
 import { liveUpdate, updateLinkedInUI } from './js/live-update.js';
 import { generateVars, txrCopyVariation, txrOpenVariation } from './js/variations.js';
 import { prefillFromParams } from './js/prefill.js';
-import { loadMoreResults } from './js/results.js';
+import { loadMoreResults, exportResultsCSV } from './js/results.js';
 
 // index.html (and markup generated at runtime) uses inline on* attributes,
 // so every handler they reference must exist on window.
@@ -26,6 +26,7 @@ Object.assign(window, {
   txrSignOut: auth.txrSignOut,
   // chrome
   switchTab: ui.switchTab,
+  switchView: ui.switchView,
   toggleFaq: ui.toggleFaq,
   closeOnboard: ui.closeOnboard,
   // builder actions
@@ -36,6 +37,8 @@ Object.assign(window, {
   clearLoc: actions.clearLoc,
   fixRegionMismatch: actions.fixRegionMismatch,
   handleOpenClick: actions.handleOpenClick,
+  openCurrentInGoogle: actions.openCurrentInGoogle,
+  showVariations: actions.showVariations,
   copyStr: actions.copyStr,
   resetAll: actions.resetAll,
   liveUpdate,
@@ -64,6 +67,7 @@ Object.assign(window, {
   // variations
   generateVars,
   loadMoreResults,
+  exportResultsCSV,
   txrCopyVariation,
   txrOpenVariation,
   // history & templates
@@ -83,7 +87,7 @@ templates.renderTemplates();
 updateLinkedInUI();
 bubbles.renderAllBubbles();
 prefillFromParams(); // also runs the initial liveUpdate()
-auth.txrEnforceLoginGate({ trackGate: true, source: 'page_load' });
-auth.txrInitSupabaseAuth()
-  .then(() => auth.txrEnforceLoginGate())
-  .catch(() => auth.txrEnforceLoginGate());
+// Soft gate: no blocking modal on load. The sign-in modal appears when an
+// anonymous visitor exceeds FREE_SEARCHES_BEFORE_LOGIN (see gate.js).
+auth.txrRenderUserChip();
+auth.txrInitSupabaseAuth().catch(() => {});

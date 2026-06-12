@@ -115,7 +115,11 @@
 </nav>
 
 <div id="page-tool" class="page active">
-<main class="main">
+<main class="main main-wide">
+<!-- VIEW 1: builder dashboard -->
+<div id="view-builder" class="xview active">
+<div class="builder-grid">
+<div class="builder-col">
   <!-- Step 1: Platform -->
   <div class="step-card">
     <div class="step-header"><div class="step-num" id="sn1">1</div><div><div class="step-title">Where to search</div></div></div>
@@ -283,62 +287,89 @@
       </div>
       <div class="rc-bottom-row">
         <button class="rc-copy-btn" onclick="copyStr()" id="copyBtn"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="4" y="4" width="9" height="11" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M3 11V3a2 2 0 0 1 2-2h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span id="copyLbl">Copy</span></button>
-        <button class="rc-var-btn" onclick="generateVars()"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Variations</button>
+        <button class="rc-var-btn" onclick="showVariations()"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Variations</button>
       </div>
     </div>
-    <div class="rc-strength">
+  </div>
+
+  </div><!-- /builder-col -->
+
+  <aside class="builder-rail">
+    <div class="rail-card">
+      <div class="rail-title">Query health</div>
       <div class="strength-wrap" id="strengthWrap">
-        <div class="strength-top"><span class="strength-label">Query strength</span><span class="strength-status" id="strengthStatus"></span></div>
+        <div class="strength-top"><span class="strength-label">Strength</span><span class="strength-status" id="strengthStatus"></span></div>
         <div class="strength-track"><div class="strength-fill" id="strengthFill"></div></div>
         <div class="strength-tip" id="strengthTip"></div>
       </div>
-    </div>
-  </div>
-
-  <div class="smart-tips" id="smartTips">
-    <div class="smart-tips-title"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1l1.5 4.5H14l-3.5 2.5L12 13 8 10l-4 3 1.5-5L2 5.5h4.5L8 1z" stroke="#92400e" stroke-width="1.3" stroke-linejoin="round"/></svg>Getting fewer results than expected? Try these:</div>
-    <div id="smartTipsList"></div>
-  </div>
-
-  <!-- Live matching profiles (filled from /api/search-results) -->
-  <div id="liveResultsPanel" style="display:none;">
-    <div class="step-card" style="margin-bottom:14px">
-      <div class="step-header">
-        <div class="step-num" style="background:#0d7a4e">★</div>
-        <div><div class="step-title">Matching profiles</div></div>
-        <div class="step-desc"><span id="liveResultsCount"></span> · live from Google, no personalisation</div>
+      <div class="smart-tips" id="smartTips">
+        <div id="smartTipsList"></div>
       </div>
-      <div class="step-body" style="padding:14px 16px">
-        <div id="liveResultsList"></div>
-        <button class="btn-secondary" id="liveResultsMore" onclick="loadMoreResults()" style="display:none;margin-top:4px;">Load more profiles</button>
+      <button class="btn-primary" id="viewResultsBtn" onclick="switchView('results')" disabled style="width:100%;margin-top:12px;opacity:0.5;">View matching profiles →</button>
+    </div>
+
+    <div class="hist-panel rail-card" id="histPanel">
+      <div class="hist-head">
+        <div class="rail-title" style="margin:0;">Recent searches</div>
+        <div class="hist-actions">
+          <button class="btn-ghost" style="font-size:11.5px;padding:4px 10px" onclick="exportCSV()">CSV</button>
+          <button class="btn-ghost" style="font-size:11.5px;padding:4px 10px" onclick="clearHist()">Clear</button>
+        </div>
+      </div>
+      <div id="histList"></div>
+    </div>
+
+    <div class="tpl-panel rail-card" id="tplPanel">
+      <div class="hist-head"><div class="rail-title" style="margin:0;">Saved templates</div></div>
+      <div id="tplList"></div>
+    </div>
+  </aside>
+</div><!-- /builder-grid -->
+</div><!-- /view-builder -->
+
+<!-- VIEW 2: results -->
+<div id="view-results" class="xview">
+<div class="results-grid">
+  <aside class="results-side">
+    <button class="btn-secondary" onclick="switchView('builder')" style="justify-content:flex-start;">← Refine search</button>
+    <div class="rail-card">
+      <div class="rail-title">Active filters</div>
+      <div id="activeFilters"></div>
+    </div>
+    <details class="bool-details rail-card">
+      <summary>Boolean query</summary>
+      <div id="booleanEcho" class="bool-echo"></div>
+    </details>
+  </aside>
+
+  <section class="results-main">
+    <div class="results-head">
+      <div>
+        <div class="rh-title">Matching profiles</div>
+        <div class="rh-sub"><span id="liveResultsCount"></span> · live from Google, no personalisation</div>
+      </div>
+      <div class="rh-actions">
+        <button class="btn-ghost" onclick="generateVars()">↻ Variations</button>
+        <button class="btn-ghost" onclick="exportResultsCSV()">Export CSV</button>
+        <button class="btn-primary" onclick="openCurrentInGoogle()" style="flex:0 0 auto;padding:9px 16px;font-size:13px;">Open in Google ↗</button>
       </div>
     </div>
-  </div>
 
-  <div class="var-panel" id="varPanel">
-    <div class="step-card" style="margin-bottom:0">
-      <div class="step-header"><div class="step-num" style="background:#5b21b6">↻</div><div><div class="step-title">Query variations</div></div><div class="step-desc">Run each to beat the 10-result cap</div></div>
-      <div class="step-body" style="padding:14px 20px"><div id="varList"></div></div>
+    <div id="liveResultsPanel" style="display:none;">
+      <div id="liveResultsList"></div>
+      <button class="btn-secondary" id="liveResultsMore" onclick="loadMoreResults()" style="display:none;margin-top:10px;">Load more profiles</button>
     </div>
-  </div>
+    <div id="resultsEmpty" class="results-empty">Add a role or skills in the builder — matching profiles appear here live.</div>
 
-  <div class="tpl-panel" id="tplPanel">
-    <div class="sdiv"></div>
-    <div class="hist-head"><div class="hist-title">Saved templates</div></div>
-    <div id="tplList"></div>
-  </div>
-
-  <div class="hist-panel" id="histPanel">
-    <div class="sdiv"></div>
-    <div class="hist-head">
-      <div class="hist-title">Search history</div>
-      <div class="hist-actions">
-        <button class="btn-ghost" style="font-size:12px;padding:6px 12px" onclick="exportCSV()"><svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 2v9M4 7l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Export CSV</button>
-        <button class="btn-ghost" style="font-size:12px;padding:6px 12px" onclick="clearHist()">Clear</button>
+    <div class="var-panel" id="varPanel">
+      <div class="step-card" style="margin-bottom:0">
+        <div class="step-header"><div class="step-num" style="background:var(--accent-deep)">↻</div><div><div class="step-title">Query variations</div></div><div class="step-desc">Run each to beat the 10-result cap</div></div>
+        <div class="step-body" style="padding:14px 20px"><div id="varList"></div></div>
       </div>
     </div>
-    <div id="histList"></div>
-  </div>
+  </section>
+</div><!-- /results-grid -->
+</div><!-- /view-results -->
 </main>
 </div>
 

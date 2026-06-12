@@ -12,3 +12,6 @@ export const SUPABASE_ANON_KEY = 'sb_publishable_ZwdxLA2twuvjkBug6JPxxA_zlWzaVN2
  *  https://talentxray.talentsradar.com/**
  */
 export const AUTH_EMAIL_BASE = 'https://talentxray.talentsradar.com';
+
+/** Result-consuming searches an anonymous visitor gets before the sign-in modal. */
+export const FREE_SEARCHES_BEFORE_LOGIN = 1;

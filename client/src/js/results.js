@@ -1,6 +1,9 @@
 import { state } from './state.js';
 import { esc } from './util.js';
 import { txrTrackTool } from './analytics.js';
+import { PLATFORMS } from './platforms.js';
+import { gateAllows } from './gate.js';
+import { toast } from './ui.js';
 
 // Renders live candidate cards from /api/search-results responses.
 // Page 1 data arrives for free with the live-count check (same endpoint, cached);
@@ -10,6 +13,7 @@ let currentQuery = '';
 let currentPage = 1;
 let renderedPages = new Set();
 let loadingMore = false;
+let collected = []; // all results for the current query, for CSV export
 
 function platformTag(link) {
   if (link.includes('linkedin.')) return ['LinkedIn', 'tag-li'];
@@ -59,11 +63,33 @@ function candidateCard(r) {
   </div>`;
 }
 
+function setViewResultsBtn(shown, hasMore) {
+  const btn = document.getElementById('viewResultsBtn');
+  if (!btn) return;
+  if (shown > 0) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = `View ${shown}${hasMore ? '+' : ''} matching profiles →`;
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.textContent = 'View matching profiles →';
+  }
+}
+
+function setResultsEmpty(showEmpty) {
+  const empty = document.getElementById('resultsEmpty');
+  if (empty) empty.style.display = showEmpty ? '' : 'none';
+}
+
 function hideLiveResults() {
   const panel = document.getElementById('liveResultsPanel');
   if (panel) panel.style.display = 'none';
   currentQuery = '';
   renderedPages = new Set();
+  collected = [];
+  setViewResultsBtn(0, false);
+  setResultsEmpty(true);
 }
 
 function renderLiveResults(data, query) {
@@ -77,6 +103,7 @@ function renderLiveResults(data, query) {
     currentQuery = query;
     currentPage = data.page || 1;
     renderedPages = new Set();
+    collected = [];
     list.innerHTML = '';
   }
   const page = data.page || 1;
@@ -88,15 +115,60 @@ function renderLiveResults(data, query) {
     if (renderedPages.size <= 1) hideLiveResults();
     return;
   }
+  collected = collected.concat(data.results);
   list.insertAdjacentHTML('beforeend', data.results.map(candidateCard).join(''));
   panel.style.display = '';
+  setResultsEmpty(false);
   const shown = list.querySelectorAll('.cand-card').length;
   if (count) count.textContent = `${shown}${data.hasMore ? '+' : ''} found`;
   if (more) more.style.display = data.hasMore && currentPage < 5 ? '' : 'none';
+  setViewResultsBtn(shown, !!data.hasMore);
+}
+
+// Sidebar on the results view: current filters as removable chips.
+// Removal handlers re-run liveUpdate, which re-renders this via renderActiveFilters.
+function renderActiveFilters() {
+  const el = document.getElementById('activeFilters');
+  if (!el) return;
+  const sec = (label, chips) => chips ? `<div class="af-sec"><div class="af-label">${label}</div><div class="af-chips">${chips}</div></div>` : '';
+  const chip = (text, cls, onclick) => `<span class="af-chip ${cls}">${esc(text)}<button class="af-x" onclick="${onclick}" aria-label="Remove ${esc(text)}">×</button></span>`;
+  let html = '';
+  html += sec('Platforms', [...state.selPlatforms].map(k => `<span class="af-chip af-plain">${PLATFORMS[k]?.label || k}</span>`).join(''));
+  html += sec('Role', state.titleBubbles.map((t, i) => chip(t, 'af-vio', `removeTitleBubble(${i})`)).join(''));
+  html += sec('Seniority', state.seniorityBubbles.map((t, i) => chip(t, 'af-vio', `removeSeniorityBubble(${i})`)).join(''));
+  html += sec('Must-have', state.mustBubbles.map((b, i) => chip(b.text, 'af-teal', `removeBubble('must',${i})`)).join(''));
+  html += sec('Nice-to-have', state.orBubbles.map((b, i) => chip(typeof b === 'string' ? b : b.text, 'af-soft', `removeBubble('or',${i})`)).join(''));
+  html += sec('Location', state.locBubbles.map((t, i) => chip(t, 'af-plain', `removeLocBubble(${i})`)).join(''));
+  html += sec('Companies', state.compBubbles.map((t, i) => chip(t, 'af-plain', `removeGenBubble('comp',${i})`)).join(''));
+  html += sec('Excluded', state.excBubbles.map((t, i) => chip(t, 'af-red', `removeGenBubble('exc',${i})`)).join(''));
+  el.innerHTML = html || '<div class="af-empty">No filters yet — use Refine search.</div>';
+  const be = document.getElementById('booleanEcho');
+  if (be) be.textContent = state.curStr || '—';
+}
+
+function exportResultsCSV() {
+  if (!collected.length) { toast('No profiles to export yet', 'err'); return; }
+  const csvEsc = (v) => '"' + String(v || '').replace(/"/g, '""') + '"';
+  const rows = collected.map(r => {
+    const c = parseCandidate(r);
+    return [c.name, c.headline, platformTag(r.link)[0], r.link, r.snippet].map(csvEsc).join(',');
+  });
+  const csv = ['Name,Headline,Platform,Profile URL,Snippet', ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `talentxray_profiles_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  txrTrackTool('results_exported', { row_count: collected.length });
+  toast('Profiles exported', 'ok');
 }
 
 async function loadMoreResults() {
   if (loadingMore || !currentQuery) return;
+  if (!gateAllows(currentQuery)) return;
   loadingMore = true;
   const btn = document.getElementById('liveResultsMore');
   if (btn) btn.textContent = 'Loading…';
@@ -123,7 +195,9 @@ async function loadMoreResults() {
 // Click tracking for profile opens (delegated; cards are re-rendered often).
 document.addEventListener('click', (e) => {
   const a = e.target.closest && e.target.closest('.cand-open');
-  if (a) txrTrackTool('candidate_open', { platform: platformTag(a.href)[0] }, { resultUrl: a.href, query: currentQuery });
+  if (!a) return;
+  if (!gateAllows(currentQuery)) { e.preventDefault(); return; }
+  txrTrackTool('candidate_open', { platform: platformTag(a.href)[0] }, { resultUrl: a.href, query: currentQuery });
 });
 
-export { renderLiveResults, hideLiveResults, loadMoreResults };
+export { renderLiveResults, hideLiveResults, loadMoreResults, renderActiveFilters, exportResultsCSV };

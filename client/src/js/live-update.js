@@ -6,6 +6,7 @@ import { updateSkillCount } from './bubbles.js';
 import { saveHist } from './history.js';
 import { txrTrackTool } from './analytics.js';
 import { renderHL } from './util.js';
+import { renderActiveFilters } from './results.js';
 
 function updateLinkedInUI(){
   // reserved for future LinkedIn-specific toggles
@@ -45,6 +46,6 @@ function liveUpdate(){
     if(ta){ta.value='';ta.style.display='none';}if(lnk){lnk.href='#';lnk.style.opacity='0.4';lnk.style.pointerEvents='none';}
     const multi=document.getElementById('multiPlatformOutput');const single=document.getElementById('singlePlatformOutput');if(multi)multi.style.display='none';if(single)single.style.display='';
   }
-  updateStrength(str);updateSmartTips(str);scheduleLiveCount(str);
+  updateStrength(str);updateSmartTips(str);scheduleLiveCount(str);renderActiveFilters();
 }
 export { updateLinkedInUI, renderMultiPlatformOutput, savePlatformHist, liveUpdate };

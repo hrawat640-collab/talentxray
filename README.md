@@ -72,4 +72,44 @@ Events are stored locally in `data/*.jsonl`.
 
 - The Supabase anon key in `client/src/js/config.js` is intentionally public; access control relies on Supabase RLS.
 - OAuth/email redirect URLs must be allow-listed in Supabase → Auth → URL Configuration (`localhost:3000`, `localhost:5173`, production domain).
-- Netlify deploys use `netlify.toml` (publishes `client/dist`); hidden Netlify forms in `index.html` act as the event-logging fallback when no Express API is reachable.
+- Netlify hosts the static frontend (`client/dist`). The Express API runs on [Render](https://render.com) — see **Production (Netlify + Render)** below.
+- Hidden Netlify forms in `index.html` still act as a fallback for event logging if the API is unreachable.
+
+## Production (Netlify + Render)
+
+Frontend: **Netlify** (`talentxray.talentsradar.com`) · API: **Render** (Serper proxy)
+
+### 1. Deploy API on Render
+
+1. Go to [render.com](https://render.com) → **New** → **Blueprint** (or **Web Service**).
+2. Connect this GitHub repo.
+3. If using the Blueprint, Render reads `render.yaml` and creates `talentxray-api`.
+4. In the service **Environment** tab, add:
+   - `SERPER_API_KEY` — from [serper.dev](https://serper.dev) (required for live search)
+5. Deploy. Note the service URL, e.g. `https://talentxray-api.onrender.com`.
+6. Verify: open `https://talentxray-api.onrender.com/api/health` → `{"ok":true,...}`.
+
+Manual web-service settings (if not using Blueprint):
+
+| Field | Value |
+|-------|-------|
+| Build command | `npm install && npm run build` |
+| Start command | `npm start` |
+| Health check | `/api/health` |
+
+Free tier spins down after ~15 min idle; first request after sleep can take ~30s.
+
+### 2. Point Netlify at Render
+
+1. Netlify → your site → **Site configuration** → **Environment variables**.
+2. Add `RENDER_API_URL` = your Render URL (no trailing slash), e.g. `https://talentxray-api.onrender.com`.
+3. **Deploys** → **Trigger deploy** → **Clear cache and deploy site**.
+
+The build runs `scripts/write-netlify-redirects.mjs`, which writes `client/dist/_redirects` so `/api/*` on your domain proxies to Render (same-origin, no CORS).
+
+### 3. Test
+
+1. Open `https://talentxray.talentsradar.com`.
+2. Add role + skills, wait ~1s.
+3. DevTools → Network → `POST /api/search-results` should return **200** (not 404).
+4. **View matching profiles →** should enable when results exist.

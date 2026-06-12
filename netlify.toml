@@ -1,5 +1,6 @@
-# Static deploy of the frontend. The Express API (server/) is not hosted on Netlify;
-# /api/* calls fall back to the hidden Netlify forms declared in client/index.html.
+# Static frontend on Netlify. Live search API runs on Render (see render.yaml).
+# Set RENDER_API_URL in Netlify env vars (e.g. https://talentxray-api.onrender.com)
+# before deploy — scripts/write-netlify-redirects.mjs bakes it into client/dist/_redirects.
 [build]
   command = "npm install && npm run build"
   publish = "client/dist"

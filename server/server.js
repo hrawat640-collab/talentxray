@@ -6,6 +6,8 @@ require('dotenv').config();
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
+// Render / other reverse proxies — needed for rate-limit IP and x-forwarded-for.
+app.set('trust proxy', 1);
 const rootDir = path.join(__dirname, '..');
 const dataDir = path.join(rootDir, 'data');
 const clientDist = path.join(rootDir, 'client', 'dist');

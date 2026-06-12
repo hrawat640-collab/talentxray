@@ -82,6 +82,20 @@ function removeBubble(type,idx){if(type==='must')state.mustBubbles.splice(idx,1)
 function renderBubbles(){renderBubbleList('mustWrap','mustInput',state.mustBubbles,'must');renderBubbleList('orWrap','orInput',state.orBubbles,'or');updateSkillCount();}
 function renderAllBubbles(){renderBubbles();renderTitleBubbles();renderSeniorityBubbles();renderLocBubbles();renderGenBubbleList('comp');renderGenBubbleList('exc');}
 function renderBubbleList(wrapId,inputId,bubbles,type){const wrap=document.getElementById(wrapId);const input=document.getElementById(inputId);[...wrap.querySelectorAll('.bubble')].forEach(b=>b.remove());bubbles.forEach((b,i)=>{const el=document.createElement('span');el.className=`bubble ${b.mode==='and'?'and-b':'or-b'}`;el.innerHTML=`${esc(b.text)}<button class="bubble-x" onclick="removeBubble('${type}',${i})">×</button>`;wrap.insertBefore(el,input);});}
+// Commits text the user typed but never pressed Enter on (otherwise it would be
+// silently dropped from the query — e.g. a target company that never became a chip).
+function flushPendingInputs(){
+  const pending=(id)=>{const el=document.getElementById(id);const v=el?el.value.trim().replace(/,$/,'').trim():'';return {el,v};};
+  let changed=false;
+  let p=pending('titleInput');if(p.v){state.titleBubbles.push(p.v);p.el.value='';changed=true;}
+  p=pending('mustInput');if(p.v){state.mustBubbles.push({text:p.v,mode:'and'});p.el.value='';changed=true;}
+  p=pending('orInput');if(p.v){state.orBubbles.push({text:p.v,mode:'or'});p.el.value='';changed=true;}
+  p=pending('locInput');if(p.v){state.locBubbles.push(p.v);p.el.value='';changed=true;}
+  p=pending('compInput');if(p.v){state.compBubbles.push(p.v);p.el.value='';changed=true;}
+  p=pending('excInput');if(p.v){state.excBubbles.push(p.v);p.el.value='';changed=true;}
+  if(changed){renderAllBubbles();liveUpdate();}
+  return changed;
+}
 function updateSkillCount(){const isLI=state.selPlatforms.has('linkedin');const andCount=state.mustBubbles.filter(b=>b.mode==='and').length;const cnt=document.getElementById('skillCount');const warn=document.getElementById('skillWarn');if(!state.mustBubbles.length){cnt.style.display='none';warn.classList.remove('show');return;}cnt.style.display='inline';if(isLI&&andCount>3){cnt.textContent=`${andCount} skills — 3 AND max`;cnt.className='skill-count warn';warn.classList.add('show');}else{cnt.textContent=`${state.mustBubbles.length}`;cnt.className='skill-count';warn.classList.remove('show');}}
 export {
   renderTitleBubbles, removeTitleBubble, onTitleInput, onTitleKeydown, onTitleBlur, pickTitleFromSug, setTitleLogicMode,
@@ -89,5 +103,5 @@ export {
   renderLocBubbles, removeLocBubble, onLocInput, onLocKeydown, onLocBlur, pickLoc,
   onSkillInput, onSkillFocus, onSkillBlur, renderSuggestions, hideSuggestions,
   handleGenBubble, removeGenBubble, renderGenBubbleList,
-  pickSuggestion, handleBubble, removeBubble, renderBubbles, renderAllBubbles, updateSkillCount,
+  pickSuggestion, handleBubble, removeBubble, renderBubbles, renderAllBubbles, updateSkillCount, flushPendingInputs,
 };

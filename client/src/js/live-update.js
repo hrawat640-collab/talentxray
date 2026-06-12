@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { PLATFORMS, PLATFORM_ICONS } from './platforms.js';
 import { buildString, buildStringForPlatform } from './query-builder.js';
-import { updateStrength, updateSmartTips } from './insights.js';
+import { updateStrength, updateSmartTips, scheduleLiveCount } from './insights.js';
 import { updateSkillCount } from './bubbles.js';
 import { saveHist } from './history.js';
 import { txrTrackTool } from './analytics.js';
@@ -45,6 +45,6 @@ function liveUpdate(){
     if(ta){ta.value='';ta.style.display='none';}if(lnk){lnk.href='#';lnk.style.opacity='0.4';lnk.style.pointerEvents='none';}
     const multi=document.getElementById('multiPlatformOutput');const single=document.getElementById('singlePlatformOutput');if(multi)multi.style.display='none';if(single)single.style.display='';
   }
-  updateStrength(str);updateSmartTips(str);
+  updateStrength(str);updateSmartTips(str);scheduleLiveCount(str);
 }
 export { updateLinkedInUI, renderMultiPlatformOutput, savePlatformHist, liveUpdate };

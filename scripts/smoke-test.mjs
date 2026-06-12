@@ -42,6 +42,11 @@ check('query contains intitle role', outputStr.includes('intitle:"Product Manage
 check('query contains skill', outputStr.includes('"Python"'));
 check('strength meter visible', await page.locator('#strengthWrap').isVisible());
 
+// 3b. Live result count replaces the heuristic verdict (needs SERPER_API_KEY in .env; costs ~1 credit)
+await page.waitForTimeout(2600);
+const liveStatus = await page.locator('#strengthStatus').textContent();
+check('live result count shown', liveStatus.includes('Live check'));
+
 // 4. Open-in-Google link points at Google with the query
 const href = await page.locator('#openGoogleLink').getAttribute('href');
 check('open link is a google search URL', href.startsWith('https://www.google.com/search?q='));
@@ -84,13 +89,16 @@ await page.waitForTimeout(300);
 check('multi-platform rows render', (await page.locator('.platform-link-row').count()) === 2);
 await page.click('button[data-platform="github"]'); // back to LinkedIn only
 
-// 7. Open click saves history (popup expected)
+// 7. Open click saves history (popup expected).
+// compInput gets text WITHOUT Enter — open must flush it into the query (task #18).
+await page.fill('#compInput', 'Google');
 const [popup] = await Promise.all([
   page.waitForEvent('popup').catch(() => null),
   page.click('#openGoogleLink'),
 ]);
 if (popup) await popup.close();
 await page.waitForTimeout(500);
+check('pending company text flushed into query', (await page.locator('#outputStr').textContent()).includes('"Google"'));
 check('history panel visible after search', await page.locator('#histPanel').isVisible());
 check('history item rendered', (await page.locator('.hist-item').count()) >= 1);
 

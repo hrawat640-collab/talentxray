@@ -368,3 +368,10 @@ input::placeholder{color:var(--ink3);}
   .results-grid{grid-template-columns:1fr;}
   .results-side{position:static;}
 }
+
+/* slim boolean-block actions (copy lives in the header, open is secondary) */
+.rc-head-actions{display:flex;gap:6px;}
+.rc-actions-slim{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.rc-open-note{font-size:12px;color:var(--ink3);flex:1;min-width:200px;}
+.rc-open-link{width:auto;padding:9px 16px;font-size:13px;flex:0 0 auto;}
+.builder-rail .rc-var-btn{justify-content:center;}

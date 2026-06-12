@@ -159,9 +159,12 @@ await page.waitForTimeout(200);
 const cleared = await page.locator('#outputStr').textContent();
 check('reset clears output', cleared.includes('search string appears here') || cleared.includes('builds in real time'));
 
-// 10. Tab switch works
-await page.click('.tab-btn:nth-child(2)');
+// 10. Help link opens the how-to page, back button returns
+await page.click('#helpLink');
 check('how-to page activates', await page.locator('#page-howto').isVisible());
+await page.click('.how-hero button');
+await page.waitForTimeout(200);
+check('back button returns to tool', await page.locator('#page-tool').isVisible());
 
 // 11. Backend health + search proxy validation
 const health = await page.evaluate(async () => (await fetch('/api/health')).json());

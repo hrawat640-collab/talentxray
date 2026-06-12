@@ -38,7 +38,7 @@ function liveUpdate(){
   const el=document.getElementById('outputStr');const dot=document.getElementById('outputDot');const panel=document.getElementById('resultsCard');const chars=document.getElementById('outputChars');const ta=document.getElementById('outputTa');const lnk=document.getElementById('openGoogleLink');const isMulti=state.selPlatforms.size>1;
   if(str){
     el.innerHTML=renderHL(str);el.classList.add('has-content');dot.classList.add('live');panel.classList.add('active');chars.textContent=`${str.length} chars`;
-    if(!isMulti){if(ta){ta.value=str;ta.style.display='block';}if(lnk){lnk.href=url;lnk.title=url;lnk.style.opacity='1';lnk.style.pointerEvents='auto';}}
+    if(!isMulti){if(ta){ta.value=str;}if(lnk){lnk.href=url;lnk.title=url;lnk.style.opacity='1';lnk.style.pointerEvents='auto';}}
     else{if(ta)ta.style.display='none';if(lnk){lnk.style.opacity='0.4';lnk.style.pointerEvents='none';lnk.href='#';}}
     renderMultiPlatformOutput(str,url);
   }else{

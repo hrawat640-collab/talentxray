@@ -113,6 +113,12 @@ check('how-to page activates', await page.locator('#page-howto').isVisible());
 const health = await page.evaluate(async () => (await fetch('/api/health')).json());
 check('api health ok', health.ok === true);
 
+// 11b. Search proxy input validation (no live Serper call — costs credits)
+const badSearch = await page.evaluate(async () => (await fetch('/api/search-results', {
+  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: '' })
+})).status);
+check('search proxy rejects empty query', badSearch === 400);
+
 // 12. URL prefill
 await page.goto(BASE + '/?role=Data%20Engineer&must=Spark,Kafka&nice=Airflow');
 await page.waitForTimeout(600);

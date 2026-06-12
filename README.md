@@ -64,6 +64,7 @@ PLAYWRIGHT_BROWSERS_PATH=.playwright-browsers node scripts/smoke-test.mjs
 - `POST /api/lead`
 - `POST /api/login-event`
 - `POST /api/search-event`
+- `POST /api/search-results` — live Google results via Serper.dev (needs SERPER_API_KEY in .env; cached 15 min, rate limited 20/min per IP)
 
 Events are stored locally in `data/*.jsonl`.
 

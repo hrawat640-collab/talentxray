@@ -13,7 +13,7 @@ function txrShowToast(msg,type){
   if(!node)return;
   node.style.display='block';
   node.textContent=msg||'';
-  node.style.color=type==='err'?'#b91c1c':'#0f766e';
+  node.style.color=type==='err'?'#b91c1c':'#6E56F0';
 }
 
 async function txrUpsertSmUser(email,name){
@@ -194,7 +194,7 @@ function txrSwitchAuthTab(tab){
   if(signupForm)signupForm.style.display=signup?'block':'none';
   if(signinForm)signinForm.style.display=signup?'none':'block';
   if(resetForm)resetForm.style.display='none';
-  if(signupBtn){signupBtn.style.background=signup?'#0f766e':'#fff';signupBtn.style.color=signup?'#fff':'#111827';signupBtn.style.borderColor=signup?'#0f766e':'#d9d9d9';}
+  if(signupBtn){signupBtn.style.background=signup?'#6E56F0':'#fff';signupBtn.style.color=signup?'#fff':'#111827';signupBtn.style.borderColor=signup?'#6E56F0':'#d9d9d9';}
   if(signinBtn){signinBtn.style.background=signup?'#fff':'#111827';signinBtn.style.color=signup?'#111827':'#fff';signinBtn.style.borderColor=signup?'#d9d9d9':'#111827';}
   if(err)err.style.display='none';
   if(ok)ok.style.display='none';
@@ -239,7 +239,7 @@ function txrApplyDefaultLoginModalView(){
   if(signinForm)signinForm.style.display='none';
   const su=document.getElementById('txrAuthTabSignup');
   const si=document.getElementById('txrAuthTabSignin');
-  if(su){su.style.background='#0f766e';su.style.color='#fff';su.style.borderColor='#0f766e';}
+  if(su){su.style.background='#6E56F0';su.style.color='#fff';su.style.borderColor='#6E56F0';}
   if(si){si.style.background='#fff';si.style.color='#111827';si.style.borderColor='#d9d9d9';}
 }
 /* Auth return URLs — OAuth must return to the page the user started on.

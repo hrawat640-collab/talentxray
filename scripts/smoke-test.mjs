@@ -52,6 +52,32 @@ await page.waitForTimeout(300);
 check('variations panel opens', await page.locator('#varPanel').isVisible());
 check('at least 1 variation rendered', (await page.locator('.var-item').count()) >= 1);
 
+// 5b. Seniority is a plain body term, never a second intitle condition
+await page.selectOption('#senioritySelect', 'Junior');
+await page.waitForTimeout(300);
+const outSen = await page.locator('#outputStr').textContent();
+check('seniority added as plain term', outSen.includes('"Junior"'));
+check('seniority not forced into intitle', !outSen.includes('intitle:"Junior"'));
+
+// 5c. Region mismatch tip + without-location variation + no num param
+await page.fill('#locInput', 'London');
+await page.keyboard.press('Enter');
+await page.waitForTimeout(400);
+check('region mismatch tip shows', (await page.locator('#smartTipsList').textContent()).includes('Region / location mismatch'));
+await page.click('.rc-var-btn');
+await page.waitForTimeout(300);
+const noLocVar = await page.evaluate(() => (window._vars.find(v => v.label.includes('Without location')) || {}).str || '');
+check('without-location variation drops location', noLocVar !== '' && !noLocVar.includes('London'));
+await page.evaluate(() => window.fixRegionMismatch());
+await page.waitForTimeout(300);
+check('fixRegionMismatch switches region', (await page.locator('#liCountry').inputValue()) === 'uk.linkedin.com/in/');
+check('url has no num param', !(await page.locator('#openGoogleLink').getAttribute('href')).includes('num='));
+// restore state for the following sections
+await page.evaluate(() => window.clearLoc());
+await page.selectOption('#liCountry', 'in.linkedin.com/in/');
+await page.evaluate(() => window.liveUpdate());
+await page.waitForTimeout(200);
+
 // 6. Multi-platform output
 await page.click('button[data-platform="github"]');
 await page.waitForTimeout(300);

@@ -33,6 +33,7 @@ Object.assign(window, {
   relaxMustSkills: actions.relaxMustSkills,
   removeLastTitle: actions.removeLastTitle,
   clearLoc: actions.clearLoc,
+  fixRegionMismatch: actions.fixRegionMismatch,
   handleOpenClick: actions.handleOpenClick,
   copyStr: actions.copyStr,
   resetAll: actions.resetAll,

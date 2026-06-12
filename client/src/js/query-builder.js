@@ -1,6 +1,9 @@
 import { state } from './state.js';
 import { PLATFORMS } from './platforms.js';
 
+// Embedded double quotes would break the boolean query syntax; strip them from user terms.
+const clean=(s)=>String(s).replace(/"/g,'').trim();
+
 function buildStringForPlatform(platformKey,baseOv){const ov={...(baseOv||{})};if(platformKey==='behance')ov.seniorities=[];const savedPlatforms=new Set(state.selPlatforms);state.selPlatforms=new Set([platformKey]);const result=buildString(ov);state.selPlatforms=savedPlatforms;return result;}
 function buildString(ov={}){
   const platforms=[...state.selPlatforms];const hasLI=state.selPlatforms.has('linkedin');const isLIOnly=hasLI&&platforms.length===1;const liCountry=document.getElementById('liCountry').value;
@@ -8,7 +11,7 @@ function buildString(ov={}){
   let seniorities=ov.seniorities??[...state.seniorityBubbles];
   if(platforms.length===1&&platforms[0]==='behance')seniorities=[];
   const roleLogic=(ov.titleLogicMode||document.getElementById('titleLogicMode')?.value||'OR').toUpperCase()==='AND'?'AND':'OR';
-  const locations=ov.locations??[...state.locBubbles];const companies=ov.companies??state.compBubbles.map(c=>c);const excludeKw=ov.excludeKw??state.excBubbles.map(k=>k);
+  const locations=(ov.locations??[...state.locBubbles]).map(clean).filter(Boolean);const companies=(ov.companies??state.compBubbles.map(c=>c)).map(clean).filter(Boolean);const excludeKw=(ov.excludeKw??state.excBubbles.map(k=>k)).map(clean).filter(Boolean);
   let allMust=ov.mustBubbles??state.mustBubbles;let allOr=ov.orBubbles??state.orBubbles;
   if(hasLI){const andB=allMust.filter(b=>b.mode==='and');const overflow=andB.slice(3);allMust=[...allMust.filter(b=>b.mode==='or'),...andB.slice(0,3)];allOr=[...allOr,...overflow];}
   if(!titles.length&&!allMust.length&&!allOr.length)return{str:'',url:''};
@@ -20,7 +23,7 @@ function buildString(ov={}){
   if(titles.length){
     const roleOr=titles
       .flatMap((entry)=>(entry||'').split(/\s+or\s+/i))
-      .map(s=>s.trim())
+      .map(clean)
       .filter(Boolean);
     if(roleOr.length===1){
       parts.push(isLIOnly?`intitle:"${roleOr[0]}"`:`"${roleOr[0]}"`);
@@ -30,15 +33,21 @@ function buildString(ov={}){
     }
   }
   if(seniorities.length){
-    const seniorityExpr=seniorities.length===1?`"${seniorities[0]}"`:`(${seniorities.map(s=>`"${s}"`).join(' OR ')})`;
-    parts.push(isLIOnly?`intitle:${seniorityExpr}`:seniorityExpr);
+    // Seniority matches the page body, never intitle: a second intitle condition
+    // over-constrains LinkedIn queries and Google starts returning loose matches.
+    const sens=seniorities.map(clean).filter(Boolean);
+    if(sens.length){
+      const seniorityExpr=sens.length===1?`"${sens[0]}"`:`(${sens.map(s=>`"${s}"`).join(' OR ')})`;
+      parts.push(seniorityExpr);
+    }
   }
   if(locations.length===1)parts.push(`"${locations[0]}"`);else if(locations.length>1)parts.push('('+locations.map(l=>`"${l}"`).join(' OR ')+')');
   companies.forEach(c=>parts.push(`"${c}"`));
-  allMust.filter(b=>b.mode==='and').forEach(b=>parts.push(`"${b.text}"`));
-  const mustOrArr=allMust.filter(b=>b.mode==='or').map(b=>b.text);if(mustOrArr.length===1)parts.push(`"${mustOrArr[0]}"`);else if(mustOrArr.length>1)parts.push(`(${mustOrArr.map(s=>`"${s}"`).join(' OR ')})`);
-  const orArr=allOr.map(b=>typeof b==='string'?b:b.text);if(orArr.length===1)parts.push(`"${orArr[0]}"`);else if(orArr.length>1)parts.push(`(${orArr.map(s=>`"${s}"`).join(' OR ')})`);
+  allMust.filter(b=>b.mode==='and').forEach(b=>{const t=clean(b.text);if(t)parts.push(`"${t}"`);});
+  const mustOrArr=allMust.filter(b=>b.mode==='or').map(b=>clean(b.text)).filter(Boolean);if(mustOrArr.length===1)parts.push(`"${mustOrArr[0]}"`);else if(mustOrArr.length>1)parts.push(`(${mustOrArr.map(s=>`"${s}"`).join(' OR ')})`);
+  const orArr=allOr.map(b=>clean(typeof b==='string'?b:b.text)).filter(Boolean);if(orArr.length===1)parts.push(`"${orArr[0]}"`);else if(orArr.length>1)parts.push(`(${orArr.map(s=>`"${s}"`).join(' OR ')})`);
   excludeKw.forEach(k=>parts.push(`-"${k}"`));
-  const str=parts.join(' ');return{str,url:`https://www.google.com/search?q=${encodeURIComponent(str)}&num=100`};
+  // Note: Google discontinued the num= results-per-page parameter; don't send it.
+  const str=parts.join(' ');return{str,url:`https://www.google.com/search?q=${encodeURIComponent(str)}`};
 }
 export { buildString, buildStringForPlatform };

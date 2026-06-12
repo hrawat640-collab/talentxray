@@ -1,0 +1,19 @@
+# Render Blueprint — deploy the Express API (Serper proxy + event logging).
+# Frontend stays on Netlify; netlify.toml proxies /api/* to this service.
+#
+# Setup: Render Dashboard → New → Blueprint → connect this repo.
+# Then set SERPER_API_KEY in the service Environment tab (never commit it).
+
+services:
+  - type: web
+    name: talentxray-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: SERPER_API_KEY
+        sync: false

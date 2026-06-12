@@ -8,7 +8,7 @@
     "dev": "concurrently -n server,client -c blue,green \"node server/server.js\" \"vite client\"",
     "dev:server": "node server/server.js",
     "dev:client": "vite client",
-    "build": "vite build client",
+    "build": "node scripts/write-netlify-redirects.mjs && vite build client",
     "preview": "vite preview client",
     "start": "node server/server.js"
   },

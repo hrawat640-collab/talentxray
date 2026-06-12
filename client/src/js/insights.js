@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { LOC_REGION, REGION_NAMES } from '../data/locations.js';
 import { esc } from './util.js';
+import { renderLiveResults, hideLiveResults } from './results.js';
 
 function updateStrength(str){const wrap=document.getElementById('strengthWrap');if(!str){wrap.classList.remove('show');return;}wrap.classList.add('show');const andSkills=state.mustBubbles.filter(b=>b.mode==='and').length;const hasTitle=state.titleBubbles.length>0;const hasLoc=state.locBubbles.length>0;const coCount=state.compBubbles.length;const total=andSkills+(hasTitle?1:0)+(hasLoc?1:0)+Math.max(0,coCount-1);let width,color,status,tip;if(total<=2){width=82;color='#0d7a4e';status='Broad — high volume';tip='Add 1–2 must-have skills to improve precision.';}else if(total<=4){width=62;color='#0f766e';status='Balanced — good results expected';tip='Sweet spot for X-Ray searches.';}else if(total<=6){width=30;color='#b45309';status='Tight — fewer results';tip='Remove 1–2 must-have skills or convert to nice-to-have.';}else{width=8;color='#b91c1c';status='Over-constrained — likely zero results';tip='Too many AND conditions. Remove at least 3 to get results.';}
 document.getElementById('strengthFill').style.cssText=`width:${width}%;background:${color};`;const statusEl=document.getElementById('strengthStatus');statusEl.textContent=status;statusEl.style.color=color;document.getElementById('strengthTip').textContent=tip;}
@@ -14,8 +15,8 @@ function updateSmartTips(str){const panel=document.getElementById('smartTips');c
 let liveCountTimer=null,liveCountSeq=0,lastLiveStr='',lastLiveData=null;
 function scheduleLiveCount(str){
   if(liveCountTimer){clearTimeout(liveCountTimer);liveCountTimer=null;}
-  if(!str)return;
-  if(str===lastLiveStr&&lastLiveData){applyLiveCount(lastLiveData);return;}
+  if(!str){hideLiveResults();return;}
+  if(str===lastLiveStr&&lastLiveData){applyLiveCount(lastLiveData);renderLiveResults(lastLiveData,str);return;}
   const seq=++liveCountSeq;
   liveCountTimer=setTimeout(async()=>{
     try{
@@ -26,6 +27,7 @@ function scheduleLiveCount(str){
       lastLiveStr=str;lastLiveData=data;
       state.lastLiveResults=data;
       applyLiveCount(data);
+      renderLiveResults(data,str);
     }catch(_err){}
   },900);
 }

@@ -300,6 +300,21 @@
     <div id="smartTipsList"></div>
   </div>
 
+  <!-- Live matching profiles (filled from /api/search-results) -->
+  <div id="liveResultsPanel" style="display:none;">
+    <div class="step-card" style="margin-bottom:14px">
+      <div class="step-header">
+        <div class="step-num" style="background:#0d7a4e">★</div>
+        <div><div class="step-title">Matching profiles</div></div>
+        <div class="step-desc"><span id="liveResultsCount"></span> · live from Google, no personalisation</div>
+      </div>
+      <div class="step-body" style="padding:14px 16px">
+        <div id="liveResultsList"></div>
+        <button class="btn-secondary" id="liveResultsMore" onclick="loadMoreResults()" style="display:none;margin-top:4px;">Load more profiles</button>
+      </div>
+    </div>
+  </div>
+
   <div class="var-panel" id="varPanel">
     <div class="step-card" style="margin-bottom:0">
       <div class="step-header"><div class="step-num" style="background:#5b21b6">↻</div><div><div class="step-title">Query variations</div></div><div class="step-desc">Run each to beat the 10-result cap</div></div>

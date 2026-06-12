@@ -8,6 +8,7 @@ import * as templates from './js/templates.js';
 import { liveUpdate, updateLinkedInUI } from './js/live-update.js';
 import { generateVars, txrCopyVariation, txrOpenVariation } from './js/variations.js';
 import { prefillFromParams } from './js/prefill.js';
+import { loadMoreResults } from './js/results.js';
 
 // index.html (and markup generated at runtime) uses inline on* attributes,
 // so every handler they reference must exist on window.
@@ -62,6 +63,7 @@ Object.assign(window, {
   removeGenBubble: bubbles.removeGenBubble,
   // variations
   generateVars,
+  loadMoreResults,
   txrCopyVariation,
   txrOpenVariation,
   // history & templates

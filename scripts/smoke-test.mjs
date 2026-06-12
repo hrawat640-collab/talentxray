@@ -47,6 +47,14 @@ await page.waitForTimeout(2600);
 const liveStatus = await page.locator('#strengthStatus').textContent();
 check('live result count shown', liveStatus.includes('Live check'));
 
+// 3c. Candidate results viewer renders cards from the same response
+check('results panel visible', await page.locator('#liveResultsPanel').isVisible());
+check('candidate cards rendered', (await page.locator('.cand-card').count()) >= 1);
+const firstName = await page.locator('.cand-card .cand-name').first().textContent();
+check('candidate card has a parsed name', firstName.trim().length > 1 && !firstName.includes('LinkedIn'));
+const firstHref = await page.locator('.cand-card .cand-open').first().getAttribute('href');
+check('candidate card links to a profile', /^https?:\/\//.test(firstHref));
+
 // 4. Open-in-Google link points at Google with the query
 const href = await page.locator('#openGoogleLink').getAttribute('href');
 check('open link is a google search URL', href.startsWith('https://www.google.com/search?q='));

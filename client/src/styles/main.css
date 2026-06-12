@@ -287,3 +287,18 @@ input::placeholder{color:var(--ink3);}
   .site-footer{font-size:11px;padding:16px 14px;text-align:center;}
 }
 @media(max-width:400px){.platform-grid{grid-template-columns:1fr 1fr 1fr;}.platform-btn{font-size:11px;padding:8px 6px;}.main{padding:10px 10px;}}
+
+/* Live candidate result cards */
+.cand-card{display:flex;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--white);margin-bottom:8px;align-items:flex-start;transition:border-color .15s,box-shadow .15s;}
+.cand-card:hover{border-color:var(--accent-md);box-shadow:var(--shadow);}
+.cand-avatar{width:38px;height:38px;border-radius:50%;background:var(--accent-lt);color:var(--accent);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.cand-main{flex:1;min-width:0;}
+.cand-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.cand-name{font-size:14px;font-weight:700;color:var(--ink);}
+.cand-headline{font-size:12.5px;color:var(--ink2);margin-top:1px;line-height:1.5;}
+.cand-snippet{font-size:12px;color:var(--ink3);margin-top:4px;line-height:1.55;}
+.cand-skills{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px;}
+.cand-skill{font-size:10.5px;font-family:var(--mono);padding:1px 8px;border-radius:12px;background:var(--green-lt);color:var(--green);border:1px solid rgba(13,122,78,0.2);}
+.cand-open{display:inline-flex;align-items:center;padding:7px 13px;border-radius:7px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;align-self:center;}
+.cand-open:hover{background:#0d5e58;}
+@media(max-width:768px){.cand-card{flex-wrap:wrap;}.cand-open{align-self:flex-start;}}
